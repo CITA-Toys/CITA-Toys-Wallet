@@ -13,10 +13,6 @@ const manifest = JSON.parse(
 
 /* eslint-disable import/no-dynamic-require */
 const reactManifest = require(path.resolve(__dirname, '../lib/react_manifest'))
-const styledComponentsManifest = require(path.resolve(
-  __dirname,
-  '../lib/styledComponents_manifest',
-))
 /* eslint-enable import/no-dynamic-require */
 
 const devConfig = {
@@ -65,10 +61,6 @@ const devConfig = {
     new webpack.DllReferencePlugin({
       context: __dirname,
       manifest: reactManifest,
-    }),
-    new webpack.DllReferencePlugin({
-      context: __dirname,
-      manifest: styledComponentsManifest,
     }),
     new HtmlPlugin({
       title: '开发',

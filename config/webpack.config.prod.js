@@ -12,10 +12,6 @@ const AutoprefixerPlugin = require('autoprefixer')
 /* eslint-disable import/no-dynamic-require */
 const baseConfig = require(path.resolve(__dirname, './webpack.config.base'))
 const reactManifest = require(path.resolve(__dirname, '../lib/react_manifest'))
-const styledComponentsManifest = require(path.resolve(
-  __dirname,
-  '../lib/styledComponents_manifest',
-))
 /* eslint-enable import/no-dynamic-require */
 
 const manifest = JSON.parse(
@@ -74,10 +70,6 @@ const prodConfig = {
       context: __dirname,
       manifest: reactManifest,
     }),
-    new webpack.DllReferencePlugin({
-      context: __dirname,
-      manifest: styledComponentsManifest,
-    }),
     new CopyPlugin([
       {
         from: path.resolve(__dirname, '../lib'),
@@ -85,10 +77,9 @@ const prodConfig = {
       },
     ]),
     new HtmlPlugin({
-      title: 'NervOS',
+      title: 'CITA-TOYS',
       template: path.resolve(__dirname, '../src/templates/index.html'),
       react: `./lib/${manifest['react.js']}`,
-      styledComponents: `./lib/${manifest['styledComponents.js']}`,
       minify: {
         removeComments: true,
         collapseWhitespace: true,

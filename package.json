@@ -3,47 +3,48 @@
   "version": "0.1.0",
   "description": "NervOS Web",
   "main": "index.js",
-  "homepage": "https://nervosfoundation.github.io/nervos-web",
-  "repository": "https://github.com/NervosFoundation/nervos-web",
+  "repository": "https://github.com/CITA-Toys/CITA-Toys-Wallet",
   "author": "Keith <keithwhisper@gmail.com>",
   "license": "MIT",
   "scripts": {
-    "start":
-      "clear && webpack-dev-server --config config/webpack.config.dev.js",
-    "start:d":
-      "clear && webpack-dashboard -- webpack-dev-server --config config/webpack.config.dev.js",
+    "start": "clear && webpack-dev-server --config config/webpack.config.dev.js",
+    "start:d": "clear && webpack-dashboard -- webpack-dev-server --config config/webpack.config.dev.js",
     "build": "yarn run build:local",
-    "build:local":
-      "rimraf dist && webpack --config config/webpack.config.prod.js",
-    "build:test":
-      "rimraf dist && yarn install && webpack --config config/webpack.config.prod.js",
-    "build:prod":
-      "rimraf dist && yarn install && webpack --config config/webpack.config.prod.js",
+    "build:local": "rimraf dist && webpack --config config/webpack.config.prod.js",
+    "build:test": "rimraf dist && yarn install && webpack --config config/webpack.config.prod.js",
+    "build:prod": "rimraf dist && yarn install && webpack --config config/webpack.config.prod.js",
     "dll": "rimraf lib && webpack --config ./config/webpack.config.dll.js",
     "precommit": "lint-staged",
     "predeploy": "yarn run build",
     "deploy": "gh-pages -d dist"
   },
   "lint-staged": {
-    "src/**/*.{tsx,ts}": ["eslint --fix", "git add"]
+    "src/**/*.{tsx,ts}": [
+      "eslint --fix",
+      "git add"
+    ]
   },
   "dependencies": {
     "@reactivex/rxjs": "^5.5.6",
+    "axios": "^0.18.0",
     "i18next": "^10.3.0",
     "i18next-browser-languagedetector": "^2.1.0",
     "i18next-xhr-backend": "^1.5.1",
+    "material-ui": "^1.0.0-beta.39",
+    "material-ui-icons": "^1.0.0-beta.36",
     "normalize.css": "^7.0.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-i18next": "^7.3.4",
+    "react-loadable": "^5.3.1",
     "react-router-dom": "^4.2.2",
-    "styled-components": "^3.1.4"
+    "web3": "^1.0.0-beta.33"
   },
   "devDependencies": {
     "@types/node": "^9.4.0",
     "@types/react": "^16.0.35",
     "@types/react-dom": "^16.0.3",
-    "@types/react-loadable": "^5.3.1",
+    "@types/react-loadable": "^5.3.3",
     "@types/react-router-dom": "^4.2.3",
     "@types/webpack": "^3.8.4",
     "@types/webpack-dev-server": "^2.9.2",
@@ -83,6 +84,7 @@
     "typescript-eslint-parser": "^12.0.0",
     "uglifyjs-webpack-plugin": "^1.1.8",
     "url-loader": "^0.6.2",
+    "web3-typescript-typings": "^0.10.2",
     "webpack": "^3.10.0",
     "webpack-dashboard": "^1.1.1",
     "webpack-dev-server": "^2.11.1",
