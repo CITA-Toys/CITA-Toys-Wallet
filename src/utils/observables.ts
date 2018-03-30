@@ -3,7 +3,7 @@ import citaWebPlugin from './web3-cita-plugin'
 
 const CitaWeb3 = citaWebPlugin()
 
-const INTERVAL = 10000
+const INTERVAL = process.env.NODE_ENV === 'production' ? 1000 : 10000
 
 /**
  * @function newBlockNumber$
