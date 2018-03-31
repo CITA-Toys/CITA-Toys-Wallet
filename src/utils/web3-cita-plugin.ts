@@ -55,7 +55,7 @@ const JSONRPC = ({ method, params, id }: IJSONRPCParams): IJSONRPC => ({
 const { CITA_SERVER } = process.env
 
 const citaFetchIns = axios.create({
-  baseURL: CITA_SERVER,
+  baseURL: window.localStorage.getItem('cita_server') || CITA_SERVER,
   method: 'POST',
   timeout: 5000,
 })
@@ -119,9 +119,9 @@ export default (web3?) => {
       hash,
       detailed,
     }: {
-      hash: string
-      detailed: boolean
-      }) =>
+    hash: string
+    detailed: boolean
+    }) =>
       citaFetch({
         method: CITA_METHODS.GET_BLOCK_BY_HASH,
         params: [hash, detailed],
@@ -131,9 +131,9 @@ export default (web3?) => {
       quantity,
       detailed,
     }: {
-      quantity: string
-      detailed: boolean
-      }) =>
+    quantity: string
+    detailed: boolean
+    }) =>
       citaFetch({
         method: CITA_METHODS.GET_BLOCK_BY_NUMBER,
         params: [quantity, detailed],

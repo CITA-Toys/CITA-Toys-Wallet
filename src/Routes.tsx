@@ -19,6 +19,12 @@ export const containers = [
     component: 'ContractEditor',
     exact: true,
   },
+  {
+    path: '/config',
+    name: 'Config',
+    component: 'ConfigPage',
+    exact: true,
+  },
 ]
 
 const Routes = () => (

@@ -1,4 +1,4 @@
-import { Observable, ReplaySubject } from 'rxjs'
+import { Observable, ReplaySubject } from '@reactivex/rxjs'
 import citaWebPlugin from './web3-cita-plugin'
 
 const CitaWeb3 = citaWebPlugin()
@@ -15,7 +15,7 @@ export const newBlockNumber$ = Observable.interval(INTERVAL).switchMap(() =>
 )
 export const newBlockByNumber$ = newBlockNumber$
   .distinct()
-  .flatMap(blockNumber =>
+  .switchMap(blockNumber =>
     CitaWeb3.getBlockByNumber({ quantity: blockNumber, detailed: true }),
   )
 export const peerCount$ = Observable.interval(INTERVAL).switchMap(() =>

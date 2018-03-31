@@ -3,13 +3,8 @@ import Typography from 'material-ui/Typography'
 import Toolbar from 'material-ui/Toolbar/'
 import Button from 'material-ui/Button'
 import Divider from 'material-ui/Divider'
-import citaWebPlugin from '../../utils/web3-cita-plugin'
-import {
-  multicastedNewBlockByNumber$,
-  peerCount$,
-} from '../../utils/observables'
-
-const CitaWeb3 = citaWebPlugin()
+import { withObservables } from '../../contexts/observables'
+import { withConfig } from '../../contexts/config'
 
 const PlainState = ({ title, value }: { title: string; value: string }) => (
   <div style={{ flex: 1, textAlign: 'center' }}>
@@ -41,7 +36,7 @@ const initialState = {
 }
 
 type INetState = Readonly<typeof initialState>
-export default class NetStatus extends React.Component<any, INetState> {
+class NetStatus extends React.Component<any, INetState> {
   static plainStates = [
     { title: 'Peer Count', value: 'peerCount' },
     { title: 'Current Height', value: 'blockNumber' },
@@ -56,10 +51,13 @@ export default class NetStatus extends React.Component<any, INetState> {
 
   private fetchStatus = () => {
     // fetch peer Count
+    const {
+      peerCount$,
+      multicastedNewBlockByNumber$,
+    } = this.props.CITAObservables
     peerCount$.subscribe(peerCount =>
       this.setState(state => ({ peerCount: peerCount.slice(2) })),
     )
-    console.log(multicastedNewBlockByNumber$)
     // fetch Block Number and Block
     multicastedNewBlockByNumber$.subscribe(block => {
       this.setState(state => ({ blockNumber: block.header.number }))
@@ -77,3 +75,4 @@ export default class NetStatus extends React.Component<any, INetState> {
     )
   }
 }
+export default withConfig(withObservables(NetStatus))
