@@ -1,12 +1,12 @@
 import * as React from 'react'
 
 declare module 'React' {
-  type Provider < T > = React.ComponentType<{
+  type Provider<T> = React.ComponentType<{
     value: T
     children?: ReactNode
   }>
 
-  type Consumer < T > = ComponentType<{
+  type Consumer<T> = ComponentType<{
     children: (value: T) => ReactNode
   }>
 

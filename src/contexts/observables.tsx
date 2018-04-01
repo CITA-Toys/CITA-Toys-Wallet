@@ -1,4 +1,6 @@
-// / <reference path="../typings/react.d.ts" />
+/* eslint-disable */
+/// <reference path="../typings/react/index.d.ts" />
+/* eslint-enable */
 import { Observable, ReplaySubject } from 'rxjs'
 import * as React from 'react'
 import * as CITAObservables from '../utils/observables'

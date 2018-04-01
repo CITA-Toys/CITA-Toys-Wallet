@@ -24,36 +24,42 @@ interface IBlock {
   version: string | number
 }
 
+// const TransactionItem = ({ block }: { block: IBlock }) => (
+//   <ExpansionPanel>
+//     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+//       <Typography>{block.hash.slice(0, 10)}</Typography>
+//     </ExpansionPanelSummary>
+//     <ExpansionPanelDetails>
+//       <Typography variant="caption">
+//         Transactions<br />
+//       </Typography>
+//       <List>
+//         {block.body.transactions.length ? (
+//           block.body.transactions.map(tx => (
+//             <ListItem key={tx.name}>
+//               <ListItemText primary="tx" secondary="tx_details" />
+//             </ListItem>
+//           ))
+//         ) : (
+//           <ListItem>
+//             <ListItemText primary="没有交易" />
+//           </ListItem>
+//         )}
+//       </List>
+//     </ExpansionPanelDetails>
+//     <Divider />
+//     <ExpansionPanelActions>
+//       <Button size="small" color="primary">
+//         Detail
+//       </Button>
+//     </ExpansionPanelActions>
+//   </ExpansionPanel>
+// )
+
 const TransactionItem = ({ block }: { block: IBlock }) => (
-  <ExpansionPanel>
-    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-      <Typography>{block.hash.slice(0, 10)}</Typography>
-    </ExpansionPanelSummary>
-    <ExpansionPanelDetails>
-      <Typography variant="caption">
-        Transactions<br />
-      </Typography>
-      <List>
-        {block.body.transactions.length ? (
-          block.body.transactions.map(tx => (
-            <ListItem key={tx.name}>
-              <ListItemText primary="tx" secondary="tx_details" />
-            </ListItem>
-          ))
-        ) : (
-          <ListItem>
-            <ListItemText primary="没有交易" />
-          </ListItem>
-        )}
-      </List>
-    </ExpansionPanelDetails>
-    <Divider />
-    <ExpansionPanelActions>
-      <Button size="small" color="primary">
-        Detail
-      </Button>
-    </ExpansionPanelActions>
-  </ExpansionPanel>
+  <ListItem>
+    <ListItemText primary={block.hash.slice(0, 5)} />
+  </ListItem>
 )
 interface IBlockListState {
   blocks: IBlock[]
@@ -106,7 +112,11 @@ class BlockList extends React.Component<IBlockListProps, IBlockListState> {
 
         {blocks.length ? (
           <React.Fragment>
-            {blocks.map((block: IBlock) => <TransactionItem block={block} />)}
+            <List>
+              {blocks.map((block: IBlock) => (
+                <TransactionItem block={block} key={block.hash} />
+              ))}
+            </List>
           </React.Fragment>
         ) : (
           <LinearProgress />

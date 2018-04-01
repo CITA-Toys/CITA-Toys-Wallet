@@ -1,3 +1,6 @@
+/* eslint-disable */
+/// <reference path="../typings/react/index.d.ts" />
+/* eslint-enable */
 import * as React from 'react'
 import LOCAL_STORAGE from '../config/localstorage'
 
