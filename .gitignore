@@ -19,3 +19,8 @@ dist
 
 # Optional yarn error log
 yarn-error
+
+# deploy script and package
+scripts
+toys-wallet
+

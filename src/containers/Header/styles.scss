@@ -1,0 +1,13 @@
+.navItem {
+  padding: 0 15px;
+  color: #fff;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
+
+@media (max-width: 800px) {
+  .navItem > span {
+    display: none;
+  }
+}

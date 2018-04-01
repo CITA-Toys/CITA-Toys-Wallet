@@ -1,79 +1,66 @@
 import * as React from 'react'
 import Typography from 'material-ui/Typography'
-import Toolbar from 'material-ui/Toolbar/'
-import ExpansionPanel, {
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-  ExpansionPanelActions,
-} from 'material-ui/ExpansionPanel'
-import List, { ListItem, ListItemText } from 'material-ui/List/'
-import ExpandMoreIcon from 'material-ui-icons/ExpandMore'
-import Chip from 'material-ui/Chip'
-import Button from 'material-ui/Button'
+import List, {
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
+} from 'material-ui/List/'
 import Divider from 'material-ui/Divider'
+import Paper from 'material-ui/Paper'
+import Tooltip from 'material-ui/Tooltip'
+import ViewListIcon from 'material-ui-icons/ViewList'
 import { LinearProgress } from 'material-ui/Progress'
 import TextField from 'material-ui/TextField'
 import { withObservables, ICITAObservables } from '../../contexts/observables'
+import { IBlock } from '../Block'
+import { IContainerProps } from '../../typings/'
 
-interface IBlock {
-  body: {
-    transactions: any[]
-  }
-  hash: string
-  header: any
-  version: string | number
-}
+const layouts = require('../../styles/layout')
 
-// const TransactionItem = ({ block }: { block: IBlock }) => (
-//   <ExpansionPanel>
-//     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-//       <Typography>{block.hash.slice(0, 10)}</Typography>
-//     </ExpansionPanelSummary>
-//     <ExpansionPanelDetails>
-//       <Typography variant="caption">
-//         Transactions<br />
-//       </Typography>
-//       <List>
-//         {block.body.transactions.length ? (
-//           block.body.transactions.map(tx => (
-//             <ListItem key={tx.name}>
-//               <ListItemText primary="tx" secondary="tx_details" />
-//             </ListItem>
-//           ))
-//         ) : (
-//           <ListItem>
-//             <ListItemText primary="没有交易" />
-//           </ListItem>
-//         )}
-//       </List>
-//     </ExpansionPanelDetails>
-//     <Divider />
-//     <ExpansionPanelActions>
-//       <Button size="small" color="primary">
-//         Detail
-//       </Button>
-//     </ExpansionPanelActions>
-//   </ExpansionPanel>
-// )
+const MIN_COUNT = 10
+const MAX_COUNT = 600
 
-const TransactionItem = ({ block }: { block: IBlock }) => (
-  <ListItem>
-    <ListItemText primary={block.hash.slice(0, 5)} />
-  </ListItem>
+const TransactionItem = ({
+  block,
+  handleItemClicked,
+}: {
+block: IBlock
+handleItemClicked: (block: IBlock) => React.MouseEventHandler<HTMLElement>
+}) => (
+  <React.Fragment>
+    <Divider />
+    <Tooltip title={block.hash} placement="top">
+      <ListItem
+        style={{
+          cursor: 'pointer',
+        }}
+        onClick={handleItemClicked(block)}
+      >
+        <ListItemText
+          primary={`${block.hash.slice(0, 5)} when ${new Date(
+            block.header.timestamp,
+          ).toLocaleString()} at the height of ${block.header.number}`}
+          secondary={`Including ${block.body.transactions.length} transactions`}
+          title={block.hash}
+        />
+        <ListItemSecondaryAction>
+          <ViewListIcon />
+        </ListItemSecondaryAction>
+      </ListItem>
+    </Tooltip>
+  </React.Fragment>
 )
 interface IBlockListState {
   blocks: IBlock[]
   maxCount: number
 }
-interface IBlockListProps {
-  CITAObservables: ICITAObservables
-}
+interface IBlockListProps extends IContainerProps {}
 
 class BlockList extends React.Component<IBlockListProps, IBlockListState> {
   static fetchNewBlockInterval: any
   state = {
     blocks: [],
-    maxCount: 100,
+    maxCount: 50,
   }
 
   componentWillMount () {
@@ -83,24 +70,28 @@ class BlockList extends React.Component<IBlockListProps, IBlockListState> {
     this.props.CITAObservables.multicastedNewBlockByNumber$.subscribe(
       block =>
         this.setState(state => ({
-          blocks: [...state.blocks, block],
+          blocks: [...state.blocks, block].slice(-1 * MAX_COUNT),
         })),
       console.log,
     )
   }
   private handleInput = stateLabal => e => {
-    let { value } = e.target
-    if (stateLabal === 'maxCount' && +value < 10) {
-      value = 10
-      console.log(value)
+    const { value } = e.target
+    if (stateLabal === 'maxCount' && +value < MIN_COUNT) {
+      return false
     }
     this.setState(state => ({ [stateLabal]: value }))
+    return true
+  }
+  private handleItemClicked = (block: IBlock) => e => {
+    this.props.history.push(`/block/${block.hash}`)
   }
 
   render () {
     const { blocks, maxCount } = this.state
+    const displayedBlocks = blocks.reverse().slice(0, maxCount)
     return (
-      <React.Fragment>
+      <Paper className={layouts.main}>
         <div style={{ textAlign: 'right' }}>
           <TextField
             label="Max Count of Items"
@@ -113,15 +104,19 @@ class BlockList extends React.Component<IBlockListProps, IBlockListState> {
         {blocks.length ? (
           <React.Fragment>
             <List>
-              {blocks.map((block: IBlock) => (
-                <TransactionItem block={block} key={block.hash} />
+              {displayedBlocks.map((block: IBlock) => (
+                <TransactionItem
+                  block={block}
+                  handleItemClicked={this.handleItemClicked}
+                  key={block.hash}
+                />
               ))}
             </List>
           </React.Fragment>
         ) : (
           <LinearProgress />
         )}
-      </React.Fragment>
+      </Paper>
     )
   }
 }

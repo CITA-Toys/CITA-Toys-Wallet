@@ -69,7 +69,11 @@ class NetStatus extends React.Component<any, INetState> {
     return (
       <Toolbar style={{ display: 'flex' }}>
         {NetStatus.plainStates.map(state => (
-          <PlainState {...state} value={this.state[state.value]} />
+          <PlainState
+            {...state}
+            key={state.title}
+            value={this.state[state.value]}
+          />
         ))}
       </Toolbar>
     )
