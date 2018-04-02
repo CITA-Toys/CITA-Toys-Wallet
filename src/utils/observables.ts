@@ -1,7 +1,16 @@
 import { Observable, ReplaySubject } from '@reactivex/rxjs'
+// import * as Web3 from 'web3'
 import citaWebPlugin from './web3-cita-plugin'
 
-const CitaWeb3 = citaWebPlugin()
+// const provider = new Web3['providers']['HttpProvider'](
+//   process.env.CITA_SERVER || '',
+// )
+
+// const web3 = Web3(provider)
+
+const Web3Ins = citaWebPlugin()
+const CitaWeb3 = Web3Ins.CITA
+console.log(Web3Ins)
 
 const INTERVAL = process.env.NODE_ENV === 'production' ? 1000 : 10000
 
@@ -59,3 +68,13 @@ const newBlockByNumberSubject = new ReplaySubject(10)
 export const multicastedNewBlockByNumber$ = newBlockByNumber$.multicast(
   newBlockByNumberSubject,
 )
+
+/*
+ * Send Transaction
+ */
+
+export const sendTransaction$ = signedData =>
+  Observable.fromPromise(CitaWeb3.sendTransaction(signedData))
+
+export const signTx$ = (privKey: string, data: string) =>
+  Observable.of(Web3Ins.eth.sign(privKey, data))

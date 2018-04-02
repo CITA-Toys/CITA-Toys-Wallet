@@ -80,83 +80,87 @@ const citaFetch = ({ method, params, id }) =>
         result,
         error,
       } = data
-      if (error) throw new Error(error)
+      if (error) throw error
       return result
     })
-    .catch(err => console.error(err.stack))
-
-export default (web3?) => {
-  if (typeof web3 !== 'undefined') {
-    // TODO Web3 Logic
-  }
-  return class {
-    static postId = 0
-    static netPeerCount = () =>
-      citaFetch({
-        method: CITA_METHODS.NET_PEER_COUNT,
-        params: [],
-        id: 1,
-      })
-    /**
+    .catch(err => {
+      console.error(err)
+      throw err
+    })
+class CITA {
+  static postId = 0
+  static netPeerCount = () =>
+    citaFetch({
+      method: CITA_METHODS.NET_PEER_COUNT,
+      params: [],
+      id: 1,
+    })
+  /**
      * @function getBlockNumber
     null
      * @returns
      */
-    static getBlockNumber = () =>
-      citaFetch({
-        method: CITA_METHODS.CITA_BLOCK_NUMBER,
-        params: [],
-        id: 1,
-      })
+  static getBlockNumber = () =>
+    citaFetch({
+      method: CITA_METHODS.CITA_BLOCK_NUMBER,
+      params: [],
+      id: 1,
+    })
 
-    static sendTransaction = (signedData: string) =>
-      citaFetch({
-        method: CITA_METHODS.SEND_TRANSACTION,
-        params: [signedData],
-        id: 1,
-      })
-    static getBlockByHash = ({
-      hash,
-      detailed,
-    }: {
-    hash: string
-    detailed: boolean
-    }) =>
-      citaFetch({
-        method: CITA_METHODS.GET_BLOCK_BY_HASH,
-        params: [hash, detailed],
-        id: 1,
-      })
-    static getBlockByNumber = ({
-      quantity,
-      detailed,
-    }: {
-    quantity: string
-    detailed: boolean
-    }) =>
-      citaFetch({
-        method: CITA_METHODS.GET_BLOCK_BY_NUMBER,
-        params: [quantity, detailed],
-        id: 1,
-      })
+  static sendTransaction = (signedData: string) =>
+    citaFetch({
+      method: CITA_METHODS.SEND_TRANSACTION,
+      params: [signedData],
+      id: 1,
+    })
+  static getBlockByHash = ({
+    hash,
+    detailed,
+  }: {
+  hash: string
+  detailed: boolean
+  }) =>
+    citaFetch({
+      method: CITA_METHODS.GET_BLOCK_BY_HASH,
+      params: [hash, detailed],
+      id: 1,
+    })
+  static getBlockByNumber = ({
+    quantity,
+    detailed,
+  }: {
+  quantity: string
+  detailed: boolean
+  }) =>
+    citaFetch({
+      method: CITA_METHODS.GET_BLOCK_BY_NUMBER,
+      params: [quantity, detailed],
+      id: 1,
+    })
 
-    static getTransactionReceipt = (hash: string) =>
-      citaFetch({
-        method: CITA_METHODS.ETH_GET_TRANSACTION_RECEIPT,
-        params: [hash],
-        id: 1,
-      })
-    // TODO: eth_getLogs
-    // TODO: eth_call
-    // TODO: cita_getTransaction
-    // TODO: eth_getTransactionCount
-    // TODO: eth_getCode
-    // TODO: eth_getAbi
-    // TODO: eth_newFilter
-    // TODO: eth_newBlockFilter
-    // TODO: eth_uninstallFilter
-    // TODO: eth_getFilterChanges
-    // TODO: eth_getFilterLogs
-    // TODO: cita_getTransactionProof
+  static getTransactionReceipt = (hash: string) =>
+    citaFetch({
+      method: CITA_METHODS.ETH_GET_TRANSACTION_RECEIPT,
+      params: [hash],
+      id: 1,
+    })
+  // TODO: eth_getLogs
+  // TODO: eth_call
+  // TODO: cita_getTransaction
+  // TODO: eth_getTransactionCount
+  // TODO: eth_getCode
+  // TODO: eth_getAbi
+  // TODO: eth_newFilter
+  // TODO: eth_newBlockFilter
+  // TODO: eth_uninstallFilter
+  // TODO: eth_getFilterChanges
+  // TODO: eth_getFilterLogs
+  // TODO: cita_getTransactionProof
+}
+
+export default (web3?) => {
+  if (typeof web3 !== 'undefined') {
+    return { ...web3, CITA }
   }
+  return { CITA }
 }

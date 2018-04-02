@@ -8,7 +8,7 @@ import { withConfig } from '../../contexts/config'
 
 const PlainState = ({ title, value }: { title: string; value: string }) => (
   <div style={{ flex: 1, textAlign: 'center' }}>
-    <Typography align="center" variant="headline">
+    <Typography align="center" variant="title">
       {title}
     </Typography>
     <Typography align="center" variant="body1">

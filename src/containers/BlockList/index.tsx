@@ -68,17 +68,19 @@ class BlockList extends React.Component<IBlockListProps, IBlockListState> {
   }
   private fetchNewBlock = (a = 0) => {
     this.props.CITAObservables.multicastedNewBlockByNumber$.subscribe(
-      block =>
+      (block: IBlock) =>
         this.setState(state => ({
-          blocks: [...state.blocks, block].slice(-1 * MAX_COUNT),
+          blocks: [...this.state.blocks, block].slice(-1 * MAX_COUNT),
         })),
       console.log,
     )
   }
   private handleInput = stateLabal => e => {
     const { value } = e.target
+    console.log(value)
     if (stateLabal === 'maxCount' && +value < MIN_COUNT) {
-      return false
+      this.setState(state => ({ maxCount: MIN_COUNT }))
+      return true
     }
     this.setState(state => ({ [stateLabal]: value }))
     return true
@@ -89,7 +91,7 @@ class BlockList extends React.Component<IBlockListProps, IBlockListState> {
 
   render () {
     const { blocks, maxCount } = this.state
-    const displayedBlocks = blocks.reverse().slice(0, maxCount)
+    const displayedBlocks = [...blocks].reverse().slice(0, maxCount)
     return (
       <Paper className={layouts.main}>
         <div style={{ textAlign: 'right' }}>
