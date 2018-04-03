@@ -14,17 +14,31 @@ const getServerList = () => {
   return [process.env.CITA_SERVER]
 }
 
+const getPrivkeyList = () => {
+  const storedList = window.localStorage.getItem(LOCAL_STORAGE.PRIV_KEY_LIST)
+  if (storedList) {
+    return JSON.parse(storedList)
+  }
+  return []
+}
+
 const initConfig = {
   localStorage: LOCAL_STORAGE,
   serverList: getServerList(),
+  privkeyList: getPrivkeyList(),
   changeServer: server => window.localStorage.setItem('server', server),
+  changePrivkey: privkey => window.localStorage.setItem('privkey', privkey),
   addServer: server => false,
   deleteServer: server => false,
+  addPrivkey: privkey => false,
+  deletePrivkey: privkey => false,
 }
 
 interface ConfigProviderActions {
   addServer: (server: string) => boolean
   deleteServer: (idx: number) => boolean
+  addPrivkey: (privkey: string) => boolean
+  deletePrivkey: (idx: number) => boolean
 }
 
 export type IConfig = typeof initConfig & ConfigProviderActions
@@ -62,6 +76,29 @@ class ConfigProvider extends React.Component {
     )
     return true
   }
+  protected addPrivkey = (privkey: string): boolean => {
+    const privkeyList = [...this.state.privkeyList]
+    if (!privkeyList.includes(privkey)) {
+      const newPrivkeyList = [...privkeyList, privkey]
+      this.setState(state => ({ privkeyList: newPrivkeyList }))
+      window.localStorage.setItem(
+        LOCAL_STORAGE.PRIV_KEY_LIST,
+        JSON.stringify(newPrivkeyList),
+      )
+      return true
+    }
+    return false
+  }
+  protected deletePrivkey = (idx: number): boolean => {
+    const privkeyList = [...this.state.privkeyList]
+    privkeyList.splice(idx, 1)
+    this.setState(state => ({ privkeyList }))
+    window.localStorage.setItem(
+      LOCAL_STORAGE.PRIV_KEY_LIST,
+      JSON.stringify(privkeyList),
+    )
+    return true
+  }
   render () {
     return (
       <ConfigContext.Provider
@@ -69,6 +106,8 @@ class ConfigProvider extends React.Component {
           ...this.state,
           addServer: this.addServer,
           deleteServer: this.deleteServer,
+          addPrivkey: this.addPrivkey,
+          deletePrivkey: this.deletePrivkey,
         }}
       >
         {this.props.children}

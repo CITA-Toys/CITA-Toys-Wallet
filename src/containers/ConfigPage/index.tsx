@@ -20,6 +20,11 @@ import { withConfig, IConfig } from '../../contexts/config'
 
 const layouts = require('../../styles/layout')
 
+enum Configs {
+  server = 'server',
+  privkey = 'privkey',
+}
+
 export interface IConfigPageProps {
   config: IConfig
   CITAObservables: ICITAObservables
@@ -29,6 +34,9 @@ const initState = {
   server: '',
   serverError: false,
   serverHelperText: '',
+  privkey: '',
+  privkeyError: false,
+  privkeyHelperText: '',
 }
 export type IConfigPageState = typeof initState
 
@@ -40,8 +48,8 @@ class ConfigPage extends React.Component<IConfigPageProps, IConfigPageState> {
     this.setState(state => ({
       ...state,
       [stateLabel]: value,
-      serverError: false,
-      serverHelperText: '',
+      [`${stateLabel}Error`]: false,
+      [`${stateLabel}HelperText`]: '',
     }))
   }
   private handleSubmit = (actionName: string) => e => {
@@ -58,6 +66,10 @@ class ConfigPage extends React.Component<IConfigPageProps, IConfigPageState> {
         }))
         return false
       }
+      case 'addPrivkey': {
+        this.props.config.addPrivkey(this.state.privkey)
+        return true
+      }
       default: {
         return false
       }
@@ -72,6 +84,15 @@ class ConfigPage extends React.Component<IConfigPageProps, IConfigPageState> {
           serverHelperText={this.state.serverHelperText}
           serverList={this.props.config.serverList}
           deleteServer={this.props.config.deleteServer}
+          handleInput={this.handleInput}
+          handleSubmit={this.handleSubmit}
+        />
+        <PrivkeyConfig
+          privkey={this.state.privkey}
+          privkeyError={this.state.privkeyError}
+          privkeyHelperText={this.state.privkeyHelperText}
+          privkeyList={this.props.config.privkeyList}
+          deletePrivkey={this.props.config.deletePrivkey}
           handleInput={this.handleInput}
           handleSubmit={this.handleSubmit}
         />
@@ -116,6 +137,48 @@ const ServerConfig = ({
         fullWidth
       />
       <Button variant="flat" onClick={handleSubmit('addServer')}>
+        Add
+      </Button>
+    </ExpansionPanelActions>
+  </ExpansionPanel>
+)
+
+const PrivkeyConfig = ({
+  privkey,
+  privkeyError,
+  privkeyHelperText,
+  privkeyList,
+  deletePrivkey,
+  handleInput,
+  handleSubmit,
+}) => (
+  <ExpansionPanel>
+    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+      <Typography variant="headline">Privkey List</Typography>
+    </ExpansionPanelSummary>
+    <Divider />
+    <ExpansionPanelDetails>
+      <List style={{ width: '100%' }}>
+        {privkeyList.map((_privkey, idx) => (
+          <ListItem>
+            <ListItemText primary={_privkey} />
+            <DeleteIcon onClick={() => deletePrivkey(idx)} />
+          </ListItem>
+        ))}
+      </List>
+    </ExpansionPanelDetails>
+    <Divider />
+    <ExpansionPanelActions>
+      <TextField
+        value={privkey}
+        onChange={handleInput('privkey')}
+        label="Add New Privkey"
+        // placeholder="host:port"
+        error={privkeyError}
+        helperText={privkeyHelperText}
+        fullWidth
+      />
+      <Button variant="flat" onClick={handleSubmit('addPrivkey')}>
         Add
       </Button>
     </ExpansionPanelActions>
