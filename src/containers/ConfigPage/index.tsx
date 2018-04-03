@@ -28,7 +28,7 @@ export interface IConfigPageProps {
 const initState = {
   server: '',
   serverError: false,
-  serverHelpertext: '',
+  serverHelperText: '',
 }
 export type IConfigPageState = typeof initState
 
@@ -38,9 +38,10 @@ class ConfigPage extends React.Component<IConfigPageProps, IConfigPageState> {
     // const value = e.target.value
     const { value } = e.target
     this.setState(state => ({
+      ...state,
       [stateLabel]: value,
       serverError: false,
-      serverHelpertext: '',
+      serverHelperText: '',
     }))
   }
   private handleSubmit = (actionName: string) => e => {
@@ -51,8 +52,9 @@ class ConfigPage extends React.Component<IConfigPageProps, IConfigPageState> {
           return true
         }
         this.setState(state => ({
+          ...state,
           serverError: true,
-          serverHelpertext: 'Invalid Format',
+          serverHelperText: 'Invalid Format',
         }))
         return false
       }
@@ -64,42 +66,60 @@ class ConfigPage extends React.Component<IConfigPageProps, IConfigPageState> {
   render () {
     return (
       <div className={layouts.main}>
-        <ExpansionPanel defaultExpanded>
-          <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-            <Typography variant="headline">Server List</Typography>
-          </ExpansionPanelSummary>
-          <Divider />
-          <ExpansionPanelDetails>
-            <List style={{ width: '100%' }}>
-              {this.props.config.serverList.map((server, idx) => (
-                <ListItem>
-                  <ListItemText primary={server} />
-                  <DeleteIcon
-                    onClick={() => this.props.config.deleteServer(idx)}
-                  />
-                </ListItem>
-              ))}
-            </List>
-          </ExpansionPanelDetails>
-          <Divider />
-          <ExpansionPanelActions>
-            <TextField
-              value={this.state.server}
-              onChange={this.handleInput('server')}
-              label="Add New Server"
-              placeholder="host:port"
-              error={this.state.serverError}
-              helperText={this.state.serverHelpertext}
-              fullWidth
-            />
-            <Button variant="flat" onClick={this.handleSubmit('addServer')}>
-              Add
-            </Button>
-          </ExpansionPanelActions>
-        </ExpansionPanel>
+        <ServerConfig
+          server={this.state.server}
+          serverError={this.state.serverError}
+          serverHelperText={this.state.serverHelperText}
+          serverList={this.props.config.serverList}
+          deleteServer={this.props.config.deleteServer}
+          handleInput={this.handleInput}
+          handleSubmit={this.handleSubmit}
+        />
       </div>
     )
   }
 }
+
+const ServerConfig = ({
+  server,
+  serverError,
+  serverHelperText,
+  serverList,
+  deleteServer,
+  handleInput,
+  handleSubmit,
+}) => (
+  <ExpansionPanel defaultExpanded>
+    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+      <Typography variant="headline">Server List</Typography>
+    </ExpansionPanelSummary>
+    <Divider />
+    <ExpansionPanelDetails>
+      <List style={{ width: '100%' }}>
+        {serverList.map((_server, idx) => (
+          <ListItem>
+            <ListItemText primary={_server} />
+            <DeleteIcon onClick={() => deleteServer(idx)} />
+          </ListItem>
+        ))}
+      </List>
+    </ExpansionPanelDetails>
+    <Divider />
+    <ExpansionPanelActions>
+      <TextField
+        value={server}
+        onChange={handleInput('server')}
+        label="Add New Server"
+        placeholder="host:port"
+        error={serverError}
+        helperText={serverHelperText}
+        fullWidth
+      />
+      <Button variant="flat" onClick={handleSubmit('addServer')}>
+        Add
+      </Button>
+    </ExpansionPanelActions>
+  </ExpansionPanel>
+)
 
 export default withConfig(withObservables(ConfigPage))

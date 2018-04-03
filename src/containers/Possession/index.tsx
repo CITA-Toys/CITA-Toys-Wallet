@@ -1,7 +1,7 @@
 import * as React from 'react'
-import citaWebPlugin from '../../utils/web3-cita-plugin'
+import citaWebPlugin from 'cita-web3-plugin'
 
-const CitaWeb3 = citaWebPlugin()
+const CitaWeb3 = citaWebPlugin().CITA
 export default class extends React.Component {
   fetchBlockNumber = () => {
     CitaWeb3.getBlockNumber().then(console.log)

@@ -27,6 +27,8 @@
   "dependencies": {
     "@reactivex/rxjs": "^5.5.6",
     "axios": "^0.18.0",
+    "cita-observables": "^1.0.1",
+    "cita-web3-plugin": "^1.0.2",
     "i18next": "^10.3.0",
     "i18next-browser-languagedetector": "^2.1.0",
     "i18next-xhr-backend": "^1.5.1",

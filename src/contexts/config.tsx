@@ -82,11 +82,6 @@ export const provideConfig = Comp => props => (
     <Comp {...props} />
   </ConfigProvider>
 )
-// export const provideConfig = Comp => props => (
-//   <ConfigContext.Provider value={initConfig}>
-//     <Comp {...props} />
-//   </ConfigContext.Provider>
-// )
 
 export const withConfig = Comp => props => (
   <ConfigContext.Consumer>

@@ -3,7 +3,7 @@
 /* eslint-enable */
 import { Observable, ReplaySubject } from 'rxjs'
 import * as React from 'react'
-import * as CITAObservables from '../utils/observables'
+import * as CITAObservables from 'cita-observables'
 
 export type ICITAObservables = typeof CITAObservables
 

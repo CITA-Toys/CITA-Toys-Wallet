@@ -12,7 +12,7 @@
   version "1.7.0"
   resolved "https://registry.npmjs.org/@most/prelude/-/prelude-1.7.0.tgz#0956ed464ad03e7fc95143eac0c6dd028498d975"
 
-"@reactivex/rxjs@^5.5.6":
+"@reactivex/rxjs@^5.5.6", "@reactivex/rxjs@^5.5.8":
   version "5.5.8"
   resolved "https://registry.npmjs.org/@reactivex/rxjs/-/rxjs-5.5.8.tgz#d269578c72c9fb08a290fa7ebd9f2e73eef232ac"
   dependencies:
@@ -1249,6 +1249,19 @@ cipher-base@^1.0.0, cipher-base@^1.0.1, cipher-base@^1.0.3:
 circular-json@^0.3.1:
   version "0.3.3"
   resolved "https://registry.npmjs.org/circular-json/-/circular-json-0.3.3.tgz#815c99ea84f6809529d2f45791bdf82711352d66"
+
+cita-observables@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.npmjs.org/cita-observables/-/cita-observables-1.0.1.tgz#982dfd815e297f81338e1d375b3eda8de18dce9e"
+  dependencies:
+    "@reactivex/rxjs" "^5.5.8"
+    cita-web3-plugin "^1.0.2"
+
+cita-web3-plugin@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.npmjs.org/cita-web3-plugin/-/cita-web3-plugin-1.0.2.tgz#d05e461d39cc1894c25c750a985934c6a7cc7bb9"
+  dependencies:
+    axios "^0.18.0"
 
 clap@^1.0.9:
   version "1.2.3"
