@@ -70,7 +70,7 @@ class BlockList extends React.Component<IBlockListProps, IBlockListState> {
     this.props.CITAObservables.multicastedNewBlockByNumber$.subscribe(
       (block: IBlock) =>
         this.setState(state => ({
-          blocks: [...this.state.blocks, block].slice(-1 * MAX_COUNT),
+          blocks: [...state.blocks, block].slice(-1 * MAX_COUNT),
         })),
       console.log,
     )
