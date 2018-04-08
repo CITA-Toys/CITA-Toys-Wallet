@@ -3,16 +3,17 @@
 /* eslint-enable */
 import { Observable, ReplaySubject } from 'rxjs'
 import * as React from 'react'
-import * as CITAObservables from 'cita-observables'
+import CITAObservables from '@cita/observables'
 
-export type ICITAObservables = typeof CITAObservables
-
-const initObservables = CITAObservables
+export const initObservables: CITAObservables = new CITAObservables({
+  server: process.env.CITA_SERVER || '',
+  interval: 1000,
+})
 const ObservableContext = React.createContext(initObservables)
 
 export const withObservables = Comp => props => (
   <ObservableContext.Consumer>
-    {(observables: ICITAObservables) => (
+    {(observables: CITAObservables) => (
       <Comp {...props} CITAObservables={observables} />
     )}
   </ObservableContext.Consumer>

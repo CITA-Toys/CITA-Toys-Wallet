@@ -1,9 +1,10 @@
-import { IContainerProps } from './index.d'
-import { ICITAObservables } from './../contexts/observables'
+import CITAObservables from '@cita/observables'
+import './block.d'
 
+export * from './block'
 /* eslint-disable no-restricted-globals */
 export interface IContainerProps {
-  CITAObservables: ICITAObservables
+  CITAObservables: CITAObservables
   history: any
   match: {
     params: {

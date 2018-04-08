@@ -14,8 +14,9 @@ import ExpansionPanel, {
 } from 'material-ui/ExpansionPanel'
 import Divider from 'material-ui/Divider'
 import DeleteIcon from 'material-ui-icons/Delete'
+import CITAObservables from '@cita/observables'
 
-import { withObservables, ICITAObservables } from '../../contexts/observables'
+import { withObservables } from '../../contexts/observables'
 import { withConfig, IConfig } from '../../contexts/config'
 
 const layouts = require('../../styles/layout')
@@ -27,7 +28,7 @@ enum Configs {
 
 export interface IConfigPageProps {
   config: IConfig
-  CITAObservables: ICITAObservables
+  CITAObservables: CITAObservables
 }
 
 const initState = {

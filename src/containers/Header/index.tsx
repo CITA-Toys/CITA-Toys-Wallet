@@ -10,6 +10,7 @@ import FingerprintIcon from 'material-ui-icons/Fingerprint'
 import SettingsIcon from 'material-ui-icons/Settings'
 import ViewCarouselIcon from 'material-ui-icons/ViewCarousel'
 import FormatShapesIcon from 'material-ui-icons/FormatShapes'
+import GraphicIcon from 'material-ui-icons/GraphicEq'
 import { Link } from 'react-router-dom'
 import { containers } from '../../Routes'
 
@@ -20,6 +21,7 @@ const icons = {
   Blocks: <ViewCarouselIcon />,
   ContractEditor: <FormatShapesIcon />,
   Config: <SettingsIcon />,
+  Graphs: <GraphicIcon />,
 }
 
 function ButtonAppBar (props) {

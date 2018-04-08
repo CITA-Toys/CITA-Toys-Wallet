@@ -11,9 +11,8 @@ import Tooltip from 'material-ui/Tooltip'
 import ViewListIcon from 'material-ui-icons/ViewList'
 import { LinearProgress } from 'material-ui/Progress'
 import TextField from 'material-ui/TextField'
-import { withObservables, ICITAObservables } from '../../contexts/observables'
-import { IBlock } from '../Block'
-import { IContainerProps } from '../../typings/'
+import { withObservables } from '../../contexts/observables'
+import { IContainerProps, IBlock } from '../../typings/'
 
 const layouts = require('../../styles/layout')
 
@@ -67,7 +66,7 @@ class BlockList extends React.Component<IBlockListProps, IBlockListState> {
     this.fetchNewBlock()
   }
   private fetchNewBlock = (a = 0) => {
-    this.props.CITAObservables.multicastedNewBlockByNumber$.subscribe(
+    this.props.CITAObservables.newBlockByNumberSubject.subscribe(
       (block: IBlock) =>
         this.setState(state => ({
           blocks: [...state.blocks, block].slice(-1 * MAX_COUNT),
@@ -77,7 +76,6 @@ class BlockList extends React.Component<IBlockListProps, IBlockListState> {
   }
   private handleInput = stateLabal => e => {
     const { value } = e.target
-    console.log(value)
     if (stateLabal === 'maxCount' && +value < MIN_COUNT) {
       this.setState(state => ({ maxCount: MIN_COUNT }))
       return true

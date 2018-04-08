@@ -10,30 +10,10 @@ import ExpandMore from 'material-ui-icons/ExpandMore'
 
 import { withConfig } from '../../contexts/config'
 import { withObservables } from '../../contexts/observables'
-import { IContainerProps } from '../../typings'
+import { IContainerProps, IBlock } from '../../typings'
 
 const layouts = require('../../styles/layout')
 const styles = require('./styles')
-
-export interface IBlockHeader {
-  timestamp: string
-  prevHash: string
-  number: string
-  stateRoot: string
-  transactionsRoot: string
-  receiptsRoot: string
-  gasUsed: string
-  proof?: object
-}
-
-export interface IBlock {
-  body: {
-    transactions: any[]
-  }
-  hash: string
-  header: IBlockHeader
-  version: string | number
-}
 
 const initState: IBlock = {
   hash: '',
@@ -59,7 +39,7 @@ class Block extends React.Component<IBlockProps, IBlockState> {
   componentWillMount () {
     const { blockHash } = this.props.match.params
     if (typeof blockHash === 'string') {
-      this.props.CITAObservables.blockByHash$(blockHash).subscribe(
+      this.props.CITAObservables.blockByHash(blockHash).subscribe(
         (block: IBlock) => {
           this.setState(state => ({ ...block }))
         },
@@ -90,7 +70,7 @@ class Block extends React.Component<IBlockProps, IBlockState> {
             <Typography variant="headline">Transactions</Typography>
             {transactions.length ? (
               transactions.map(tx => (
-                <ExpansionPanel key={tx}>
+                <ExpansionPanel key={tx.hash}>
                   <ExpansionPanelSummary expandIcon={<ExpandMore />}>
                     <Typography variant="headline">tx.hash</Typography>
                   </ExpansionPanelSummary>

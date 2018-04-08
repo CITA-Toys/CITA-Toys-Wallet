@@ -1,13 +1,13 @@
 import * as React from 'react'
 
 declare module 'React' {
-  type Provider<T> = React.ComponentType<{
+  type Provider < T > = React.ComponentType<{
     value: T
-    children?: ReactNode
+    children?: React.ReactNode
   }>
 
-  type Consumer<T> = ComponentType<{
-    children: (value: T) => ReactNode
+  type Consumer < T > = React.ComponentType<{
+    children: (value: T) => React.ReactNode
   }>
 
   interface Context<T> {

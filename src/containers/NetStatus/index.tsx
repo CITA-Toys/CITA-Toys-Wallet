@@ -5,6 +5,7 @@ import Button from 'material-ui/Button'
 import Divider from 'material-ui/Divider'
 import { withObservables } from '../../contexts/observables'
 import { withConfig } from '../../contexts/config'
+import { IContainerProps, IContainerState } from '../../typings/'
 
 const PlainState = ({ title, value }: { title: string; value: string }) => (
   <div style={{ flex: 1, textAlign: 'center' }}>
@@ -18,7 +19,7 @@ const PlainState = ({ title, value }: { title: string; value: string }) => (
 )
 
 const initialState = {
-  peerCount: 0,
+  peerCount: '0',
   blockNumber: '',
   block: {
     body: '',
@@ -35,8 +36,9 @@ const initialState = {
   network: process.env.CITA_SERVER || '',
 }
 
-type INetState = Readonly<typeof initialState>
-class NetStatus extends React.Component<any, INetState> {
+type INetStatusState = Readonly<typeof initialState>
+interface INetStatusProps extends IContainerProps {}
+class NetStatus extends React.Component<INetStatusProps, INetStatusState> {
   static plainStates = [
     { title: 'Peer Count', value: 'peerCount' },
     { title: 'Current Height', value: 'blockNumber' },
@@ -51,18 +53,15 @@ class NetStatus extends React.Component<any, INetState> {
 
   private fetchStatus = () => {
     // fetch peer Count
-    const {
-      peerCount$,
-      multicastedNewBlockByNumber$,
-    } = this.props.CITAObservables
-    peerCount$.subscribe(peerCount =>
-      this.setState(state => ({ peerCount: peerCount.slice(2) })),
+    const { peerCount, newBlockByNumberSubject } = this.props.CITAObservables
+    peerCount(60000).subscribe((count: string) =>
+      this.setState(state => ({ peerCount: count.slice(2) })),
     )
     // fetch Block Number and Block
-    multicastedNewBlockByNumber$.subscribe(block => {
+    newBlockByNumberSubject.subscribe(block => {
       this.setState(state => ({ blockNumber: block.header.number }))
     })
-    multicastedNewBlockByNumber$.connect()
+    newBlockByNumberSubject.connect()
   }
   render () {
     const { block } = this.state

@@ -1,18 +1,10 @@
 import * as React from 'react'
-import { HashRouter as Router, Route } from 'react-router-dom'
+import { HashRouter as Router, Route, Redirect } from 'react-router-dom'
 import AsyncLoader from './components/AsyncLoader'
 
 export const containers = [
-  { path: '/', name: 'Header', component: 'Header', nav: false },
-  // { path: '/', name: 'Sidebar', component: 'Sidebar' },
-  { path: '/', name: 'NetStatus', component: 'NetStatus', nav: false },
-  {
-    path: '/possessions',
-    name: 'Possession',
-    component: 'Possession',
-    exact: true,
-    nav: true,
-  },
+  { path: '/', name: 'Header', component: 'Header', nav: false }, // { path: '/', name: 'Sidebar', component: 'Sidebar' },
+  { path: '/', name: 'NetStatus', component: 'NetStatus', nav: false }, // {
   {
     path: '/block/:blockHash',
     name: 'Block',
@@ -21,19 +13,25 @@ export const containers = [
     nav: false,
   },
   {
-    path: '/blocks',
+    path: '/',
     name: 'Blocks',
     component: 'BlockList',
     exact: true,
     nav: true,
   },
   {
-    path: '/contract-editor',
-    name: 'ContractEditor',
-    component: 'ContractEditor',
+    path: '/graphs',
+    name: 'Graphs',
+    component: 'Graphs',
     exact: true,
     nav: true,
-  },
+  }, // {
+  //   path: '/contract-editor',
+  //   name: 'ContractEditor',
+  //   component: 'ContractEditor',
+  //   exact: true,
+  //   nav: true,
+  // },
   {
     path: '/config',
     name: 'Config',

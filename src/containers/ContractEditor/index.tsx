@@ -7,7 +7,7 @@ import Divider from 'material-ui/Divider'
 import MenuItem from 'material-ui/Menu/MenuItem'
 import { withConfig } from '../../contexts/config'
 import { withObservables } from '../../contexts/observables'
-import { IContainerProps, IContainerState } from '../../typings/'
+import { IContainerProps } from '../../typings/'
 
 const layouts = require('../../styles/layout')
 
@@ -35,7 +35,7 @@ class ContractEditor extends React.Component<
   //   console.log('catch', e)
   // }
   private submit = e => {
-    this.props.CITAObservables.sendTransaction$(this.state.byteCode).subscribe(
+    this.props.CITAObservables.sendTransaction(this.state.byteCode).subscribe(
       (result: any) => {
         this.setState(state => ({
           result,
