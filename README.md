@@ -1,5 +1,3 @@
-# nervos-web
-
 ## 1. Install Dependencies
 
 ```bash

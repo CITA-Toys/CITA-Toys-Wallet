@@ -87,7 +87,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           </Toolbar>
         </AppBar>
         <Dialog
-          open={this.state.settingsOn}
+          on={this.state.settingsOn}
           dialogTitle="Setting"
           onClose={this.toggleSettings(false)}
         >

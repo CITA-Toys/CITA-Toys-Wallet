@@ -6,6 +6,13 @@ export const containers = [
   { path: '/', name: 'Header', component: 'Header', nav: false }, // { path: '/', name: 'Sidebar', component: 'Sidebar' },
   { path: '/', name: 'NetStatus', component: 'NetStatus', nav: false }, // {
   {
+    path: '/',
+    name: 'Homepage',
+    component: 'Homepage',
+    exact: true,
+    nav: false,
+  },
+  {
     path: '/block/:blockHash',
     name: 'Block',
     component: 'Block',
