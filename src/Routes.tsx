@@ -39,6 +39,13 @@ export const containers = [
     exact: true,
     nav: true,
   },
+  {
+    path: '/',
+    name: 'Footer',
+    component: 'Footer',
+    exact: false,
+    nav: false,
+  },
 ]
 
 const Routes = () => (

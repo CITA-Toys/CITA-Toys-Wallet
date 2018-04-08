@@ -63,17 +63,17 @@ class BlockList extends React.Component<IBlockListProps, IBlockListState> {
   }
 
   componentWillMount () {
-    this.fetchNewBlock()
+    // this.fetchNewBlock()
   }
-  private fetchNewBlock = (a = 0) => {
-    this.props.CITAObservables.newBlockByNumberSubject.subscribe(
-      (block: IBlock) =>
-        this.setState(state => ({
-          blocks: [...state.blocks, block].slice(-1 * MAX_COUNT),
-        })),
-      console.log,
-    )
-  }
+  // private fetchNewBlock = (a = 0) => {
+  // this.props.CITAObservables.newBlockByNumberSubject.subscribe(
+  //   (block: IBlock) =>
+  //     this.setState(state => ({
+  //       blocks: [...state.blocks, block].slice(-1 * MAX_COUNT),
+  //     })),
+  //   console.log,
+  // )
+  // }
   private handleInput = stateLabal => e => {
     const { value } = e.target
     if (stateLabal === 'maxCount' && +value < MIN_COUNT) {
