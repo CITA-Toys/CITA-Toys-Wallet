@@ -2,9 +2,9 @@
 # yarn lockfile v1
 
 
-"@cita/observables@^1.0.11":
-  version "1.0.11"
-  resolved "https://registry.npmjs.org/@cita/observables/-/observables-1.0.11.tgz#d581d84d9dd9a0f4b902446461d205cce1a22c1c"
+"@cita/observables@^1.0.12":
+  version "1.0.12"
+  resolved "https://registry.npmjs.org/@cita/observables/-/observables-1.0.12.tgz#048753d4c0ad9cd6468fa2616978adbe17792d1d"
   dependencies:
     "@cita/web3-plugin" "^1.0.16"
     "@reactivex/rxjs" "^5.5.8"

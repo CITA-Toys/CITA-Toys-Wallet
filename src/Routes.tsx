@@ -4,7 +4,7 @@ import AsyncLoader from './components/AsyncLoader'
 
 export const containers = [
   { path: '/', name: 'Header', component: 'Header', nav: false }, // { path: '/', name: 'Sidebar', component: 'Sidebar' },
-  { path: '/', name: 'NetStatus', component: 'NetStatus', nav: false }, // {
+  // { path: '/', name: 'NetStatus', component: 'NetStatus', nav: false }, // {
   {
     path: '/',
     name: 'Homepage',
@@ -20,7 +20,7 @@ export const containers = [
     nav: false,
   },
   {
-    path: '/',
+    path: '/blocks',
     name: 'Blocks',
     component: 'BlockList',
     exact: true,

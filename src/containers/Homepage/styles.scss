@@ -1,0 +1,25 @@
+.smCards {
+  display: flex;
+  flex-wrap: wrap;
+  & > div {
+    width: 50%;
+    // margin: 0 15px;
+    &:first-child {
+      margin-left: 0px;
+    }
+    &:last-child {
+      margin-right: 0px;
+    }
+  }
+}
+
+.listCards {
+  display: flex;
+  flex-direction: column;
+}
+.blockListHeader {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+}

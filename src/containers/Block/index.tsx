@@ -1,18 +1,20 @@
 import * as React from 'react'
+import { Link } from 'react-router-dom'
 import Paper from 'material-ui/Paper'
 import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card'
-import ExpansionPanel, {
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-} from 'material-ui/ExpansionPanel'
+import List, { ListItem, ListItemText } from 'material-ui/List'
 import Typography from 'material-ui/Typography'
 import ExpandMore from 'material-ui-icons/ExpandMore'
+import IconButton from 'material-ui/IconButton'
+import BackIcon from 'material-ui-icons/ArrowBack'
+import NextIcon from 'material-ui-icons/ArrowForward'
 
 import { withConfig } from '../../contexts/config'
 import { withObservables } from '../../contexts/observables'
 import { IContainerProps, IBlock } from '../../typings'
 
 const layouts = require('../../styles/layout')
+const texts = require('../../styles/text.scss')
 const styles = require('./styles')
 
 const initState: IBlock = {
@@ -25,6 +27,11 @@ const initState: IBlock = {
     transactionsRoot: '',
     receiptsRoot: '',
     gasUsed: '',
+    proof: {
+      Tendermint: {
+        proposal: '',
+      },
+    },
   },
   body: {
     transactions: [],
@@ -46,6 +53,12 @@ class Block extends React.Component<IBlockProps, IBlockState> {
       )
     }
   }
+  private headerInfo = [
+    { key: 'gasUsed', label: 'Gas Used' },
+    { key: 'receiptsRoot', label: 'Receipts Root' },
+    { key: 'stateRoot', label: 'State Root' },
+    { key: 'transactionsRoot', label: 'Transactions Root' },
+  ]
 
   render () {
     const { body: { transactions }, hash, header } = this.state
@@ -53,35 +66,57 @@ class Block extends React.Component<IBlockProps, IBlockState> {
       <div className={layouts.main}>
         <Card>
           <CardHeader
-            title="Block"
-            subheader={hash}
+            title={
+              <div className={styles.blockHeader}>
+                Block: <span className={texts.addr}>{hash}</span>
+              </div>
+            }
+            subheader={`${header.timestamp &&
+              new Date(+header.timestamp).toLocaleString()}`}
+            action={
+              <div className={styles.blockHeader}>
+                <IconButton>
+                  <BackIcon />
+                </IconButton>
+                {header.number}
+                <IconButton>
+                  <NextIcon />
+                </IconButton>
+              </div>
+            }
             classes={{ subheader: styles.subheader }}
           />
-          <CardHeader
-            title="Position"
-            subheader={`${new Date(
-              header.timestamp,
-            ).toLocaleString()} at the height of ${header.number}`}
-            classes={{
-              subheader: styles.subheader,
-            }}
-          />
           <CardContent>
-            <Typography variant="headline">Transactions</Typography>
-            {transactions.length ? (
-              transactions.map(tx => (
-                <ExpansionPanel key={tx.hash}>
-                  <ExpansionPanelSummary expandIcon={<ExpandMore />}>
-                    <Typography variant="headline">tx.hash</Typography>
-                  </ExpansionPanelSummary>
-                  <ExpansionPanelDetails>tx.details</ExpansionPanelDetails>
-                </ExpansionPanel>
-              ))
-            ) : (
-              <Typography variant="headline" align="center">
-                No Data
-              </Typography>
-            )}
+            <List>
+              <ListItem>
+                <ListItemText
+                  primary="MinedBy"
+                  secondary={header.proof.Tendermint.proposal}
+                />
+              </ListItem>
+              <ListItem>
+                <ListItemText
+                  primary="Parent Hash"
+                  secondary={
+                    <Link
+                      to={header.prevHash}
+                      href={header.prevHash}
+                      className={texts.addr}
+                    >
+                      {header.prevHash}
+                    </Link>
+                  }
+                />
+              </ListItem>
+              {this.headerInfo.map(item => (
+                <ListItem key={item.key}>
+                  <ListItemText
+                    primary={item.label}
+                    secondary={header[item.key]}
+                  />
+                </ListItem>
+              ))}
+            </List>
           </CardContent>
         </Card>
       </div>

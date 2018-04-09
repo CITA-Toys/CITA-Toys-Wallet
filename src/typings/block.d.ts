@@ -9,7 +9,11 @@ export interface IBlockHeader {
   transactionsRoot: string
   receiptsRoot: string
   gasUsed: string
-  proof?: object
+  proof: {
+    Tendermint: {
+      proposal: string
+    }
+  }
 }
 export interface Transaction {
   hash: Hash

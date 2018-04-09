@@ -13,6 +13,7 @@ import SettingsIcon from 'material-ui-icons/Settings'
 import ViewCarouselIcon from 'material-ui-icons/ViewCarousel'
 import FormatShapesIcon from 'material-ui-icons/FormatShapes'
 import GraphicIcon from 'material-ui-icons/GraphicEq'
+import SearchIcon from 'material-ui-icons/Search'
 import { Link } from 'react-router-dom'
 import { containers } from '../../Routes'
 import { IContainerProps } from '../../typings/index.d'
@@ -55,7 +56,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             <Typography variant="title" color="inherit">
               CITA TOYS
             </Typography>
-            <div style={{ flexGrow: 1, display: 'flex' }}>
+            <div className={styles.navs}>
               {/* containers.filter(container => container.nav).map(container => (
               <Typography variant="subheading">
                 <Link
@@ -82,7 +83,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 value={this.state.keyword}
                 onChange={this.handleInput('keyword')}
               />
-              Go
+              <Link
+                to={`/search/${this.state.keyword}`}
+                href={`/search/${this.state.keyword}`}
+              >
+                <IconButton style={{ color: '#FFF' }}>
+                  <SearchIcon />
+                </IconButton>
+              </Link>
             </div>
           </Toolbar>
         </AppBar>
