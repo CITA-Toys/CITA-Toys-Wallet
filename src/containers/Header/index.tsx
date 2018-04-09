@@ -21,6 +21,22 @@ import Dialog from '../Dialog'
 
 const styles = require('./styles')
 
+const urlGen = keyword => {
+  switch (keyword.length) {
+    case 64:
+    case 66: {
+      return `/block/${keyword}`
+    }
+    case 40:
+    case 42: {
+      return `/account/${keyword}`
+    }
+    default: {
+      return `/height/${keyword}`
+    }
+  }
+}
+
 const icons = {
   Possession: <FingerprintIcon />,
   Blocks: <ViewCarouselIcon />,
@@ -38,9 +54,11 @@ interface HeaderProps extends IContainerProps {}
 class Header extends React.Component<HeaderProps, HeaderState> {
   state = initState
   private handleInput = name => e => {
+    // const value = e.target.value
+    const { value } = e.target
     this.setState(state => ({
       ...state,
-      [name]: e.target.value,
+      [name]: value,
     }))
   }
   private toggleSettings = (on = !this.state.settingsOn) => e => {
@@ -53,9 +71,11 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       <React.Fragment>
         <AppBar position="static">
           <Toolbar>
-            <Typography variant="title" color="inherit">
-              CITA TOYS
-            </Typography>
+            <Link to="/" href="/" style={{ color: '#FFF' }}>
+              <Typography variant="title" color="inherit">
+                CITA TOYS
+              </Typography>
+            </Link>
             <div className={styles.navs}>
               {/* containers.filter(container => container.nav).map(container => (
               <Typography variant="subheading">
@@ -84,8 +104,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 onChange={this.handleInput('keyword')}
               />
               <Link
-                to={`/search/${this.state.keyword}`}
-                href={`/search/${this.state.keyword}`}
+                // to={`/search/${this.state.keyword}`}
+                // href={`/search/${this.state.keyword}`}
+                to={urlGen(this.state.keyword)}
+                href={urlGen(this.state.keyword)}
               >
                 <IconButton style={{ color: '#FFF' }}>
                   <SearchIcon />

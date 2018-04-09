@@ -8,12 +8,14 @@
 // 最新交易列表, 默认10, 无需刷新
 
 import * as React from 'react'
+import { Link } from 'react-router-dom'
 import Typography from 'material-ui/Typography'
 import Zoom from 'material-ui/transitions/Zoom'
 import List, { ListItem, ListItemText } from 'material-ui/List'
-import { IContainerProps, IBlock } from '../../typings'
+import { IContainerProps, IBlock, Transaction } from '../../typings'
 import { withObservables } from '../../contexts/observables'
 import StaticCard from '../../components/StaticCard'
+import TransactionList from '../../components/TransactionList/'
 
 const layout = require('../../styles/layout.scss')
 const texts = require('../../styles/text.scss')
@@ -23,7 +25,7 @@ interface HomepageProps extends IContainerProps {}
 
 const initState = {
   blocks: [] as IBlock[],
-  transactions: [] as any[],
+  transactions: [] as Transaction[],
   generals: {
     tps: '',
     duration: '',
@@ -63,24 +65,23 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
       const blockCount = blocks.length
       if (blockCount > 0) {
         // get tps
-        const tps =
-          `${blocks.reduce(
-            (acc, block) => block.body.transactions.length + acc,
-            0,
-          ) /
-            blockCount
-          } TPS`
+        const tps = `${blocks.reduce(
+          (acc, block) => block.body.transactions.length + acc,
+          0,
+        ) / blockCount} TPS`
         // get duration
-        const duration =
-          `${(+blocks[0].header.timestamp -
-            +blocks[blockCount - 1].header.timestamp) /
-            1000 /
-            blockCount
-          }s`
+        const duration = `${(+blocks[0].header.timestamp -
+          +blocks[blockCount - 1].header.timestamp) /
+          1000 /
+          blockCount}s`
         // update state
+        const transactions = blocks
+          .reduce((acc, block) => [...acc, ...block.body.transactions], [])
+          .slice(2, 10)
+
         this.setState(state => {
           const generals = Object.assign({}, state.generals, { tps, duration })
-          return { ...state, generals, blocks }
+          return { ...state, generals, blocks, transactions }
         })
       } else {
         throw new Error('No History or Fetch Blocks Failed')
@@ -110,7 +111,12 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
                 <ListItemText
                   primary={
                     <div className={styles.blockListHeader}>
-                      <h1 className={texts.addr}>{block.hash}</h1>
+                      <Link
+                        to={`/block/${block.hash}`}
+                        href={`/block/${block.hash}`}
+                      >
+                        <h1 className={texts.addr}>{block.hash}</h1>
+                      </Link>
                       <span>
                         {new Date(+block.header.timestamp).toLocaleString()}
                       </span>
@@ -124,7 +130,9 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
             ))}
           </List>
         </StaticCard>
-        <StaticCard title="最新交易">最新交易</StaticCard>
+        <StaticCard title="最新交易">
+          <TransactionList transactions={this.state.transactions} />
+        </StaticCard>
       </div>
     )
   }

@@ -14,7 +14,14 @@ export const containers = [
   },
   {
     path: '/block/:blockHash',
-    name: 'Block',
+    name: 'BlockByHash',
+    component: 'Block',
+    exact: true,
+    nav: false,
+  },
+  {
+    path: '/height/:height',
+    name: 'BlockByHeight',
     component: 'Block',
     exact: true,
     nav: false,

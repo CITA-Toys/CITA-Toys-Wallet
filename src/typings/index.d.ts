@@ -7,7 +7,9 @@ export interface IContainerProps {
   CITAObservables: CITAObservables
   history: any
   match: {
+    path: string
     params: {
+      height?: string
       blockHash?: string
     }
   }
