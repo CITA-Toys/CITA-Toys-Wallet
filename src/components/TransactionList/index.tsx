@@ -9,20 +9,29 @@ const styles = require('./styles.scss')
 export default ({ transactions }: { transactions: Transaction[] }) => (
   <List>
     {transactions.map(tx => (
-      <ListItem key={tx.id}>
+      <ListItem key={tx.hash}>
         <ListItemText
+          classes={{ primary: styles.primary }}
           primary={
-            <div className={styles.listItemPrimary}>
-              <Link to={`/transaction/${tx.id}`} href={`/transaction/${tx.id}`}>
-                <h1 className={texts.addr}>{tx.id}</h1>
+            <React.Fragment>
+              <Link
+                to={`/transaction/${tx.hash}`}
+                href={`/transaction/${tx.hash}`}
+              >
+                <h1 className={styles.txHash}>
+                  TXID: <span className={texts.addr}>{tx.hash}</span>
+                </h1>
               </Link>
-              <span>{new Date(+tx.timestamp).toLocaleString()}</span>
-            </div>
+              <span>
+                {/* new Date(+tx.timestamp).toLocaleString() */}(time of the tx)
+              </span>
+            </React.Fragment>
           }
           secondary={
             <div>
-              From <span className={texts.addr}>{tx.from}</span> TO{' '}
-              <span className={texts.addr}>{tx.to}</span>
+              From <span className={texts.addr}>{/* tx.from */}(from)</span> TO{' '}
+              <span className={texts.addr}>{/* tx.to */}(to)</span> Value{' '}
+              <span className={texts.highlight}>(Value)</span>
             </div>
           }
         />

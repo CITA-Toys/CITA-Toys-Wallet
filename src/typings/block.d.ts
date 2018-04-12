@@ -17,11 +17,21 @@ export interface IBlockHeader {
 }
 export interface Transaction {
   hash: Hash
-  id: string
-  from: Hash
-  to: Hash
-  tokenValue: string
-  timestamp: Timestamp
+  content: string
+  // content: string
+  // id: string
+  // from: Hash
+  // to: Hash
+  // tokenValue: string
+  // timestamp: Timestamp
+}
+
+export interface DetailedTransaction {
+  hash: Hash
+  content: string
+  blockHash: Hash
+  blockNumber: string
+  index: string
 }
 
 export interface IBlock {

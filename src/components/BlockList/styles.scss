@@ -3,8 +3,10 @@
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  a {
+    word-break: break-all;
+  }
 }
-.txHash {
-  font-size: 1rem;
-  color: #000;
+.secondary {
+  word-break: break-all;
 }

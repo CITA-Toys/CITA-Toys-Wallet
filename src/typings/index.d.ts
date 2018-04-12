@@ -11,6 +11,8 @@ export interface IContainerProps {
     params: {
       height?: string
       blockHash?: string
+      transaction?: string
+      account?: string
     }
   }
 }

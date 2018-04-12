@@ -15,6 +15,7 @@ import List, { ListItem, ListItemText } from 'material-ui/List'
 import { IContainerProps, IBlock, Transaction } from '../../typings'
 import { withObservables } from '../../contexts/observables'
 import StaticCard from '../../components/StaticCard'
+import BlockList from '../../components/BlockList'
 import TransactionList from '../../components/TransactionList/'
 
 const layout = require('../../styles/layout.scss')
@@ -63,24 +64,29 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
       count,
     }).subscribe((blocks: IBlock[]) => {
       const blockCount = blocks.length
+      const totalDuration =
+        (+blocks[0].header.timestamp -
+          +blocks[blockCount - 1].header.timestamp) /
+        1000
       if (blockCount > 0) {
         // get tps
         const tps = `${blocks.reduce(
           (acc, block) => block.body.transactions.length + acc,
           0,
-        ) / blockCount} TPS`
+        ) / totalDuration} TPS`
         // get duration
-        const duration = `${(+blocks[0].header.timestamp -
-          +blocks[blockCount - 1].header.timestamp) /
-          1000 /
-          blockCount}s`
+        const duration = `${totalDuration / blockCount}s`
         // update state
         const transactions = blocks
           .reduce((acc, block) => [...acc, ...block.body.transactions], [])
-          .slice(2, 10)
+          .slice(0, 10)
 
         this.setState(state => {
-          const generals = Object.assign({}, state.generals, { tps, duration })
+          const generals = Object.assign({}, state.generals, {
+            tps,
+            duration,
+            blockCount: +height,
+          })
           return { ...state, generals, blocks, transactions }
         })
       } else {
@@ -105,30 +111,7 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
         </StaticCard>
         <StaticCard title="节点健康状况">健康</StaticCard>
         <StaticCard title="最新区块">
-          <List>
-            {this.state.blocks.map(block => (
-              <ListItem key={block.hash}>
-                <ListItemText
-                  primary={
-                    <div className={styles.blockListHeader}>
-                      <Link
-                        to={`/block/${block.hash}`}
-                        href={`/block/${block.hash}`}
-                      >
-                        <h1 className={texts.addr}>{block.hash}</h1>
-                      </Link>
-                      <span>
-                        {new Date(+block.header.timestamp).toLocaleString()}
-                      </span>
-                    </div>
-                  }
-                  secondary={`At Height of ${
-                    block.header.number
-                  }, mined by own`}
-                />
-              </ListItem>
-            ))}
-          </List>
+          <BlockList blocks={this.state.blocks} />
         </StaticCard>
         <StaticCard title="最新交易">
           <TransactionList transactions={this.state.transactions} />

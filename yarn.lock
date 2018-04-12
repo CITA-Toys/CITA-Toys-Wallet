@@ -3,15 +3,15 @@
 
 
 "@cita/observables@^1.0.12":
-  version "1.0.12"
-  resolved "https://registry.npmjs.org/@cita/observables/-/observables-1.0.12.tgz#048753d4c0ad9cd6468fa2616978adbe17792d1d"
+  version "1.0.15"
+  resolved "https://registry.npmjs.org/@cita/observables/-/observables-1.0.15.tgz#d67b684168a6e3ef460697a23acb470beeb2afd3"
   dependencies:
-    "@cita/web3-plugin" "^1.0.16"
+    "@cita/web3-plugin" "1.0.20"
     "@reactivex/rxjs" "^5.5.8"
 
-"@cita/web3-plugin@^1.0.16":
-  version "1.0.16"
-  resolved "https://registry.npmjs.org/@cita/web3-plugin/-/web3-plugin-1.0.16.tgz#f8e1d66b0284a4bd11360cc8508853c86a32a4d6"
+"@cita/web3-plugin@1.0.20":
+  version "1.0.20"
+  resolved "https://registry.npmjs.org/@cita/web3-plugin/-/web3-plugin-1.0.20.tgz#b76330e014884abd9a5af19c87e460c593de105f"
   dependencies:
     axios "^0.18.0"
 
@@ -25,9 +25,15 @@
   version "1.7.0"
   resolved "https://registry.npmjs.org/@most/prelude/-/prelude-1.7.0.tgz#0956ed464ad03e7fc95143eac0c6dd028498d975"
 
-"@reactivex/rxjs@^5.5.6", "@reactivex/rxjs@^5.5.8":
+"@reactivex/rxjs@^5.5.6":
   version "5.5.8"
   resolved "https://registry.npmjs.org/@reactivex/rxjs/-/rxjs-5.5.8.tgz#d269578c72c9fb08a290fa7ebd9f2e73eef232ac"
+  dependencies:
+    symbol-observable "1.0.1"
+
+"@reactivex/rxjs@^5.5.8":
+  version "5.5.9"
+  resolved "https://registry.npmjs.org/@reactivex/rxjs/-/rxjs-5.5.9.tgz#31c09169c7d4707e335ba93ba1221ab6cd938395"
   dependencies:
     symbol-observable "1.0.1"
 

@@ -18,6 +18,7 @@ import { Link } from 'react-router-dom'
 import { containers } from '../../Routes'
 import { IContainerProps } from '../../typings/index.d'
 import Dialog from '../Dialog'
+import SettingPanel from '../../components/SettingPanel'
 
 const styles = require('./styles')
 
@@ -47,6 +48,11 @@ const icons = {
 const initState = {
   keyword: '',
   settingsOn: false,
+  settings: {
+    id: 'id',
+    name: 'name',
+    operator: 'operator',
+  },
 }
 type HeaderState = typeof initState
 interface HeaderProps extends IContainerProps {}
@@ -104,8 +110,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 onChange={this.handleInput('keyword')}
               />
               <Link
-                // to={`/search/${this.state.keyword}`}
-                // href={`/search/${this.state.keyword}`}
                 to={urlGen(this.state.keyword)}
                 href={urlGen(this.state.keyword)}
               >
@@ -118,10 +122,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         </AppBar>
         <Dialog
           on={this.state.settingsOn}
-          dialogTitle="Setting"
+          dialogTitle="Settings"
           onClose={this.toggleSettings(false)}
         >
-          <DialogContent>Settings</DialogContent>
+          <DialogContent>
+            <SettingPanel settings={this.state.settings} />
+          </DialogContent>
         </Dialog>
       </React.Fragment>
     )

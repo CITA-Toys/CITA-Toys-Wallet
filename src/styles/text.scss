@@ -1,7 +1,20 @@
 $codeColor: #0d904f;
-.addr {
-  font-family: monospace;
-  font-size: 1.2rem;
-  color: $codeColor;
+$highlight: rgba(109, 165, 255, 1) !important;
+%hash {
+  font-family: monospace !important;
+  font-size: 1.2rem !important;
   text-decoration: none;
+  word-break: break-all;
+  word-wrap: break-word;
+}
+.addr {
+  @extend %hash;
+  color: $codeColor;
+}
+.hash {
+  @extend %hash;
+}
+
+.highlight {
+  color: $highlight;
 }

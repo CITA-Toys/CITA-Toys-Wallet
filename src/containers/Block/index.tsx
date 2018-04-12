@@ -130,7 +130,8 @@ class Block extends React.Component<IBlockProps, IBlockState> {
                 </ListItem>
                 <ListItem>
                   <ListItemText
-                    primary="MinedBy"
+                    classes={{ secondary: texts.hash }}
+                    primary="Mined By"
                     secondary={header.proof.Tendermint.proposal}
                   />
                 </ListItem>
@@ -151,6 +152,7 @@ class Block extends React.Component<IBlockProps, IBlockState> {
                 {this.headerInfo.map(item => (
                   <ListItem key={item.key}>
                     <ListItemText
+                      classes={{ secondary: texts.hash }}
                       primary={item.label}
                       secondary={header[item.key]}
                     />
