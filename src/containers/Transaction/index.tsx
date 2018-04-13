@@ -7,6 +7,7 @@ import Typography from 'material-ui/Typography'
 
 import { withObservables } from '../../contexts/observables'
 import { IContainerProps, DetailedTransaction } from '../../typings/'
+import ErrorNotification from '../../components/ErrorNotification'
 
 const layouts = require('../../styles/layout.scss')
 const texts = require('../../styles/text.scss')
@@ -14,13 +15,22 @@ const styles = require('./styles.scss')
 
 interface TransactionProps extends IContainerProps {}
 
-interface TransactionState extends DetailedTransaction {}
+interface TransactionState extends DetailedTransaction {
+  error: {
+    message: string
+    code: string
+  }
+}
 const initState: TransactionState = {
   hash: '',
   blockHash: '',
   blockNumber: '',
   index: '',
   content: '',
+  error: {
+    message: '',
+    code: '',
+  },
 }
 class Transaction extends React.Component<TransactionProps, TransactionState> {
   readonly state = initState
@@ -28,9 +38,17 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
     const { transaction } = this.props.match.params
     if (transaction) {
       this.props.CITAObservables.getTransaction(transaction).subscribe(
+        // next
         (tx: DetailedTransaction) => {
           this.setState(state => ({ ...tx }))
         },
+        // error
+        error => {
+          this.setState(state => ({ error }))
+        },
+
+        // complete
+        () => {},
       )
     }
   }
@@ -41,8 +59,17 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
       label: 'Content',
     },
   ]
+
+  private dismissNotification = e => {
+    this.setState(state => ({
+      error: {
+        message: '',
+        code: '',
+      },
+    }))
+  }
   render () {
-    const { hash, blockHash, blockNumber, content, index } = this.state
+    const { hash, blockHash, blockNumber, content, index, error } = this.state
     return (
       <React.Fragment>
         {hash ? '' : <LinearProgress />}
@@ -102,6 +129,10 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
             </CardContent>
           </Card>
         </div>
+        <ErrorNotification
+          error={error}
+          dismissNotification={this.dismissNotification}
+        />
       </React.Fragment>
     )
   }

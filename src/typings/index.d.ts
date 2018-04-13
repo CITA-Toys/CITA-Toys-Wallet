@@ -16,6 +16,18 @@ export interface IContainerProps {
     }
   }
 }
+
+export interface ABIElement {
+  constant: boolean
+  inputs: { name: string; type: string; value?: string }[]
+  name: string
+  outputs: { name: string; type: string; value?: string }[]
+  payable: boolean
+  stateMutability: string
+  type: string
+}
 /* eslint-enable no-restricted-globals */
+
+export type ABI = ABIElement[]
 
 export interface IContainerState {}

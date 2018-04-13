@@ -12,11 +12,13 @@ import { Link } from 'react-router-dom'
 import Typography from 'material-ui/Typography'
 import Zoom from 'material-ui/transitions/Zoom'
 import List, { ListItem, ListItemText } from 'material-ui/List'
+import { LinearProgress } from 'material-ui/Progress'
 import { IContainerProps, IBlock, Transaction } from '../../typings'
 import { withObservables } from '../../contexts/observables'
 import StaticCard from '../../components/StaticCard'
 import BlockList from '../../components/BlockList'
 import TransactionList from '../../components/TransactionList/'
+import ErrorNotification from '../../components/ErrorNotification'
 
 const layout = require('../../styles/layout.scss')
 const texts = require('../../styles/text.scss')
@@ -25,6 +27,7 @@ const styles = require('./styles.scss')
 interface HomepageProps extends IContainerProps {}
 
 const initState = {
+  loading: 0,
   blocks: [] as IBlock[],
   transactions: [] as Transaction[],
   generals: {
@@ -36,14 +39,26 @@ const initState = {
   healthy: {
     count: '',
   },
+  error: {
+    code: '',
+    message: '',
+  },
 }
 type HomepageState = typeof initState
 class Homepage extends React.Component<HomepageProps, HomepageState> {
   state = initState
-  componentDidMount () {
-    this.props.CITAObservables.newBlockNumber(0, false).subscribe(blockNumber =>
-      this.blockHistory({ height: blockNumber, count: 10 }),
-    )
+  componentWillMount () {
+    this.setState(state => ({ loading: state.loading + 1 }))
+    this.props.CITAObservables.newBlockNumber(0, false)
+      .finally(() => this.setState(state => ({ loading: state.loading - 1 })))
+      .subscribe(
+        // next
+        blockNumber => this.blockHistory({ height: blockNumber, count: 10 }),
+        // error
+        error => this.setState(state => ({ error })),
+        // complete
+        () => {},
+      )
   }
   private generals = [
     { key: 'tps', label: '平均 TPS' },
@@ -94,29 +109,39 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
       }
     })
   }
+  private dismissNotification = e => {
+    this.setState(state => ({ error: { message: '', code: '' } }))
+  }
   render () {
     return (
-      <div className={layout.main}>
-        <StaticCard title="系统概览">
-          <List>
-            {this.generals.map(item => (
-              <ListItem key={item.key}>
-                <ListItemText
-                  primary={item.label}
-                  secondary={this.state.generals[item.key]}
-                />
-              </ListItem>
-            ))}
-          </List>
-        </StaticCard>
-        <StaticCard title="节点健康状况">健康</StaticCard>
-        <StaticCard title="最新区块">
-          <BlockList blocks={this.state.blocks} />
-        </StaticCard>
-        <StaticCard title="最新交易">
-          <TransactionList transactions={this.state.transactions} />
-        </StaticCard>
-      </div>
+      <React.Fragment>
+        {this.state.loading ? <LinearProgress /> : null}
+        <div className={layout.main}>
+          <StaticCard title="系统概览">
+            <List>
+              {this.generals.map(item => (
+                <ListItem key={item.key}>
+                  <ListItemText
+                    primary={item.label}
+                    secondary={this.state.generals[item.key]}
+                  />
+                </ListItem>
+              ))}
+            </List>
+          </StaticCard>
+          <StaticCard title="节点健康状况">健康</StaticCard>
+          <StaticCard title="最新区块">
+            <BlockList blocks={this.state.blocks} />
+          </StaticCard>
+          <StaticCard title="最新交易">
+            <TransactionList transactions={this.state.transactions} />
+          </StaticCard>
+        </div>
+        <ErrorNotification
+          error={this.state.error}
+          dismissNotification={this.dismissNotification}
+        />
+      </React.Fragment>
     )
   }
 }

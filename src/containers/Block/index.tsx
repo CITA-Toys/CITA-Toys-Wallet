@@ -4,26 +4,37 @@ import { LinearProgress } from 'material-ui/Progress'
 import Paper from 'material-ui/Paper'
 import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card'
 import List, { ListItem, ListItemText } from 'material-ui/List'
+import Snackbar from 'material-ui/Snackbar/'
 import Typography from 'material-ui/Typography'
+
 import ExpandMore from 'material-ui-icons/ExpandMore'
 import IconButton from 'material-ui/IconButton'
 import BackIcon from 'material-ui-icons/ArrowBack'
 import NextIcon from 'material-ui-icons/ArrowForward'
+import CloseIcon from 'material-ui-icons/Close'
 
 import { withConfig } from '../../contexts/config'
 import { withObservables } from '../../contexts/observables'
 import { IContainerProps, IBlock } from '../../typings'
 import Dialog from '../Dialog/'
 import TransactionList from '../../components/TransactionList/'
+import ErrorNotification from '../../components/ErrorNotification'
 
 const layouts = require('../../styles/layout')
 const texts = require('../../styles/text.scss')
 const styles = require('./styles')
 
 interface IBlockState extends IBlock {
+  loading: number
   transactionsOn: boolean
+  error: {
+    message: string
+    code: string
+  }
 }
+
 const initState: IBlockState = {
+  loading: 0,
   hash: '',
   header: {
     timestamp: '',
@@ -44,6 +55,10 @@ const initState: IBlockState = {
   },
   version: 0,
   transactionsOn: false,
+  error: {
+    message: '',
+    code: '',
+  },
 }
 
 interface IBlockProps extends IContainerProps {}
@@ -52,24 +67,46 @@ class Block extends React.Component<IBlockProps, IBlockState> {
   componentWillMount () {
     const { blockHash, height } = this.props.match.params
     if (blockHash) {
-      this.props.CITAObservables.blockByHash(blockHash).subscribe(
-        (block: IBlock) => {
-          this.setState(state => ({ ...block }))
-        },
-      )
+      this.setState(state => ({ loading: state.loading + 1 }))
+      this.props.CITAObservables.blockByHash(blockHash)
+        .finally(() => this.setState(state => ({ loading: state.loading - 1 })))
+        .subscribe(
+          // next
+          (block: IBlock) => this.setState(state => ({ ...block })),
+          // error
+          error => this.setState(state => ({ error })),
+          // complete
+          () => {},
+        )
     }
     if (height) {
-      this.props.CITAObservables.blockByNumber(height).subscribe(
-        (block: IBlock) => {
-          this.setState(state => ({ ...block }))
-        },
-      )
+      this.setState(state => ({ loading: state.loading + 1 }))
+      this.props.CITAObservables.blockByNumber(height)
+        .finally(() => this.setState(state => ({ loading: state.loading - 1 })))
+        .subscribe(
+          // next
+          (block: IBlock) => this.setState(state => ({ ...block })),
+          // error
+          error => this.setState(state => ({ error })),
+          // complete
+          () => {},
+        )
     }
   }
   private toggleTransaction = (on: boolean = false) => e => {
     this.setState(state => ({
       ...state,
       transactionsOn: on,
+    }))
+  }
+
+  private dismissNotification = e => {
+    console.log('clicked')
+    this.setState(state => ({
+      error: {
+        message: '',
+        code: '',
+      },
     }))
   }
   private headerInfo = [
@@ -80,10 +117,17 @@ class Block extends React.Component<IBlockProps, IBlockState> {
   ]
 
   render () {
-    const { body: { transactions }, hash, header, transactionsOn } = this.state
+    const {
+      loading,
+      body: { transactions },
+      hash,
+      header,
+      transactionsOn,
+      error,
+    } = this.state
     return (
       <React.Fragment>
-        {hash ? '' : <LinearProgress />}
+        {loading ? <LinearProgress /> : null}
         <div className={layouts.main}>
           <Card>
             <CardHeader
@@ -169,6 +213,10 @@ class Block extends React.Component<IBlockProps, IBlockState> {
         >
           <TransactionList transactions={transactions} />
         </Dialog>
+        <ErrorNotification
+          error={error}
+          dismissNotification={this.dismissNotification}
+        />
       </React.Fragment>
     )
   }
