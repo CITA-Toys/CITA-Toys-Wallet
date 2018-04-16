@@ -155,6 +155,7 @@ class Account extends React.Component<AccountProps, AccountState> {
       .subscribe(
         // next
         encoded => {
+          if (encoded === '0x') return
           try {
             const abiStr = web3Utils.hexToUtf8(encoded as string)
             const abi = JSON.parse(abiStr)
@@ -170,7 +171,9 @@ class Account extends React.Component<AccountProps, AccountState> {
           }
         },
         // error
-        err => this.handleError(err),
+        err => {
+          this.handleError(err)
+        },
         // complete
         () => {
           // this.setState(state => ({ loading: state.loading - 1 }))
@@ -372,7 +375,7 @@ class Account extends React.Component<AccountProps, AccountState> {
               <Divider />
               {panelOn ? (
                 <ERCPanel
-                  abi={abi}
+                  abi={abi.filter(abiEl => abiEl.type === 'function')}
                   handleAbiValueChange={this.handleAbiValueChange}
                   handleEthCall={this.handleEthCall}
                 />
