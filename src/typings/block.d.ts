@@ -17,7 +17,14 @@ export interface IBlockHeader {
 }
 export interface Transaction {
   hash: Hash
-  content: string
+  timestamp?: string
+  content?: string
+  basicInfo?: {
+    from: string
+    to: string
+    value: string
+    data: string
+  }
   // content: string
   // id: string
   // from: Hash
@@ -28,7 +35,13 @@ export interface Transaction {
 
 export interface DetailedTransaction {
   hash: Hash
-  content: string
+  content?: string
+  basicInfo?: {
+    to: string
+    from: string
+    data: string
+    value: string
+  }
   blockHash: Hash
   blockNumber: string
   index: string

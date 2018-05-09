@@ -93,7 +93,16 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
         const duration = `${totalDuration / blockCount}s`
         // update state
         const transactions = blocks
-          .reduce((acc, block) => [...acc, ...block.body.transactions], [])
+          .reduce(
+            (acc, block) => [
+              ...acc,
+              ...block.body.transactions.map(tx => ({
+                ...tx,
+                timestamp: `${block.header.timestamp}`,
+              })),
+            ],
+            [],
+          )
           .slice(0, 10)
 
         this.setState(state => {
@@ -129,7 +138,6 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
               ))}
             </List>
           </StaticCard>
-          <StaticCard title="节点健康状况">健康</StaticCard>
           <StaticCard title="最新区块">
             <BlockList blocks={this.state.blocks} />
           </StaticCard>

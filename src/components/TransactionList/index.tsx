@@ -23,16 +23,37 @@ export default ({ transactions }: { transactions: Transaction[] }) => (
                 </h1>
               </Link>
               <span>
-                {/* new Date(+tx.timestamp).toLocaleString() */}(time of the tx)
+                {tx.timestamp && new Date(+tx.timestamp).toLocaleString()}
               </span>
             </React.Fragment>
           }
           secondary={
-            <div>
-              From <span className={texts.addr}>{/* tx.from */}(from)</span> TO{' '}
-              <span className={texts.addr}>{/* tx.to */}(to)</span> Value{' '}
-              <span className={texts.highlight}>(Value)</span>
-            </div>
+            tx.basicInfo ? (
+              <div>
+                From{' '}
+                <Link
+                  to={`/account/${tx.basicInfo.from}`}
+                  href={`/account/${tx.basicInfo.from}`}
+                  className={texts.addr}
+                >
+                  {tx.basicInfo.from || '_'}
+                </Link>{' '}
+                TO{' '}
+                <Link
+                  to={`/account/${tx.basicInfo.to}`}
+                  href={`/account/${tx.basicInfo.to}`}
+                  className={texts.addr}
+                >
+                  {tx.basicInfo.to || '_'}
+                </Link>{' '}
+                Value{' '}
+                <span className={texts.highlight}>
+                  {tx.basicInfo.value || '_'}
+                </span>
+              </div>
+            ) : (
+              <div>{tx.content}</div>
+            )
           }
         />
       </ListItem>

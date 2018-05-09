@@ -94,14 +94,24 @@ class Account extends React.Component<AccountProps, AccountState> {
   state = initState
 
   componentWillMount () {
+    const { account } = this.props.match.params
+    this.onMount(account)
+  }
+  componentWillReceiveProps (nextProps: AccountProps) {
+    const { account } = nextProps.match.params
+    if (account && account !== this.props.match.params.account) {
+      this.onMount(account)
+    }
+  }
+  private onMount = account => {
+    this.setState(initState)
     this.loadAddrList()
-    this.updateBasicInfo()
+    this.updateBasicInfo(account)
   }
   private onTabClick = (e, value) => {
     this.setState(state => ({ panelOn: !!value }))
   }
   componentDidCatch (err) {
-    // console.log(e)
     this.handleError(err)
   }
 
@@ -124,6 +134,18 @@ class Account extends React.Component<AccountProps, AccountState> {
     { key: 'txCount', label: 'Count of Transactions' },
   ]
   private fetchInfo = addr => {
+    /**
+     * @method get_balance
+     */
+    this.setState(state => ({ loading: state.loading + 1 }))
+    this.props.CITAObservables.getBalance({ addr, blockNumber: 'latest' })
+      .finally(() => this.setState(state => ({ loading: state.loading - 1 })))
+      .subscribe(
+        (balance: string) =>
+          this.setState(state => ({ balance: `${+balance}` })),
+        error => this.handleError(error),
+        () => {},
+      )
     /**
      * @method get_transaction_count
      */
@@ -160,7 +182,6 @@ class Account extends React.Component<AccountProps, AccountState> {
             const abiStr = web3Utils.hexToUtf8(encoded as string)
             const abi = JSON.parse(abiStr)
             const contract = new Web3Contract(abi, this.state.addr)
-
             this.setState(state => ({
               abi,
               contract,
@@ -180,8 +201,7 @@ class Account extends React.Component<AccountProps, AccountState> {
         },
       )
   }
-  private updateBasicInfo = () => {
-    const { account } = this.props.match.params
+  private updateBasicInfo = account => {
     if (account) {
       const addr = accountFormatter(account)
       let type = AccountType.NORMAL

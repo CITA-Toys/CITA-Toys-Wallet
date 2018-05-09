@@ -27,11 +27,43 @@ const initState: TransactionState = {
   blockNumber: '',
   index: '',
   content: '',
+  basicInfo: {
+    to: '',
+    from: '',
+    data: '',
+    value: '',
+  },
   error: {
     message: '',
     code: '',
   },
 }
+
+const InfoList = ({ infos, details }) =>
+  infos.map(info => (
+    <ListItem key={info.key}>
+      <ListItemText
+        classes={{
+          primary: styles.txHeader,
+          secondary: styles.subheader,
+        }}
+        primary={info.label}
+        secondary={
+          info.type ? (
+            <Link
+              to={`/${info.type}/${details[info.key]}`}
+              href={`/${info.type}/${details[info.key]}`}
+              className={texts.addr}
+            >
+              {details[info.key] || '_'}
+            </Link>
+          ) : (
+            details[info.key] || '_'
+          )
+        }
+      />
+    </ListItem>
+  ))
 class Transaction extends React.Component<TransactionProps, TransactionState> {
   readonly state = initState
   componentWillMount () {
@@ -40,7 +72,7 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
       this.props.CITAObservables.getTransaction(transaction).subscribe(
         // next
         (tx: DetailedTransaction) => {
-          this.setState(state => ({ ...tx }))
+          this.handleReturnedTx(tx)
         },
         // error
         error => {
@@ -52,12 +84,31 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
       )
     }
   }
+  private handleReturnedTx = (tx: DetailedTransaction) => {
+    if (!tx) {
+      return this.setState(state => ({
+        error: {
+          message: 'Transaction Not Found',
+          code: '-1',
+        },
+      }))
+    }
+    return this.setState(state => ({ ...tx }))
+  }
   private infos = [
+    { key: 'blockHash', label: 'Block Hash', type: 'block' },
+    { key: 'blockNumber', label: 'Height', type: 'height' },
     { key: 'index', label: 'Index' },
     {
       key: 'content',
       label: 'Content',
     },
+  ]
+  private basicInfo = [
+    { key: 'from', label: 'From', type: 'account' },
+    { key: 'to', label: 'To', type: 'account' },
+    { key: 'value', label: 'value' },
+    // { key: 'data', label: 'data' },
   ]
 
   private dismissNotification = e => {
@@ -85,46 +136,11 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
             />
             <CardContent>
               <List>
-                <ListItem>
-                  <ListItemText
-                    primary="Block: "
-                    secondary={
-                      <Link
-                        to={`/block/${blockHash}`}
-                        href={`/block/${blockHash}`}
-                        className={texts.addr}
-                      >
-                        {blockHash}
-                      </Link>
-                    }
-                  />
-                </ListItem>
-                <ListItem>
-                  <ListItemText
-                    primary="Height: "
-                    secondary={
-                      <Link
-                        to={`/height/${blockNumber}`}
-                        href={`/height/${blockNumber}`}
-                        className={texts.addr}
-                      >
-                        {blockNumber}
-                      </Link>
-                    }
-                  />
-                </ListItem>
-                {this.infos.map(info => (
-                  <ListItem key={info.key}>
-                    <ListItemText
-                      classes={{
-                        primary: styles.txHeader,
-                        secondary: styles.subheader,
-                      }}
-                      primary={info.label}
-                      secondary={this.state[info.key]}
-                    />
-                  </ListItem>
-                ))}
+                <InfoList infos={this.infos} details={this.state} />
+                <InfoList
+                  infos={this.basicInfo}
+                  details={this.state.basicInfo}
+                />
               </List>
             </CardContent>
           </Card>

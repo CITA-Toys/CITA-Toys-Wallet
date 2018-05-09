@@ -44,7 +44,7 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        CITA_SERVER: JSON.stringify('http://39.104.94.244:1301'),
+        CITA_SERVER: JSON.stringify('http://47.75.129.215:1337'),
       },
     }),
   ],

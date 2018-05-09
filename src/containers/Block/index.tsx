@@ -65,14 +65,30 @@ interface IBlockProps extends IContainerProps {}
 class Block extends React.Component<IBlockProps, IBlockState> {
   readonly state = initState
   componentWillMount () {
-    const { blockHash, height } = this.props.match.params
+    this.onMount(this.props.match.params)
+  }
+  componentWillReceiveProps (nextProps: IBlockProps) {
+    const { blockHash, height } = nextProps.match.params
+    const {
+      blockHash: oldBlockHash,
+      height: oldHeight,
+    } = this.props.match.params
+    if (
+      (blockHash && blockHash !== oldBlockHash) ||
+      (height && height !== oldHeight)
+    ) {
+      this.onMount(nextProps.match.params)
+    }
+  }
+  onMount = params => {
+    const { blockHash, height } = params
     if (blockHash) {
       this.setState(state => ({ loading: state.loading + 1 }))
       this.props.CITAObservables.blockByHash(blockHash)
         .finally(() => this.setState(state => ({ loading: state.loading - 1 })))
         .subscribe(
           // next
-          (block: IBlock) => this.setState(state => ({ ...block })),
+          (block: IBlock) => this.handleReturnedBlock(block),
           // error
           error => this.setState(state => ({ error })),
           // complete
@@ -85,13 +101,33 @@ class Block extends React.Component<IBlockProps, IBlockState> {
         .finally(() => this.setState(state => ({ loading: state.loading - 1 })))
         .subscribe(
           // next
-          (block: IBlock) => this.setState(state => ({ ...block })),
+          (block: IBlock) => {
+            this.handleReturnedBlock(block)
+          },
+
           // error
           error => this.setState(state => ({ error })),
           // complete
           () => {},
         )
     }
+  }
+  private handleReturnedBlock = (block: IBlock) => {
+    if (!block) {
+      this.setState(state => ({
+        error: {
+          message: 'Block Not Found',
+          code: '-1',
+        },
+      }))
+    }
+    /* eslint-disable */
+    block.body.transactions = block.body.transactions.map(tx => ({
+      ...tx,
+      timestamp: `${block.header.timestamp}`,
+    }))
+    /* eslint-enable */
+    return this.setState(state => ({ ...block }))
   }
   private toggleTransaction = (on: boolean = false) => e => {
     this.setState(state => ({
@@ -176,7 +212,11 @@ class Block extends React.Component<IBlockProps, IBlockState> {
                   <ListItemText
                     classes={{ secondary: texts.hash }}
                     primary="Mined By"
-                    secondary={header.proof.Tendermint.proposal}
+                    secondary={
+                      header.proof &&
+                      header.proof.Tendermint &&
+                      header.proof.Tendermint.proposal
+                    }
                   />
                 </ListItem>
                 <ListItem>

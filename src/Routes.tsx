@@ -1,6 +1,7 @@
 import * as React from 'react'
-import { HashRouter as Router, Route, Redirect } from 'react-router-dom'
-import AsyncLoader from './components/AsyncLoader'
+import { HashRouter as Router, Route } from 'react-router-dom'
+import Bundle from './components/Bundle'
+// import AsyncLoader from './components/AsyncLoader'
 
 export const containers = [
   { path: '/', name: 'Header', component: 'Header', nav: false },
@@ -45,17 +46,7 @@ export const containers = [
     component: 'Account',
     exact: true,
     nav: false,
-  }, //   name: 'Graphs', //   path: '/graphs', // { path: '/', name: 'NetStatus', component: 'NetStatus', nav: false }, // { // { path: '/', name: 'Sidebar', component: 'Sidebar' }, // {
-  //   component: 'Graphs',
-  //   exact: true,
-  //   nav: true,
-  // }, // {
-  //   path: '/contract-editor',
-  //   name: 'ContractEditor',
-  //   component: 'ContractEditor',
-  //   exact: true,
-  //   nav: true,
-  // },
+  },
   {
     path: '/config',
     name: 'Config',
@@ -66,15 +57,37 @@ export const containers = [
   { path: '/', name: 'Footer', component: 'Footer', exact: false, nav: false },
 ]
 
+const asyncRender = mod => routerProps => {
+  if (!mod) return null
+  /* eslint-disable */
+  const Component = require(`bundle-loader?lazy!./containers/${mod}`)
+  /* eslint-enable */
+  return (
+    <Bundle load={Component}>
+      {Comp => (Comp ? <Comp {...routerProps} /> : <div>Loading</div>)}
+    </Bundle>
+  )
+}
+/* eslint-enable import/no-dynamic-require */
+/* eslint-enable global-require */
+
+export const renderRouteArray = containerArr =>
+  containerArr.map(container => (
+    <Route
+      key={container.name}
+      {...container}
+      render={asyncRender(container.component)}
+    />
+  ))
+
 const Routes = () => (
   <React.Fragment>
     {containers.map(container => (
       <Route
         key={container.name}
-        {...container}
-        component={AsyncLoader({
-          loader: () => import(`./containers/${container.component}`),
-        })}
+        path={container.path}
+        exact={container.exact}
+        render={asyncRender(container.component)}
       />
     ))}
   </React.Fragment>

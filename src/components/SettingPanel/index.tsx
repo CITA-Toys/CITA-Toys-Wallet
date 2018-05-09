@@ -1,23 +1,63 @@
 import * as React from 'react'
 import List, { ListItem, ListItemText } from 'material-ui/List'
+import { Metadata } from '../../containers/Header'
+
+const texts = require('../../styles/text')
 
 /* eslint-disable no-restricted-globals */
-interface Settings {
-  id: string
-  name: string
-  operator: string
-}
+// interface Settings {
+//   id: string
+//   name: string
+//   operator: string
+// }
 /* eslint-enable no-restricted-globals */
-export default ({ settings }: { settings: Settings }) => (
+export default ({ metadata }: { metadata: Metadata }) => (
   <List>
     <ListItem>
-      <ListItemText primary={`CITA-ID: ${settings.id}`} />
+      <ListItemText primary={`Chain-ID: ${metadata.chainId}`} />
     </ListItem>
     <ListItem>
-      <ListItemText primary={`Name: ${settings.name}`} />
+      <ListItemText primary={`Chain-Name: ${metadata.chainName}`} />
     </ListItem>
     <ListItem>
-      <ListItemText primary={`Operator: ${settings.operator}`} />
+      <ListItemText primary={`Operator: ${metadata.operator}`} />
+    </ListItem>
+    <ListItem>
+      <ListItemText
+        primary={
+          <span>
+            Website:{' '}
+            <a
+              href={metadata.website}
+              className={texts.addr}
+              target="_blank"
+              rel="noreferrer noopener"
+            >
+              {metadata.website}
+            </a>
+          </span>
+        }
+      />
+    </ListItem>
+    <ListItem>
+      <ListItemText
+        primary={`Genesis Time: ${new Date(
+          +metadata.genesisTimestamp,
+        ).toLocaleString()}`}
+      />
+    </ListItem>
+    <ListItem>
+      <ListItemText primary={`Interval: ${metadata.blockInterval}ms`} />
+    </ListItem>
+    <ListItem>
+      <ListItemText
+        primary="Validators:"
+        secondary={metadata.validators.map(val => (
+          <p key={val} className={texts.highlight}>
+            {val}
+          </p>
+        ))}
+      />
     </ListItem>
   </List>
 )

@@ -19,6 +19,7 @@ import { containers } from '../../Routes'
 import { IContainerProps } from '../../typings/index.d'
 import Dialog from '../Dialog'
 import SettingPanel from '../../components/SettingPanel'
+import { withObservables } from '../../contexts/observables'
 
 const styles = require('./styles')
 
@@ -45,20 +46,46 @@ const icons = {
   Config: <SettingsIcon />,
   Graphs: <GraphicIcon />,
 }
+export interface Metadata {
+  chainId: string
+  chainName: string
+  operator: string
+  website: string
+  genesisTimestamp: string
+  validators: string[]
+  blockInterval: number
+}
+const initMetadata: Metadata = {
+  chainId: '',
+  chainName: '',
+  operator: '',
+  website: '',
+  genesisTimestamp: '',
+  validators: [],
+  blockInterval: 0,
+}
 const initState = {
   keyword: '',
   settingsOn: false,
-  settings: {
-    id: 'id',
-    name: 'name',
-    operator: 'operator',
-  },
+  metadata: initMetadata,
 }
 type HeaderState = typeof initState
 interface HeaderProps extends IContainerProps {}
 
 class Header extends React.Component<HeaderProps, HeaderState> {
   state = initState
+  componentDidMount () {
+    this.props.CITAObservables.metaData({
+      blockNumber: '0x0',
+    }).subscribe(
+      (metadata: Metadata) => {
+        this.setState(state => ({ ...state, metadata }))
+      },
+      error => {
+        console.error(error)
+      },
+    )
+  }
   private handleInput = name => e => {
     // const value = e.target.value
     const { value } = e.target
@@ -126,7 +153,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           onClose={this.toggleSettings(false)}
         >
           <DialogContent>
-            <SettingPanel settings={this.state.settings} />
+            <SettingPanel metadata={this.state.metadata} />
           </DialogContent>
         </Dialog>
       </React.Fragment>
@@ -134,4 +161,4 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   }
 }
 
-export default Header
+export default withObservables(Header)

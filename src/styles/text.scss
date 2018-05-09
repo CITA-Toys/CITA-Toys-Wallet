@@ -16,5 +16,6 @@ $highlight: rgba(109, 165, 255, 1) !important;
 }
 
 .highlight {
+  @extend %hash;
   color: $highlight;
 }
