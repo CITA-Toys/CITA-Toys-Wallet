@@ -106,7 +106,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           <Toolbar>
             <Link to="/" href="/" style={{ color: '#FFF' }}>
               <Typography variant="title" color="inherit">
-                CITA TOYS
+                {(process.env.APP_NAME as string).toUpperCase()}
               </Typography>
             </Link>
             <div className={styles.navs}>

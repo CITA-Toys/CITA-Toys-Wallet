@@ -77,7 +77,7 @@ const prodConfig = {
       },
     ]),
     new HtmlPlugin({
-      title: 'CITA-TOYS',
+      title: 'Microscope',
       template: path.resolve(__dirname, '../src/templates/index.html'),
       react: `./lib/${manifest['react.js']}`,
       minify: {

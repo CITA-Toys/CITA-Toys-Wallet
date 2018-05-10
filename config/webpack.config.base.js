@@ -45,6 +45,7 @@ module.exports = {
     new webpack.DefinePlugin({
       'process.env': {
         CITA_SERVER: JSON.stringify('http://47.75.129.215:1337'),
+        APP_NAME: JSON.stringify('Microscope'),
       },
     }),
   ],
