@@ -23,3 +23,9 @@ export const fetchTransactions = (params: {
     .get(url('api/transactions'), { params })
     .then((res: AxiosResponse) => res.data)
     .catch(err => console.error(err))
+
+export const fetchStatistics = params =>
+  axios
+    .get(url('/api/statistics'), { params })
+    .then((res: AxiosResponse) => res.data)
+    .catch(err => console.error(err))

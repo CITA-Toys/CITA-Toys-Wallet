@@ -14,11 +14,11 @@ interface BlockSelectors {
 
 const initialState: TableWithSelectorProps & BlockSelectors = {
   headers: [
-    { name: 'height', text: 'height' },
-    { name: 'hash', text: 'hash' },
-    { name: 'age', text: 'age' },
-    { name: 'transactions', text: 'transactions' },
-    { name: 'gasUsed', text: 'gas used' },
+    { key: 'height', text: 'height' },
+    { key: 'hash', text: 'hash' },
+    { key: 'age', text: 'age' },
+    { key: 'transactions', text: 'transactions' },
+    { key: 'gasUsed', text: 'gas used' },
   ],
   items: [] as any[],
   count: 0,

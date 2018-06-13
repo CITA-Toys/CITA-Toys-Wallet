@@ -86,3 +86,8 @@ export interface BlockFromServer {
   }
   hash: string
 }
+
+export interface ProposalFromServer {
+  validator: string
+  count: number
+}

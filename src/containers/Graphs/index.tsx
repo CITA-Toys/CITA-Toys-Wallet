@@ -8,14 +8,16 @@ import {
   BlockNumber,
   Timestamp,
   TransactionFromServer,
+  ProposalFromServer,
   Hash,
 } from '../../typings/'
-import { BarOption } from '../../config/graph'
-import { fetchTransactions } from '../../utils/fetcher'
+import { BarOption, PieOption } from '../../config/graph'
+import { fetchTransactions, fetchStatistics } from '../../utils/fetcher'
 
 const initState = {
   blocks: [] as IBlock[],
   transactions: [] as TransactionFromServer[],
+  proposals: [] as ProposalFromServer[],
   loadBlockHistory: false,
   maxCount: 10,
 }
@@ -24,6 +26,7 @@ interface GraphsProps extends IContainerProps {}
 type GraphState = typeof initState
 type BlockGraphData = [BlockNumber, Timestamp, number, string]
 type TxGraphData = [Hash, number]
+type ProposalData = [string, number]
 
 const getBlockSource = ({ blocks = this.state.blocks }) => {
   if (blocks.length <= 1) return []
@@ -39,7 +42,12 @@ const getBlockSource = ({ blocks = this.state.blocks }) => {
     return curr
   })
   const graphSource = [
-    ['Blocks', 'Block Interval', 'Transactions', 'Gas Used'],
+    [
+      'Blocks',
+      'Block Interval/Blocks',
+      'Transactions/Blocks',
+      'Gas Used/Blocks',
+    ],
     ...source,
   ]
   return graphSource
@@ -52,6 +60,14 @@ const getTxSource = ({ txs = this.state.transactions }) => {
   return graphSource
 }
 
+const getProposalSource = ({ proposals = this.state.proposals }) => {
+  const source: ProposalData[] = proposals.length
+    ? proposals.map(p => [p.validator, p.count])
+    : []
+  const graphSource = [['Validators', 'Count'], ...source]
+  return graphSource
+}
+
 class Graphs extends React.Component<GraphsProps, GraphState> {
   readonly state = initState
   componentWillMount () {
@@ -59,19 +75,24 @@ class Graphs extends React.Component<GraphsProps, GraphState> {
   }
 
   componentDidMount () {
+    // init chart dom
     this.blockGraph = echarts.init(this.blockGraphDOM as HTMLDivElement)
     this.txCountGraph = echarts.init(this.txCountGraphDOM as HTMLDivElement)
     this.gasUsedGraph = echarts.init(this.gasUsedGraphDOM as HTMLDivElement)
     this.txGasUsedGraph = echarts.init(this.txGasUsedGraphDOM as HTMLDivElement)
+    this.proposalsGraph = echarts.init(this.proposalsGraphDOM as HTMLDivElement)
   }
+  // declare chart variables
   private blockGraph: any
   private txCountGraph: any
   private gasUsedGraph: any
   private txGasUsedGraph: any
+  private proposalsGraph: any
   private blockGraphDOM: HTMLDivElement | null
   private txCountGraphDOM: HTMLDivElement | null
   private gasUsedGraphDOM: HTMLDivElement | null
   private txGasUsedGraphDOM: HTMLDivElement | null
+  private proposalsGraphDOM: HTMLDivElement | null
   // private graphSource: any[] = []
   private updateAllDiagram = () => {}
   private updateDiagram = ({ chart, data }) => {}
@@ -91,8 +112,10 @@ class Graphs extends React.Component<GraphsProps, GraphState> {
     this.props.CITAObservables.newBlockByNumberSubject.subscribe(
       block => {
         if (block.hash) {
+          console.log(block.hash)
           this.handleNewBlock(block)
           this.updateTransactions()
+          this.updateProposals()
         } else {
           throw new Error(block)
         }
@@ -101,9 +124,26 @@ class Graphs extends React.Component<GraphsProps, GraphState> {
     )
     this.props.CITAObservables.newBlockByNumberSubject.connect()
   }
+  private updateProposals = () => {
+    fetchStatistics({ type: 'proposals' }).then(({ result = [] }) => {
+      this.setState(state => ({ ...state, proposals: result }))
+      const source = getProposalSource({ proposals: result })
+      const proposalOption = {
+        ...PieOption,
+        radius: ['50%', '70%'],
+        dataset: { source: source.map(item => [item[0], item[1]]) },
+      }
+      this.updateGraph({
+        graph: this.proposalsGraph,
+        option: proposalOption,
+      })
+      // this.update
+    })
+  }
   private updateTransactions = () => {
     fetchTransactions({ limit: this.state.maxCount })
       .then(({ result: txs }) => {
+        txs.reverse()
         this.setState(state => ({
           ...state,
           transactions: txs,
@@ -164,6 +204,10 @@ class Graphs extends React.Component<GraphsProps, GraphState> {
         />
         <div
           ref={el => (this.txGasUsedGraphDOM = el)}
+          style={{ width: '100vw', height: '30vh' }}
+        />
+        <div
+          ref={el => (this.proposalsGraphDOM = el)}
           style={{ width: '100vw', height: '30vh' }}
         />
       </div>
