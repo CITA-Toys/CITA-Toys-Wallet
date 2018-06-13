@@ -41,10 +41,10 @@ const initialState: TableWithSelectorProps & BlockSelectors = {
     },
   ],
   selectorsValue: {
-    from: 'from',
-    to: 'to',
-    valueFrom: 'valueFrom',
-    valueTo: 'valueTo',
+    from: '',
+    to: '',
+    valueFrom: '',
+    valueTo: '',
   },
 }
 class TransactionTable extends React.Component {
@@ -66,6 +66,7 @@ class TransactionTable extends React.Component {
       }: {
       result: { transactions: TransactionFromServer[]; count: number }
       }) => {
+        console.log(result)
         this.setState(state => ({
           count: result.count,
           items: result.transactions.map(tx => ({

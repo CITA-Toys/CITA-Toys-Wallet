@@ -122,9 +122,6 @@ export default class TableWithSelector extends React.Component<
             ))}
           </tbody>
         </table>
-        pageNo: {pageNo}
-        pageSize: {pageSize}
-        count: {count}
         <Pager
           total={total}
           current={pageNo}

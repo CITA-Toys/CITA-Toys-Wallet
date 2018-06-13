@@ -112,7 +112,6 @@ class Graphs extends React.Component<GraphsProps, GraphState> {
     this.props.CITAObservables.newBlockByNumberSubject.subscribe(
       block => {
         if (block.hash) {
-          console.log(block.hash)
           this.handleNewBlock(block)
           this.updateTransactions()
           this.updateProposals()
@@ -122,7 +121,7 @@ class Graphs extends React.Component<GraphsProps, GraphState> {
       },
       error => console.error(error),
     )
-    this.props.CITAObservables.newBlockByNumberSubject.connect()
+    // this.props.CITAObservables.newBlockByNumberSubject.connect()
   }
   private updateProposals = () => {
     fetchStatistics({ type: 'proposals' }).then(({ result = [] }) => {

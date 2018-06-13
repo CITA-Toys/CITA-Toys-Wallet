@@ -62,9 +62,16 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
   }
   private transactionHistory = () => {
     fetch10Transactions().then(
-      ({ result }: { result: TransactionFromServer[] }) => {
+      ({
+        result,
+      }: {
+      result: {
+      transactions: TransactionFromServer[]
+      count: number
+      }
+      }) => {
         this.setState(state => ({
-          transactions: result,
+          transactions: result.transactions,
         }))
       },
     )

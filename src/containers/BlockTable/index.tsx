@@ -35,10 +35,10 @@ const initialState: TableWithSelectorProps & BlockSelectors = {
     },
   ],
   selectorsValue: {
-    numberFrom: 'numberfrom',
-    numberTo: 'numberto',
-    transactionFrom: 'transactionsfrom',
-    transactionTo: 'transactionsto',
+    numberFrom: '',
+    numberTo: '',
+    transactionFrom: '',
+    transactionTo: '',
   },
 }
 class BlockTable extends React.Component {
@@ -48,8 +48,7 @@ class BlockTable extends React.Component {
   }
 
   onSearch = params => {
-    console.log(params)
-    this.fetchBlock(params)
+    this.fetchBlock({ ...this.state.selectorsValue, ...params })
   }
   private fetchBlock = (params: { [index: string]: string | number } = {}) =>
     fetchBlocks(paramsFilter(params)).then(

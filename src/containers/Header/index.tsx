@@ -15,7 +15,7 @@ import GraphicIcon from '@material-ui/icons/GraphicEq'
 import SearchIcon from '@material-ui/icons/Search'
 import { Link } from 'react-router-dom'
 import { containers } from '../../Routes'
-import { IContainerProps } from '../../typings/index.d'
+import { IContainerProps, IBlock } from '../../typings/index.d'
 import RightSidebar from '../../components/RightSidebar'
 import MetadataPanel from '../../components/MetadataPanel'
 import { withObservables } from '../../contexts/observables'
@@ -71,6 +71,28 @@ const initState = {
   activePanel: '',
   searchIp: '',
   otherMetadata: initMetadata,
+  peerCount: 0,
+  block: {
+    body: {
+      transactions: [],
+    },
+    hash: '',
+    header: {
+      timestamp: '',
+      prevHash: '',
+      number: '',
+      stateRoot: '',
+      transactionsRoot: '',
+      receiptsRoot: '',
+      gasUsed: '',
+      proof: {
+        Tendermint: {
+          proposal: '',
+        },
+      },
+    },
+    version: 0,
+  } as IBlock,
 }
 type HeaderState = typeof initState
 interface HeaderProps extends IContainerProps {}
@@ -79,7 +101,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   state = initState
   componentWillMount () {
     this.onSearch$ = new Subject()
-    console.log(this.props.CITAObservables.server)
+    this.fetchStatus()
   }
   componentDidMount () {
     this.searchSubscription = this.onSearch$
@@ -100,6 +122,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       },
     )
   }
+  /**
+   * @method fetchStatus
+   */
   private onPanelActivate = () => {
     console.log('onPanelActivate')
   }
@@ -127,6 +152,21 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           console.error(err)
         })
     }
+  }
+  private fetchStatus = () => {
+    // fetch peer Count
+    const { peerCount, newBlockByNumberSubject } = this.props.CITAObservables
+    peerCount(60000).subscribe((count: string) =>
+      this.setState((state: any) => ({ ...state, peerCount: +count })),
+    )
+    // fetch Block Number and Block
+    newBlockByNumberSubject.subscribe(block => {
+      this.setState((state: any) => ({
+        ...state,
+        block,
+      }))
+    })
+    newBlockByNumberSubject.connect()
   }
   private togglePanel = (panel: string) => e => {
     this.setState(state => ({
@@ -224,17 +264,24 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         </AppBar>
         <RightSidebar
           on={this.state.activePanel !== ''}
-          // open={true}
           onClose={this.togglePanel('')}
           onOpen={() => {}}
         >
-          <MetadataPanel
-            metadata={this.state.metadata}
-            handleInput={this.handleInput}
-            searchIp={this.state.searchIp}
-            searchResult={this.state.otherMetadata}
-            switchChain={this.switchChain}
-          />
+          {this.state.activePanel === 'metadata' ? (
+            <MetadataPanel
+              metadata={this.state.metadata}
+              handleInput={this.handleInput}
+              searchIp={this.state.searchIp}
+              searchResult={this.state.otherMetadata}
+              switchChain={this.switchChain}
+            />
+          ) : (
+            <div>
+              peerCount: {this.state.peerCount}
+              blockNumber: {this.state.block.header.number}
+              time: {this.state.block.header.timestamp}
+            </div>
+          )}
         </RightSidebar>
       </React.Fragment>,
       document.getElementById('header') as HTMLElement,
