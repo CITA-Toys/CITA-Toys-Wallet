@@ -8,8 +8,7 @@ module.exports = {
     chunkFilename: 'scripts/[name]-[hash:5].js',
   },
   module: {
-    rules: [
-      {
+    rules: [{
         test: /\.tsx?/,
         use: [
           'react-hot-loader/webpack',
@@ -44,7 +43,10 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        CITA_SERVER: JSON.stringify('http://47.75.129.215:1337'),
+        // CITA_SERVER: JSON.stringify('http://47.75.129.215:1337'),
+        CITA_SERVER: JSON.stringify('http://localhost:4000'),
+        // CITA_SERVER: JSON.stringify('http://47.97.171.140:4000'),
+        // CITA_SERVER: JSON.stringify('http://121.196.200.225:1337'),
         APP_NAME: JSON.stringify('Microscope'),
       },
     }),

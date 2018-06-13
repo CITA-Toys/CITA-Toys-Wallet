@@ -1,10 +1,10 @@
 import * as React from 'react'
-import Paper from 'material-ui/Paper'
-import Button from 'material-ui/Button'
-import TextField from 'material-ui/TextField'
-import Typography from 'material-ui/Typography'
-import Divider from 'material-ui/Divider'
-import MenuItem from 'material-ui/Menu/MenuItem'
+import Paper from '@material-ui/core/Paper'
+import Button from '@material-ui/core/Button'
+import TextField from '@material-ui/core/TextField'
+import Typography from '@material-ui/core/Typography'
+import Divider from '@material-ui/core/Divider'
+import MenuItem from '@material-ui/core/MenuItem'
 import { withConfig } from '../../contexts/config'
 import { withObservables } from '../../contexts/observables'
 import { IContainerProps } from '../../typings/'
@@ -17,7 +17,7 @@ const initEditorState = {
   resultError: false,
   resultErrorText: '',
   privKeys: ['test', 'tset2', 'test3'],
-  selectedKey: 'test',
+  selectedKey: 'test'
 }
 
 type IContractEditorState = typeof initEditorState
@@ -40,7 +40,7 @@ class ContractEditor extends React.Component<
         this.setState(state => ({
           result,
           resultError: false,
-          resultErrorText: '',
+          resultErrorText: ''
         }))
       },
       error => {
@@ -48,9 +48,9 @@ class ContractEditor extends React.Component<
         this.setState({
           result: error.message,
           resultError: true,
-          resultErrorText: 'Error Received',
+          resultErrorText: 'Error Received'
         })
-      },
+      }
     )
   }
   private handleChange = name => e => {

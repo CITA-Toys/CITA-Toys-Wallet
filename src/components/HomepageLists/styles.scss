@@ -1,0 +1,71 @@
+@import '../../styles/color.scss';
+.primary {
+  color: $text;
+  display: flex !important;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  a {
+    word-break: break-all;
+  }
+}
+
+.secondary {
+  color: $text;
+  word-break: break-all;
+}
+
+.cardContentRoot {
+  padding-left: 22px;
+}
+
+.listItemContainer {
+  width: auto !important;
+  padding: 0 !important;
+  padding-top: 25px !important;
+  padding-bottom: 16px !important;
+  margin-left: 33px;
+  display: flex;
+  align-items: stretch !important;
+  height: 123px;
+  border-bottom: 1px solid $border-grey;
+}
+
+.listItemTextRoot {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding-left: 14px !important;
+  padding-right: 0 !important;
+}
+
+.blockIcon {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: $primary-color;
+  width: 100px;
+  color: #FFF !important;
+  border-radius: 4px;
+  a {
+    color: inherit !important;
+  }
+}
+
+.time {
+  color: $light-grey;
+}
+
+.txInfo {
+  color: $text;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.value {
+  padding: 0px 8px;
+  background: #e2e9f2;
+  border-radius: 4px;
+}

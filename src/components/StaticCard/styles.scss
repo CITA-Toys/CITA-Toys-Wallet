@@ -1,0 +1,24 @@
+$pageButtonColor: #f15a29;
+.cardContentRoot {
+  padding-left: 22px !important;
+  padding-top: 25px !important;
+  padding-right: 19px !important;
+  padding-bottom: 60px !important;
+}
+
+.page {
+  font-size: 1rem;
+  color: $pageButtonColor;
+  border: 2px solid $pageButtonColor;
+  border-radius: 4px;
+  width: 90px;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.titleRoot {
+  display: flex !important;
+  justify-content: space-between;
+}

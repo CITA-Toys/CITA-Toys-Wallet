@@ -1,24 +1,24 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 
-import ExpansionPanel, {
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-  ExpansionPanelActions,
-} from 'material-ui/ExpansionPanel'
-import Typography from 'material-ui/Typography'
-import List, {
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-} from 'material-ui/List'
-import IconButton from 'material-ui/IconButton'
-import TextField from 'material-ui/TextField'
-import Button from 'material-ui/Button'
+import ExpansionPanel from '@material-ui/core/ExpansionPanel'
 
-import ExpandMoreIcon from 'material-ui-icons/ExpandMore'
-import AddIcon from 'material-ui-icons/Add'
-import DeleteIcon from 'material-ui-icons/Delete'
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
+import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions'
+import Typography from '@material-ui/core/Typography'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+
+import IconButton from '@material-ui/core/IconButton'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
+
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import AddIcon from '@material-ui/icons/Add'
+import DeleteIcon from '@material-ui/icons/Delete'
 
 const texts = require('../../styles/text.scss')
 const styles = require('./styles.scss')
@@ -45,7 +45,7 @@ export default props =>
               <ListItem key={item.addr}>
                 <ListItemText
                   classes={{
-                    root: styles.addrItem,
+                    root: styles.addrItem
                   }}
                   primary={item.name}
                   secondary={

@@ -1,17 +1,27 @@
+@import '../../styles/color.scss';
 .navs {
   display: flex;
   flex: 1;
 }
+
 .navItem {
   padding: 0 15px;
-  color: #fff;
+  color: $text;
   text-decoration: none;
   display: flex;
   align-items: center;
 }
 
 @media (max-width: 800px) {
-  .navItem > span {
+  .navItem>span {
     display: none;
   }
+}
+
+.rightNavs {
+  display: flex;
+  justify-content: center;
+  align-items: space-between !important; // .navItem {
+  //   color: $primary-color;
+  // }
 }

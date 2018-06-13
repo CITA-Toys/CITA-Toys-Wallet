@@ -1,9 +1,8 @@
 .smCards {
   display: flex;
   flex-wrap: wrap;
-  & > div {
-    width: 50%;
-    // margin: 0 15px;
+  &>div {
+    width: 50%; // margin: 0 15px;
     &:first-child {
       margin-left: 0px;
     }
@@ -17,9 +16,23 @@
   display: flex;
   flex-direction: column;
 }
+
 .blockListHeader {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+}
+
+.listContainer {
+  display: flex;
+  &>div {
+    width: 50%;
+    &:first-child {
+      margin-right: 10px;
+    }
+    &:last-child {
+      margin-left: 10px;
+    }
+  }
 }

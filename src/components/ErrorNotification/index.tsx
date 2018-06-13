@@ -1,8 +1,8 @@
 import * as React from 'react'
-import Slide from 'material-ui/transitions/Slide'
-import IconButton from 'material-ui/IconButton'
-import Snackbar from 'material-ui/Snackbar'
-import CloseIcon from 'material-ui-icons/Close'
+import Slide from '@material-ui/core/Slide'
+import IconButton from '@material-ui/core/IconButton'
+import Snackbar from '@material-ui/core/Snackbar'
+import CloseIcon from '@material-ui/icons/Close'
 
 const texts = require('../../styles/text.scss')
 
@@ -13,7 +13,7 @@ export default ({ error, dismissNotification }) => (
     message={<span className={texts.error}>{error.message}</span>}
     open={!!error.message}
     anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-    transition={SnackbarTransition}
+    // transition={SnackbarTransition}
     action={
       <React.Fragment>
         <a

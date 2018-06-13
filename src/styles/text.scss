@@ -1,5 +1,4 @@
-$codeColor: #0d904f;
-$highlight: rgba(109, 165, 255, 1) !important;
+@import './color.scss';
 %hash {
   font-family: monospace !important;
   font-size: 1.2rem !important;
@@ -7,10 +6,12 @@ $highlight: rgba(109, 165, 255, 1) !important;
   word-break: break-all;
   word-wrap: break-word;
 }
+
 .addr {
   @extend %hash;
-  color: $codeColor;
+  color: $addr;
 }
+
 .hash {
   @extend %hash;
 }

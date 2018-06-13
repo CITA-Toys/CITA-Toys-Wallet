@@ -1,27 +1,28 @@
 import * as React from 'react'
-
-import AppBar from 'material-ui/AppBar'
-import Toolbar from 'material-ui/Toolbar'
-import Typography from 'material-ui/Typography'
-import Button from 'material-ui/Button'
-import IconButton from 'material-ui/IconButton'
-import TextField from 'material-ui/TextField'
-import MenuIcon from 'material-ui-icons/Menu'
-import { DialogContent } from 'material-ui/Dialog'
-import FingerprintIcon from 'material-ui-icons/Fingerprint'
-import SettingsIcon from 'material-ui-icons/Settings'
-import ViewCarouselIcon from 'material-ui-icons/ViewCarousel'
-import FormatShapesIcon from 'material-ui-icons/FormatShapes'
-import GraphicIcon from 'material-ui-icons/GraphicEq'
-import SearchIcon from 'material-ui-icons/Search'
+import { createPortal } from 'react-dom'
+import { Subject, Subscription } from '@reactivex/rxjs'
+import axios, { AxiosResponse } from 'axios'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import Typography from '@material-ui/core/Typography'
+import Button from '@material-ui/core/Button'
+import IconButton from '@material-ui/core/IconButton'
+import FingerprintIcon from '@material-ui/icons/Fingerprint'
+import SettingsIcon from '@material-ui/icons/Settings'
+import ViewCarouselIcon from '@material-ui/icons/ViewCarousel'
+import FormatShapesIcon from '@material-ui/icons/FormatShapes'
+import GraphicIcon from '@material-ui/icons/GraphicEq'
+import SearchIcon from '@material-ui/icons/Search'
 import { Link } from 'react-router-dom'
 import { containers } from '../../Routes'
 import { IContainerProps } from '../../typings/index.d'
-import Dialog from '../Dialog'
-import SettingPanel from '../../components/SettingPanel'
+import RightSidebar from '../../components/RightSidebar'
+import MetadataPanel from '../../components/MetadataPanel'
 import { withObservables } from '../../contexts/observables'
+import { isIp } from '../../utils/validators'
 
 const styles = require('./styles')
+const layout = require('../../styles/layout')
 
 const urlGen = keyword => {
   switch (keyword.length) {
@@ -66,17 +67,30 @@ const initMetadata: Metadata = {
 }
 const initState = {
   keyword: '',
-  settingsOn: false,
   metadata: initMetadata,
+  activePanel: '',
+  searchIp: '',
+  otherMetadata: initMetadata,
 }
 type HeaderState = typeof initState
 interface HeaderProps extends IContainerProps {}
 
 class Header extends React.Component<HeaderProps, HeaderState> {
   state = initState
+  componentWillMount () {
+    this.onSearch$ = new Subject()
+    console.log(this.props.CITAObservables.server)
+  }
   componentDidMount () {
+    this.searchSubscription = this.onSearch$
+      .debounceTime(1000)
+      .subscribe(({ key, value }) => {
+        if (key === 'searchIp') {
+          this.getChainMetadata(value)
+        }
+      })
     this.props.CITAObservables.metaData({
-      blockNumber: '0x0',
+      blockNumber: 'latest',
     }).subscribe(
       (metadata: Metadata) => {
         this.setState(state => ({ ...state, metadata }))
@@ -86,52 +100,90 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       },
     )
   }
-  private handleInput = name => e => {
-    // const value = e.target.value
-    const { value } = e.target
+  private onPanelActivate = () => {
+    console.log('onPanelActivate')
+  }
+  private onSearch$: Subject<any>
+  getChainMetadata = ip => {
+    if (isIp(ip)) {
+      axios
+        .post(`http://${ip}`, {
+          jsonrpc: '2.0',
+          method: 'cita_getMetaData',
+          params: ['latest'],
+          id: 1,
+        })
+        .then((res: AxiosResponse) => {
+          if (res.data && res.data.result) {
+            this.setState(state => ({
+              otherMetadata: res.data.result,
+            }))
+          } else {
+            throw new Error('Error Response')
+          }
+        })
+        .catch(err => {
+          // TODO: handle error
+          console.error(err)
+        })
+    }
+  }
+  private togglePanel = (panel: string) => e => {
+    this.setState(state => ({
+      activePanel: panel,
+    }))
+  }
+
+  protected handleInput = key => (
+    e: React.SyntheticEvent<HTMLInputElement>,
+  ) => {
+    const { value } = e.currentTarget
+    if (key === 'searchIp') {
+      this.onSearch$.next({ key: 'searchIp', value })
+    }
     this.setState(state => ({
       ...state,
-      [name]: value,
+      [key]: value,
     }))
   }
-  private toggleSettings = (on = !this.state.settingsOn) => e => {
-    this.setState(state => ({
-      settingsOn: on,
-    }))
+
+  switchChain = () => {
+    // console.log(this.state.searchIp)
+    this.props.CITAObservables.setServer(
+      this.state.searchIp.startsWith('http')
+        ? this.state.searchIp
+        : `http://${this.state.searchIp}`,
+    )
   }
+  private searchSubscription: Subscription
   render () {
-    return (
+    return createPortal(
       <React.Fragment>
-        <AppBar position="static">
-          <Toolbar>
-            <Link to="/" href="/" style={{ color: '#FFF' }}>
+        <AppBar position="static" color="default" elevation={1}>
+          <Toolbar className={layout.center}>
+            <Link to="/" href="/" style={{ color: '#000' }}>
               <Typography variant="title" color="inherit">
                 {(process.env.APP_NAME as string).toUpperCase()}
               </Typography>
             </Link>
             <div className={styles.navs}>
-              {/* containers.filter(container => container.nav).map(container => (
-              <Typography variant="subheading">
-                <Link
-                  to={container.path}
-                  href={container.path}
-                  className={styles.navItem}
-                >
-                  <IconButton color="inherit" aria-label={container.name}>
-                    {icons[container.name]}
-                  </IconButton>
-                  <span>{container.name}</span>
-                </Link>
-              </Typography>
-            )) */}
+              {containers.filter(container => container.nav).map(container => (
+                <Typography variant="subheading" key={container.name}>
+                  <Link
+                    to={container.path}
+                    href={container.path}
+                    className={styles.navItem}
+                  >
+                    <IconButton color="inherit" aria-label={container.name}>
+                      {icons[container.name]}
+                    </IconButton>
+                    <span>{container.name}</span>
+                  </Link>
+                </Typography>
+              ))}
             </div>
-            <div>
-              <IconButton
-                style={{ color: '#FFF' }}
-                onClick={this.toggleSettings(true)}
-              >
-                <SettingsIcon />
-              </IconButton>
+            <div className={styles.rightNavs}>
+              {/*
               <TextField
                 value={this.state.keyword}
                 onChange={this.handleInput('keyword')}
@@ -144,19 +196,48 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                   <SearchIcon />
                 </IconButton>
               </Link>
+              */}
+
+              <Button
+                className={styles.navItem}
+                onClick={this.togglePanel('metadata')}
+              >
+                {this.state.metadata.chainName}
+              </Button>
+              <Button
+                className={styles.navItem}
+                onClick={this.togglePanel('statistics')}
+              >
+                TPS: 00
+              </Button>
+              <IconButton
+                className={styles.navItem}
+                onClick={this.togglePanel('search')}
+              >
+                <SearchIcon />
+              </IconButton>
+              <Button className={styles.navItem} onClick={this.togglePanel('')}>
+                CN
+              </Button>
             </div>
           </Toolbar>
         </AppBar>
-        <Dialog
-          on={this.state.settingsOn}
-          dialogTitle="Settings"
-          onClose={this.toggleSettings(false)}
+        <RightSidebar
+          on={this.state.activePanel !== ''}
+          // open={true}
+          onClose={this.togglePanel('')}
+          onOpen={() => {}}
         >
-          <DialogContent>
-            <SettingPanel metadata={this.state.metadata} />
-          </DialogContent>
-        </Dialog>
-      </React.Fragment>
+          <MetadataPanel
+            metadata={this.state.metadata}
+            handleInput={this.handleInput}
+            searchIp={this.state.searchIp}
+            searchResult={this.state.otherMetadata}
+            switchChain={this.switchChain}
+          />
+        </RightSidebar>
+      </React.Fragment>,
+      document.getElementById('header') as HTMLElement,
     )
   }
 }

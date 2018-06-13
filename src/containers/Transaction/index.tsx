@@ -1,9 +1,14 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
-import { LinearProgress } from 'material-ui/Progress'
-import Card, { CardHeader, CardContent, CardActions } from 'material-ui/Card'
-import List, { ListItem, ListItemText } from 'material-ui/List'
-import Typography from 'material-ui/Typography'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import Card from '@material-ui/core/Card'
+import CardHeader from '@material-ui/core/CardHeader'
+import CardContent from '@material-ui/core/CardContent'
+import CardActions from '@material-ui/core/CardActions'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import Typography from '@material-ui/core/Typography'
 
 import { withObservables } from '../../contexts/observables'
 import { IContainerProps, DetailedTransaction } from '../../typings/'
@@ -31,12 +36,12 @@ const initState: TransactionState = {
     to: '',
     from: '',
     data: '',
-    value: '',
+    value: ''
   },
   error: {
     message: '',
-    code: '',
-  },
+    code: ''
+  }
 }
 
 const InfoList = ({ infos, details }) =>
@@ -45,7 +50,7 @@ const InfoList = ({ infos, details }) =>
       <ListItemText
         classes={{
           primary: styles.txHeader,
-          secondary: styles.subheader,
+          secondary: styles.subheader
         }}
         primary={info.label}
         secondary={
@@ -80,7 +85,7 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
         },
 
         // complete
-        () => {},
+        () => {}
       )
     }
   }
@@ -89,8 +94,8 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
       return this.setState(state => ({
         error: {
           message: 'Transaction Not Found',
-          code: '-1',
-        },
+          code: '-1'
+        }
       }))
     }
     return this.setState(state => ({ ...tx }))
@@ -101,13 +106,13 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
     { key: 'index', label: 'Index' },
     {
       key: 'content',
-      label: 'Content',
-    },
+      label: 'Content'
+    }
   ]
   private basicInfo = [
     { key: 'from', label: 'From', type: 'account' },
     { key: 'to', label: 'To', type: 'account' },
-    { key: 'value', label: 'value' },
+    { key: 'value', label: 'value' }
     // { key: 'data', label: 'data' },
   ]
 
@@ -115,8 +120,8 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
     this.setState(state => ({
       error: {
         message: '',
-        code: '',
-      },
+        code: ''
+      }
     }))
   }
   render () {

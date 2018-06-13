@@ -15,6 +15,7 @@ export interface IBlockHeader {
     }
   }
 }
+
 export interface Transaction {
   hash: Hash
   timestamp?: string
@@ -54,4 +55,34 @@ export interface IBlock {
   hash: Hash
   header: IBlockHeader
   version: string | number
+}
+export interface TransactionFromServer {
+  blockNumber: string
+  content: string
+  from: string
+  gasUsed: string
+  hash: string
+  timestamp: number
+  to: string
+  value: number
+}
+
+export interface BlockFromServer {
+  version: number
+  transactionsCount: number
+  header: {
+    transactionsRoot: string
+    timestamp: number
+    stateRoot: string
+    receiptsRoot: string
+    proof: {
+      Tendermint: {
+        proposal: string
+      }
+    }
+    prevHash: string
+    number: string
+    gasUsed: string
+  }
+  hash: string
 }

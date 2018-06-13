@@ -1,16 +1,15 @@
 import * as React from 'react'
-import Typography from 'material-ui/Typography'
-import List, {
-  ListItem,
-  ListItemText,
-  ListItemSecondaryAction,
-} from 'material-ui/List/'
-import Divider from 'material-ui/Divider'
-import Paper from 'material-ui/Paper'
-import Tooltip from 'material-ui/Tooltip'
-import ViewListIcon from 'material-ui-icons/ViewList'
-import { LinearProgress } from 'material-ui/Progress'
-import TextField from 'material-ui/TextField'
+import Typography from '@material-ui/core/Typography'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import Divider from '@material-ui/core/Divider'
+import Paper from '@material-ui/core/Paper'
+import Tooltip from '@material-ui/core/Tooltip'
+import ViewListIcon from '@material-ui/icons/ViewList'
+import LinearProgress from '@material-ui/core/LinearProgress'
+import TextField from '@material-ui/core/TextField'
 import { withObservables } from '../../contexts/observables'
 import { IContainerProps, IBlock } from '../../typings/'
 
@@ -21,7 +20,7 @@ const MAX_COUNT = 600
 
 const TransactionItem = ({
   block,
-  handleItemClicked,
+  handleItemClicked
 }: {
 block: IBlock
 handleItemClicked: (block: IBlock) => React.MouseEventHandler<HTMLElement>
@@ -31,13 +30,13 @@ handleItemClicked: (block: IBlock) => React.MouseEventHandler<HTMLElement>
     <Tooltip title={block.hash} placement="top">
       <ListItem
         style={{
-          cursor: 'pointer',
+          cursor: 'pointer'
         }}
         onClick={handleItemClicked(block)}
       >
         <ListItemText
           primary={`${block.hash.slice(0, 5)} when ${new Date(
-            block.header.timestamp,
+            block.header.timestamp
           ).toLocaleString()} at the height of ${block.header.number}`}
           secondary={`Including ${block.body.transactions.length} transactions`}
           title={block.hash}
@@ -59,7 +58,7 @@ class BlockList extends React.Component<IBlockListProps, IBlockListState> {
   static fetchNewBlockInterval: any
   state = {
     blocks: [],
-    maxCount: 50,
+    maxCount: 50
   }
 
   componentWillMount () {

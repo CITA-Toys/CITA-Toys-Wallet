@@ -1,5 +1,15 @@
-.main {
+@mixin center {
+  width: 100%;
   max-width: 1200px;
+  margin: 0 auto;
+}
+
+.center {
+  @include center;
+}
+
+.main {
+  @include center;
   margin: 50px auto 0 auto;
 }
 

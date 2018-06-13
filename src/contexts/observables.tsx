@@ -6,7 +6,8 @@ import * as React from 'react'
 import CITAObservables from '@cita/observables'
 
 export const initObservables: CITAObservables = new CITAObservables({
-  server: process.env.CITA_SERVER || '',
+  server:
+    window.localStorage.getItem('chainIp') || process.env.CITA_SERVER || '',
   interval: 1000,
 })
 const ObservableContext = React.createContext(initObservables)

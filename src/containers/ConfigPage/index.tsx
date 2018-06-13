@@ -1,19 +1,21 @@
 import * as React from 'react'
-import Paper from 'material-ui/Paper'
-import List, { ListItem, ListItemText } from 'material-ui/List'
-import Typography from 'material-ui/Typography'
-import TextField from 'material-ui/TextField'
-import Button from 'material-ui/Button'
-import Icon from 'material-ui/Icon'
-import AddIcon from 'material-ui-icons/Add'
-import ExpandMoreIcon from 'material-ui-icons/ExpandMore'
-import ExpansionPanel, {
-  ExpansionPanelSummary,
-  ExpansionPanelDetails,
-  ExpansionPanelActions,
-} from 'material-ui/ExpansionPanel'
-import Divider from 'material-ui/Divider'
-import DeleteIcon from 'material-ui-icons/Delete'
+import Paper from '@material-ui/core/Paper'
+import List from '@material-ui/core/List'
+import ListItem from '@material-ui/core/ListItem'
+import ListItemText from '@material-ui/core/ListItemText'
+
+import Typography from '@material-ui/core/Typography'
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
+import Icon from '@material-ui/core/Icon'
+import AddIcon from '@material-ui/icons/Add'
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
+import ExpansionPanel from '@material-ui/core/ExpansionPanel'
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
+import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions'
+import Divider from '@material-ui/core/Divider'
+import DeleteIcon from '@material-ui/icons/Delete'
 import CITAObservables from '@cita/observables'
 
 import { withObservables } from '../../contexts/observables'
@@ -23,7 +25,7 @@ const layouts = require('../../styles/layout')
 
 enum Configs {
   server = 'server',
-  privkey = 'privkey',
+  privkey = 'privkey'
 }
 
 export interface IConfigPageProps {
@@ -37,7 +39,7 @@ const initState = {
   serverHelperText: '',
   privkey: '',
   privkeyError: false,
-  privkeyHelperText: '',
+  privkeyHelperText: ''
 }
 export type IConfigPageState = typeof initState
 
@@ -50,7 +52,7 @@ class ConfigPage extends React.Component<IConfigPageProps, IConfigPageState> {
       ...state,
       [stateLabel]: value,
       [`${stateLabel}Error`]: false,
-      [`${stateLabel}HelperText`]: '',
+      [`${stateLabel}HelperText`]: ''
     }))
   }
   private handleSubmit = (actionName: string) => e => {
@@ -63,7 +65,7 @@ class ConfigPage extends React.Component<IConfigPageProps, IConfigPageState> {
         this.setState(state => ({
           ...state,
           serverError: true,
-          serverHelperText: 'Invalid Format',
+          serverHelperText: 'Invalid Format'
         }))
         return false
       }
@@ -109,7 +111,7 @@ const ServerConfig = ({
   serverList,
   deleteServer,
   handleInput,
-  handleSubmit,
+  handleSubmit
 }) => (
   <ExpansionPanel defaultExpanded>
     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
@@ -151,7 +153,7 @@ const PrivkeyConfig = ({
   privkeyList,
   deletePrivkey,
   handleInput,
-  handleSubmit,
+  handleSubmit
 }) => (
   <ExpansionPanel>
     <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>

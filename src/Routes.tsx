@@ -29,7 +29,14 @@ export const containers = [
   {
     path: '/blocks',
     name: 'Blocks',
-    component: 'BlockList',
+    component: 'BlockTable',
+    exact: true,
+    nav: true,
+  },
+  {
+    path: '/transactions',
+    name: 'Transactions',
+    component: 'TransactionTable',
     exact: true,
     nav: true,
   },
@@ -46,6 +53,13 @@ export const containers = [
     component: 'Account',
     exact: true,
     nav: false,
+  },
+  {
+    path: '/graphs',
+    name: 'Graph',
+    component: 'Graphs',
+    exact: true,
+    nav: true,
   },
   {
     path: '/config',

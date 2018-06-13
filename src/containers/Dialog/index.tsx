@@ -1,12 +1,13 @@
 import * as React from 'react'
 import { createPortal } from 'react-dom'
-import Dialog, { DialogTitle } from 'material-ui/Dialog'
-import AppBar from 'material-ui/AppBar/'
-import Toolbar from 'material-ui/Toolbar/'
-import IconButton from 'material-ui/IconButton/'
-import CloseIcon from 'material-ui-icons/Close'
-import Typography from 'material-ui/Typography'
-import Slide from 'material-ui/transitions/Slide'
+import Dialog from '@material-ui/core/Dialog'
+import DialogTitle from '@material-ui/core/DialogTitle'
+import AppBar from '@material-ui/core/AppBar/'
+import Toolbar from '@material-ui/core/Toolbar/'
+import IconButton from '@material-ui/core/IconButton/'
+import CloseIcon from '@material-ui/icons/Close'
+import Typography from '@material-ui/core/Typography'
+import Slide from '@material-ui/core/Slide'
 
 function Transition (props) {
   return <Slide direction="up" {...props} />
@@ -24,7 +25,7 @@ const DialogComp = (props: DialogCompProps) => (
     fullScreen={props.fullScreen}
     onClose={props.onClose}
     open={props.on}
-    transition={Transition}
+    // transition={Transition}
   >
     {props.fullScreen ? (
       <AppBar position="sticky">
@@ -50,7 +51,7 @@ const DialogComp = (props: DialogCompProps) => (
 export default class extends React.Component<DialogCompProps, {}> {
   render () {
     return createPortal(<DialogComp {...this.props} />, document.getElementById(
-      'dialog',
+      'dialog'
     ) as HTMLElement)
   }
 }
