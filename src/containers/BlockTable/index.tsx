@@ -99,15 +99,14 @@ class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
 
   private setParamsFromUrl = () => {
     const actParams = new URLSearchParams(this.props.location.search)
-    const availables = [
-      'numberFrom',
-      'numberTo',
-      'transactionFrom',
-      'transactionTo',
-      'pageNo',
-    ]
-    const params = {}
-    availables.forEach(key => {
+    const params = {
+      numberFrom: '',
+      numberTo: '',
+      transactionFrom: '',
+      transactionTo: '',
+      pageNo: '',
+    }
+    Object.keys(params).forEach(key => {
       const value = actParams.get(key)
       params[key] = value
     })

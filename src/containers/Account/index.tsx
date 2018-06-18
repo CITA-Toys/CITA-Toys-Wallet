@@ -94,9 +94,7 @@ class Account extends React.Component<AccountProps, AccountState> {
   componentWillReceiveProps (nextProps: AccountProps) {
     const { account } = nextProps.match.params
     if (account && account !== this.props.match.params.account) {
-      window.location.reload()
-      // this.onMount(account)
-      // this.forceUpdate(
+      this.onMount(account)
     }
   }
   componentDidCatch (err) {
@@ -104,7 +102,7 @@ class Account extends React.Component<AccountProps, AccountState> {
   }
   private onMount = account => {
     this.setState(initState)
-    this.loadAddrList()
+    // this.loadAddrList()
     this.updateBasicInfo(account)
   }
   private onTabClick = (e, value) => {
@@ -214,16 +212,16 @@ class Account extends React.Component<AccountProps, AccountState> {
       this.fetchInfo(addr)
     }
   }
-  private loadAddrList = () => {
-    const normals = JSON.parse(window.localStorage.getItem('normals') || '[]')
-    const erc20s = JSON.parse(window.localStorage.getItem('erc20s') || '[]')
-    const erc721s = JSON.parse(window.localStorage.getItem('erc721s') || '[]')
-    this.setState(state => ({
-      normals,
-      erc20s,
-      erc721s,
-    }))
-  }
+  // private loadAddrList = () => {
+  //   const normals = JSON.parse(window.localStorage.getItem('normals') || '[]')
+  //   const erc20s = JSON.parse(window.localStorage.getItem('erc20s') || '[]')
+  //   const erc721s = JSON.parse(window.localStorage.getItem('erc721s') || '[]')
+  //   this.setState(state => ({
+  //     normals,
+  //     erc20s,
+  //     erc721s,
+  //   }))
+  // }
   private toggleAddrs = (addrsOn = false) => e => {
     this.setState(state => ({ addrsOn }))
   }
@@ -399,7 +397,7 @@ class Account extends React.Component<AccountProps, AccountState> {
                   handleEthCall={this.handleEthCall}
                 />
               ) : (
-                <TransactionTable {...this.props} />
+                <TransactionTable {...this.props} key={addr} />
               )}
             </CardContent>
           </Card>

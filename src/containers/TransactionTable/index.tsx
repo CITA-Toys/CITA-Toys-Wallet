@@ -89,26 +89,26 @@ class TransactionTable extends React.Component<
     // hide invisible header
     this.setState(state => {
       const { headers } = state
-      const visibleHeaders = headers.filter(header => (
-        this.props.config.panelConfigs[
-          `transaction${header.key[0].toUpperCase()}${header.key.slice(1)}`
-        ] !== false
-      ))
+      const visibleHeaders = headers.filter(
+        header =>
+          this.props.config.panelConfigs[
+            `transaction${header.key[0].toUpperCase()}${header.key.slice(1)}`
+          ] !== false,
+      )
       return { headers: visibleHeaders }
     })
   }
   private setParamsFromUrl = () => {
     const actParams = new URLSearchParams(this.props.location.search)
-    const availables = [
-      'from',
-      'to',
-      'valueFrom',
-      'valueTo',
-      'pageNo',
-      'account',
-    ]
-    const params = {}
-    availables.forEach(key => {
+    const params = {
+      from: '',
+      to: '',
+      valueFrom: '',
+      valueTo: '',
+      pageNo: '',
+      account: '',
+    }
+    Object.keys(params).forEach(key => {
       const value = actParams.get(key)
       params[key] = value
     })
@@ -121,8 +121,7 @@ class TransactionTable extends React.Component<
       selectorsValue[key] = params[key] || this.state.selectorsValue[key]
     })
 
-    const pageNo =
-      +params.pageNo >= 1 ? +params.pageNo - 1 : this.state.pageNo
+    const pageNo = +params.pageNo >= 1 ? +params.pageNo - 1 : this.state.pageNo
 
     this.setState({
       selectorsValue,

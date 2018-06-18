@@ -24,11 +24,21 @@ module.exports = {
 
   rules: {
     'accessor-pairs': 2,
-    'arrow-spacing': [2, { before: true, after: true }],
+    'arrow-spacing': [2, {
+      before: true,
+      after: true
+    }],
     'block-spacing': [2, 'always'],
-    'brace-style': [2, '1tbs', { allowSingleLine: true }],
-    camelcase: [2, { properties: 'never' }],
-    'comma-spacing': [2, { before: false, after: true }],
+    'brace-style': [2, '1tbs', {
+      allowSingleLine: true
+    }],
+    camelcase: [2, {
+      properties: 'never'
+    }],
+    'comma-spacing': [2, {
+      before: false,
+      after: true
+    }],
     'comma-style': [2, 'last'],
     'constructor-super': 2,
     curly: [2, 'multi-line'],
@@ -37,10 +47,21 @@ module.exports = {
     eqeqeq: [2, 'allow-null'],
     'func-call-spacing': [2, 'never'],
     'handle-callback-err': [2, '^(err|error)$'],
-    indent: [2, 2, { SwitchCase: 1 }],
-    'key-spacing': [2, { beforeColon: false, afterColon: true }],
-    'keyword-spacing': [2, { before: true, after: true }],
-    'new-cap': [2, { newIsCap: true, capIsNew: false }],
+    indent: [2, 2, {
+      SwitchCase: 1
+    }],
+    'key-spacing': [2, {
+      beforeColon: false,
+      afterColon: true
+    }],
+    'keyword-spacing': [2, {
+      before: true,
+      after: true
+    }],
+    'new-cap': [2, {
+      newIsCap: true,
+      capIsNew: false
+    }],
     'new-parens': 2,
     'no-console': 0,
     'no-array-constructor': 2,
@@ -48,7 +69,9 @@ module.exports = {
     'no-class-assign': 2,
     'no-cond-assign': 2,
     'no-const-assign': 2,
-    'no-constant-condition': [2, { checkLoops: false }],
+    'no-constant-condition': [2, {
+      checkLoops: false
+    }],
     'no-control-regex': 2,
     'no-debugger': 2,
     'no-delete-var': 2,
@@ -75,12 +98,17 @@ module.exports = {
     'no-irregular-whitespace': 2,
     'no-iterator': 2,
     'no-label-var': 2,
-    'no-labels': [2, { allowLoop: false, allowSwitch: false }],
+    'no-labels': [2, {
+      allowLoop: false,
+      allowSwitch: false
+    }],
     'no-lone-blocks': 2,
     'no-mixed-spaces-and-tabs': 2,
     'no-multi-spaces': 2,
     'no-multi-str': 2,
-    'no-multiple-empty-lines': [2, { max: 1 }],
+    'no-multiple-empty-lines': [2, {
+      max: 1
+    }],
     'no-native-reassign': 2,
     'no-negated-in-lhs': 2,
     'no-new': 2,
@@ -112,11 +140,16 @@ module.exports = {
     'no-undef-init': 2,
     'no-unexpected-multiline': 2,
     'no-unmodified-loop-condition': 2,
-    'no-unneeded-ternary': [2, { defaultAssignment: false }],
+    'no-unneeded-ternary': [2, {
+      defaultAssignment: false
+    }],
     'no-unreachable': 2,
     'no-unsafe-finally': 2,
     'no-unsafe-negation': 2,
-    'no-unused-vars': [0, { vars: 'all', args: 'none' }],
+    'no-unused-vars': [0, {
+      vars: 'all',
+      args: 'none'
+    }],
     'no-useless-call': 2,
     'no-useless-computed-key': 2,
     'no-useless-constructor': 2,
@@ -124,28 +157,48 @@ module.exports = {
     'no-useless-rename': 2,
     'no-whitespace-before-property': 2,
     'no-with': 2,
-    'object-property-newline': [2, { allowMultiplePropertiesPerLine: true }],
-    'one-var': [2, { initialized: 'never' }],
+    'object-property-newline': [2, {
+      allowMultiplePropertiesPerLine: true
+    }],
+    'one-var': [2, {
+      initialized: 'never'
+    }],
     'operator-linebreak': [
       2,
       'after',
-      { overrides: { '?': 'before', ':': 'before' } },
+      {
+        overrides: {
+          '?': 'before',
+          ':': 'before'
+        }
+      },
     ],
     'padded-blocks': [2, 'never'],
-    quotes: [2, 'single', { avoidEscape: true, allowTemplateLiterals: true }],
+    quotes: [2, 'single', {
+      avoidEscape: true,
+      allowTemplateLiterals: true
+    }],
     'rest-spread-spacing': [2, 'never'],
     semi: [2, 'never'],
-    'semi-spacing': [2, { before: false, after: true }],
+    'semi-spacing': [2, {
+      before: false,
+      after: true
+    }],
     'space-before-blocks': [2, 'always'],
     'space-before-function-paren': [2, 'always'],
     'space-in-parens': [2, 'never'],
     'space-infix-ops': 2,
-    'space-unary-ops': [2, { words: true, nonwords: false }],
+    'space-unary-ops': [2, {
+      words: true,
+      nonwords: false
+    }],
     'spaced-comment': [
       2,
       'always',
       {
-        line: { markers: ['*package', '!', ','] },
+        line: {
+          markers: ['*package', '!', ',']
+        },
         block: {
           balanced: true,
           markers: ['*package', '!', ','],
@@ -163,12 +216,17 @@ module.exports = {
     'react/forbid-prop-types': [0],
     'react/prop-types': [0],
     'import/no-extraneous-dependencies': [0],
-    'import/no-unresolved': [2, { commonjs: true, amd: true }],
+    'import/no-unresolved': [2, {
+      commonjs: true,
+      amd: true
+    }],
     'import/extensions': [2, 'never'],
     // 'react/display-name': 1,
     'react/jsx-filename-extension': [
       1,
-      { extensions: ['.js', '.jsx', '.ts', '.tsx', '.d.ts'] },
+      {
+        extensions: ['.js', '.jsx', '.ts', '.tsx', '.d.ts']
+      },
     ],
     'jsx-a11y/label-has-for': 0,
     'jsx-a11y/click-events-have-key-events': [0],
