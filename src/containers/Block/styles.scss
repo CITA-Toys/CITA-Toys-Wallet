@@ -2,6 +2,63 @@
   word-wrap: break-word;
   word-break: break-all;
 }
+
 .blockHeader {
   font-size: 1.2rem;
+}
+
+.icon {
+  display: block;
+  width: 60px;
+  height: 60px;
+  margin: 0 auto;
+  margin-top: 38px;
+  margin-bottom: 9px;
+}
+
+.hash {
+  text-align: center;
+  line-height: 33px;
+  font-size: 1.5rem;
+  font-weight: bolder;
+  word-break: break-all;
+}
+
+.height {
+  max-width: 850px;
+  text-align: right;
+  margin: 54px auto 39px;
+  a {
+    margin: 0 12px;
+    &:last-child {
+      margin-right: 0
+    }
+  }
+}
+
+.items {
+  width: 850px;
+  margin: 0 auto !important;
+  color: #4a546c;
+  li {
+    border-bottom: 1px solid #e2e9f2;
+    padding: 30px 0 10px;
+  }
+  .itemTitle {
+    display: flex;
+    width: 200px;
+    justify-content: flex-start;
+    align-items: center;
+    font-weight: bolder;
+    &:after {
+      content: ':'
+    }
+  }
+}
+
+@media (max-width: 800px) {
+  .items {
+    width: 100%;
+    word-break: break-all;
+  }
 }

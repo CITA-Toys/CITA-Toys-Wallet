@@ -1,8 +1,55 @@
-.subheader {
+@import '../../styles/color.scss';
+$textBlack: #061027;
+.infoValue {
   word-wrap: break-word;
+  word-break: break-all;
+  margin-bottom: 18px;
+}
+
+.infoTitle {
+  font-size: 1.25rem;
+  color: $textBlack;
+}
+
+.hash {
+  height: 29px;
+  margin-top: 17px;
+  margin-bottom: 12px;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: $textBlack;
   word-break: break-all;
 }
 
-.txHeader {
-  font-size: 1.2rem;
+.attrs {
+  font-size: 1.25rem;
+  margin: 38px 0 21px;
+  svg {
+    margin-right: 10px;
+  }
+}
+
+.lists {
+  display: flex;
+  margin-top: 84px;
+  &>ul {
+    width: 50%;
+  }
+}
+
+.listHeaderRoot {
+  font-size: 1.5rem !important;
+  font-weight: bold !important;
+  color: $textBlack !important;
+}
+
+@media (max-width: 800px) {
+  .lists {
+    flex-direction: column;
+    margin-top: 15px;
+  }
+  .attrs {
+    display: flex;
+    flex-direction: column;
+  }
 }

@@ -2,9 +2,9 @@
 /// <reference path="../typings/react/index.d.ts" />
 /* eslint-enable */
 import * as React from 'react'
-import LOCAL_STORAGE from '../config/localstorage'
+import LOCAL_STORAGE, { PanelConfigs } from '../config/localstorage'
+import { initPanelConfigs } from '../initValues'
 
-// const initServerList = window.localStorage.getItem('server_list')
 const getServerList = () => {
   const storedList = window.localStorage.getItem(LOCAL_STORAGE.SERVER_LIST)
   if (storedList) {
@@ -21,17 +21,32 @@ const getPrivkeyList = () => {
   }
   return []
 }
+const getPanelConfigs = (defaultConfig: PanelConfigs = initPanelConfigs) => {
+  const localConfigs = window.localStorage.getItem(LOCAL_STORAGE.PANEL_CONFIGS)
+  if (localConfigs) {
+    try {
+      console.log(localConfigs)
+      return JSON.parse(localConfigs)
+    } catch (e) {
+      console.log(e)
+      return defaultConfig
+    }
+  }
+  return defaultConfig
+}
 
 const initConfig = {
   localStorage: LOCAL_STORAGE,
   serverList: getServerList(),
   privkeyList: getPrivkeyList(),
+  panelConfigs: getPanelConfigs(),
   changeServer: server => window.localStorage.setItem('server', server),
   changePrivkey: privkey => window.localStorage.setItem('privkey', privkey),
   addServer: server => false,
   deleteServer: server => false,
   addPrivkey: privkey => false,
   deletePrivkey: privkey => false,
+  changePanelConfig: (config: any) => false,
 }
 
 interface ConfigProviderActions {
@@ -39,6 +54,7 @@ interface ConfigProviderActions {
   deleteServer: (idx: number) => boolean
   addPrivkey: (privkey: string) => boolean
   deletePrivkey: (idx: number) => boolean
+  changePanelConfig: (configs: any) => boolean
 }
 
 export type IConfig = typeof initConfig & ConfigProviderActions
@@ -47,7 +63,7 @@ const ConfigContext = React.createContext<IConfig>({
   ...initConfig,
 })
 
-class ConfigProvider extends React.Component {
+class ConfigProvider extends React.Component<any, IConfig> {
   state = initConfig
   protected addServer = (server: string): boolean => {
     const serverList = [...this.state.serverList]
@@ -99,6 +115,16 @@ class ConfigProvider extends React.Component {
     )
     return true
   }
+  protected changePanelConfig = newPanelConfigs => {
+    this.setState(state => {
+      window.localStorage.setItem(
+        LOCAL_STORAGE.PANEL_CONFIGS,
+        JSON.stringify(newPanelConfigs),
+      )
+      return { panelConfigs: newPanelConfigs }
+    })
+    return true
+  }
   render () {
     return (
       <ConfigContext.Provider
@@ -108,6 +134,7 @@ class ConfigProvider extends React.Component {
           deleteServer: this.deleteServer,
           addPrivkey: this.addPrivkey,
           deletePrivkey: this.deletePrivkey,
+          changePanelConfig: this.changePanelConfig,
         }}
       >
         {this.props.children}

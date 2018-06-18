@@ -1,7 +1,17 @@
 @mixin center {
   width: 100%;
+  box-sizing: border-box;
   max-width: 1200px;
   margin: 0 auto;
+}
+
+@mixin boxShadow {
+  box-shadow: 0 0 6px 0 rgba(170, 170, 170, 0.5) !important;
+}
+
+.cardContainer {
+  @include boxShadow;
+  min-height: 830px !important;
 }
 
 .center {
@@ -10,7 +20,7 @@
 
 .main {
   @include center;
-  margin: 50px auto 0 auto;
+  margin: 50px auto 0;
 }
 
 @media (max-width: 800px) {

@@ -20,7 +20,7 @@ const MAX_COUNT = 600
 
 const TransactionItem = ({
   block,
-  handleItemClicked
+  handleItemClicked,
 }: {
 block: IBlock
 handleItemClicked: (block: IBlock) => React.MouseEventHandler<HTMLElement>
@@ -30,13 +30,13 @@ handleItemClicked: (block: IBlock) => React.MouseEventHandler<HTMLElement>
     <Tooltip title={block.hash} placement="top">
       <ListItem
         style={{
-          cursor: 'pointer'
+          cursor: 'pointer',
         }}
         onClick={handleItemClicked(block)}
       >
         <ListItemText
-          primary={`${block.hash.slice(0, 5)} when ${new Date(
-            block.header.timestamp
+          primary={`${block.hash} when ${new Date(
+            block.header.timestamp,
           ).toLocaleString()} at the height of ${block.header.number}`}
           secondary={`Including ${block.body.transactions.length} transactions`}
           title={block.hash}
@@ -58,7 +58,7 @@ class BlockList extends React.Component<IBlockListProps, IBlockListState> {
   static fetchNewBlockInterval: any
   state = {
     blocks: [],
-    maxCount: 50
+    maxCount: 50,
   }
 
   componentWillMount () {
@@ -79,7 +79,7 @@ class BlockList extends React.Component<IBlockListProps, IBlockListState> {
       this.setState(state => ({ maxCount: MIN_COUNT }))
       return true
     }
-    this.setState(state => ({ [stateLabal]: value }))
+    this.setState(state => Object.assign({}, state, { [stateLabal]: value }))
     return true
   }
   private handleItemClicked = (block: IBlock) => e => {

@@ -29,6 +29,9 @@
   align-items: stretch !important;
   height: 123px;
   border-bottom: 1px solid $border-grey;
+  svg {
+    font-size: 1.5rem;
+  }
 }
 
 .listItemTextRoot {
@@ -36,7 +39,7 @@
   flex-direction: column;
   justify-content: space-between;
   padding-left: 14px !important;
-  padding-right: 0 !important;
+  padding-right: 100px !important;
 }
 
 .blockIcon {
@@ -45,9 +48,11 @@
   justify-content: center;
   align-items: center;
   background-color: $primary-color;
-  width: 100px;
+  min-width: 100px;
+  padding: 0 20px;
   color: #FFF !important;
   border-radius: 4px;
+  box-sizing: border-box;
   a {
     color: inherit !important;
   }
@@ -55,6 +60,9 @@
 
 .time {
   color: $light-grey;
+  position: absolute;
+  top: 25px;
+  right: 0;
 }
 
 .txInfo {
@@ -68,4 +76,14 @@
   padding: 0px 8px;
   background: #e2e9f2;
   border-radius: 4px;
+}
+
+@media (max-width: 800px) {
+  .listItemContainer {
+    margin-left: 0;
+    padding: 16px 0 !important;
+    &:last-child {
+      border-bottom: none;
+    }
+  }
 }

@@ -91,3 +91,12 @@ export interface ProposalFromServer {
   validator: string
   count: number
 }
+export interface Metadata {
+  chainId: string
+  chainName: string
+  operator: string
+  website: string
+  genesisTimestamp: string
+  validators: string[]
+  blockInterval: number
+}

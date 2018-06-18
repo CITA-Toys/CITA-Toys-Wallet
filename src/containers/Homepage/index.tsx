@@ -61,6 +61,7 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
     })
   }
   private transactionHistory = () => {
+    this.setState(state => ({ loading: state.loading + 1 }))
     fetch10Transactions().then(
       ({
         result,
@@ -71,6 +72,7 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
       }
       }) => {
         this.setState(state => ({
+          loading: state.loading - 1,
           transactions: result.transactions,
         }))
       },
@@ -84,10 +86,20 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
       <React.Fragment>
         {this.state.loading ? <LinearProgress /> : null}
         <div className={`${layout.main} ${styles.listContainer}`}>
-          <StaticCard title="最新10个区块" page="blocks">
+          <StaticCard
+            icon="block"
+            title="最新10个区块"
+            page="blocks"
+            className={styles.card}
+          >
             <BlockList blocks={this.state.blocks} />
           </StaticCard>
-          <StaticCard title="最新10笔交易" page="transactions">
+          <StaticCard
+            icon="transfer-2"
+            title="最新10笔交易"
+            page="transactions"
+            className={styles.card}
+          >
             <TransactionList transactions={this.state.transactions} />
           </StaticCard>
         </div>

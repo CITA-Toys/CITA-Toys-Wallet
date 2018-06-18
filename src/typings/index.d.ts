@@ -1,9 +1,11 @@
 import CITAObservables from '@cita/observables'
+import { IConfig } from '../contexts/config'
 import './block.d'
 
 export * from './block'
 /* eslint-disable no-restricted-globals */
 export interface IContainerProps {
+  config: IConfig
   CITAObservables: CITAObservables
   history: any
   match: {
@@ -14,6 +16,11 @@ export interface IContainerProps {
       transaction?: string
       account?: string
     }
+  }
+  location: {
+    hash: string
+    pathname: string
+    search: string
   }
 }
 

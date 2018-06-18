@@ -1,5 +1,8 @@
 import * as React from 'react'
-import { Metadata } from '../../containers/Header'
+import { Metadata } from '../../typings'
+
+const styles = require('./styles.scss')
+const text = require('../../styles/text.scss')
 
 const list = [
   { name: 'Name', value: 'chainName' },
@@ -11,17 +14,18 @@ const list = [
 ]
 
 const MetadataRender = ({ metadata }: { metadata: Metadata }) => (
-  <div>
+  <div className={styles.display}>
     {list.map(item => (
-      <div key={item.name}>
-        {item.name}: {metadata[item.value]}
+      <div key={item.name} className={styles.item}>
+        {item.name}:{' '}
+        <span className={styles.itemValue}>{metadata[item.value]}</span>
       </div>
     ))}
-    <div>
-      <div>Validators</div>
-      <div>
+    <div className={styles.validators}>
+      <div className={styles.item}>Validators:</div>
+      <div className={styles.box}>
         {metadata.validators.map((validator, index) => (
-          <div key={validator}>
+          <div key={validator} className={text.ellipsis}>
             {index + 1}: {validator}
           </div>
         ))}
@@ -36,6 +40,7 @@ interface MetadataPanelProps {
   searchResult: Metadata
   handleInput: (key: string) => (e: any) => void
   switchChain: (e) => void
+  handleKeyUp: (e: React.KeyboardEvent<HTMLInputElement>) => void
 }
 
 const MetadataPanel: React.SFC<MetadataPanelProps> = ({
@@ -43,15 +48,25 @@ const MetadataPanel: React.SFC<MetadataPanelProps> = ({
   searchIp,
   searchResult,
   handleInput,
+  handleKeyUp,
   switchChain,
 }) => (
   <div>
-    <div>Active Chain:</div>
+    <div className={styles.title}>Active Chain:</div>
     <MetadataRender metadata={metadata} />
-    <div>Other Chain</div>
-    <input type="text" onChange={handleInput('searchIp')} value={searchIp} />
-    <button onClick={switchChain}>切换</button>
-    <MetadataRender metadata={searchResult} />
+    <div className={styles.title}>Other Chain</div>
+    <div className={styles.fields}>
+      <input
+        type="text"
+        onChange={handleInput('searchIp')}
+        value={searchIp}
+        onKeyUp={handleKeyUp}
+      />
+      <button onClick={switchChain}>切换</button>
+    </div>
+    {searchResult.chainId !== '' ? (
+      <MetadataRender metadata={searchResult} />
+    ) : null}
   </div>
 )
 

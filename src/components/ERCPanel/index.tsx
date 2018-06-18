@@ -1,30 +1,22 @@
 import * as React from 'react'
 import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import TextField from '@material-ui/core/TextField'
-import IconButton from '@material-ui/core/IconButton'
-import Chip from '@material-ui/core/Chip'
-import SearchIcon from '@material-ui/icons/Search'
-import ArrowIcon from '@material-ui/icons/TrendingFlat'
+import Divider from '@material-ui/core/Divider'
 import { ABI, ABIElement } from '../../typings'
 
-const Item = ({ label, field }) => (
-  <ListItem>
-    <ListItemText
-      primary={
-        <div style={{ display: 'flex', alignItems: 'center' }}>
-          {label}: {field}
-        </div>
-      }
-    />
-  </ListItem>
+const styles = require('./styles.scss')
+
+const Item = ({ label, fields }) => (
+  <div className={styles.method}>
+    <div className={styles.title}>{label}</div>
+    <Divider />
+    <div className={styles.fields}>{fields}</div>
+  </div>
 )
 /* eslint-disable no-restricted-globals */
 interface ErcPanel {
   abi: ABI
   handleAbiValueChange: (
-    index: number
+    index: number,
   ) => (inputIndex: number) => (e: any) => void
   handleEthCall: (index: number) => (e: any) => void
 }
@@ -32,9 +24,8 @@ interface ErcPanel {
 
 const ContractMethod = ({
   abiEl,
-  index,
   handleAbiValueChange,
-  handleEthCall
+  handleEthCall,
 }: {
 abiEl: ABIElement
 index: number
@@ -43,44 +34,52 @@ handleEthCall: (e: any) => void
 }) => (
   <Item
     label={abiEl.name}
-    field={
+    fields={
       <React.Fragment>
-        {abiEl.inputs &&
-          abiEl.inputs.map((input, inputIndex) => (
-            <TextField
-              key={input.name}
-              label={input.name}
-              placeholder={input.name}
-              onChange={handleAbiValueChange(inputIndex)}
-              value={input.value}
-            />
-          ))}{' '}
-        <ArrowIcon />{' '}
-        {abiEl.outputs &&
-          abiEl.outputs.map(output => {
-            if (output.value && output.value.match(/jpg|png|gif/)) {
+        <div className={styles.inputs}>
+          {abiEl.inputs && abiEl.inputs.length ? (
+            abiEl.inputs.map((input, inputIndex) => (
+              <input
+                key={input.name}
+                // label={input.name}
+                placeholder={input.name}
+                onChange={handleAbiValueChange(inputIndex)}
+                value={input.value}
+              />
+            ))
+          ) : (
+            <span className={styles.noEls}>No Inputs</span>
+          )}
+        </div>
+        <div className={styles.outputs}>
+          {abiEl.outputs && abiEl.outputs.length ? (
+            abiEl.outputs.map(output => {
+              if (output.value && output.value.match(/jpg|png|gif/)) {
+                return (
+                  <img
+                    src={output.value}
+                    key={output.name}
+                    alt="img"
+                    style={{ height: '100px' }}
+                  />
+                )
+              }
               return (
-                <img
-                  src={output.value}
+                <input
+                  disabled
                   key={output.name}
-                  alt="img"
-                  style={{ height: '100px' }}
+                  placeholder={output.name}
+                  // label={output.name}
+                  value={output.value}
+                  onChange={() => {}}
                 />
               )
-            }
-            return (
-              <TextField
-                disabled
-                key={output.name}
-                label={output.name}
-                value={output.value}
-                onChange={() => {}}
-              />
-            )
-          })}
-        <IconButton onClick={handleEthCall}>
-          <SearchIcon />
-        </IconButton>
+            })
+          ) : (
+            <span className={styles.noEls}>No Outputs</span>
+          )}
+        </div>
+        <button onClick={handleEthCall}>Submit</button>
       </React.Fragment>
     }
   />

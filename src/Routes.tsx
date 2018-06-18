@@ -56,7 +56,7 @@ export const containers = [
   },
   {
     path: '/graphs',
-    name: 'Graph',
+    name: 'Statistics',
     component: 'Graphs',
     exact: true,
     nav: true,

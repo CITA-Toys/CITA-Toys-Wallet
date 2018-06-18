@@ -55,7 +55,7 @@ class ContractEditor extends React.Component<
   }
   private handleChange = name => e => {
     const { value } = e.target
-    this.setState(state => ({ [name]: value }))
+    this.setState(state => Object.assign({}, state, { [name]: value }))
   }
   render () {
     return (

@@ -1,24 +1,57 @@
-$pageButtonColor: #f15a29;
-.cardContentRoot {
-  padding-left: 22px !important;
-  padding-top: 25px !important;
-  padding-right: 19px !important;
-  padding-bottom: 60px !important;
+$pageButtonColor: #637494;
+.title {
+  display: flex;
+  justify-content: space-between;
+  padding-left: 2px;
+  padding-top: 25px;
+  padding-right: 0px;
+  padding-bottom: 0px;
+  font-size: 1.125rem;
+  svg {
+    font-size: 1.5rem;
+    margin-right: 10px;
+  }
 }
 
-.page {
-  font-size: 1rem;
-  color: $pageButtonColor;
-  border: 2px solid $pageButtonColor;
-  border-radius: 4px;
-  width: 90px;
-  height: 30px;
+.more {
+  font-size: 0.875rem;
+  color: $pageButtonColor; // border: 2px solid $pageButtonColor;
   display: flex;
   justify-content: center;
   align-items: center;
+  svg {
+    margin-left: 5px;
+    margin-right: 0px;
+  }
 }
 
 .titleRoot {
   display: flex !important;
   justify-content: space-between;
+}
+
+@media (max-width: 800px) {
+  .title {
+    position: relative;
+    line-height: 2;
+    margin: 0;
+    padding: 0;
+    background: #f7f8fa;
+    &:before,
+    &:after {
+      content: '';
+      position: absolute;
+      display: block;
+      top: 0;
+      bottom: 0;
+      width: 16px;
+      background: #f7f8fa;
+    }
+    &:before {
+      right: 100%;
+    }
+    &:after {
+      left: 100%;
+    }
+  }
 }

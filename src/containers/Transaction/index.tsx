@@ -2,13 +2,12 @@ import * as React from 'react'
 import { Link } from 'react-router-dom'
 import LinearProgress from '@material-ui/core/LinearProgress'
 import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
 import CardContent from '@material-ui/core/CardContent'
-import CardActions from '@material-ui/core/CardActions'
 import List from '@material-ui/core/List'
+import ListSubheader from '@material-ui/core/ListSubheader'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
-import Typography from '@material-ui/core/Typography'
+import Divider from '@material-ui/core/Divider'
 
 import { withObservables } from '../../contexts/observables'
 import { IContainerProps, DetailedTransaction } from '../../typings/'
@@ -21,6 +20,8 @@ const styles = require('./styles.scss')
 interface TransactionProps extends IContainerProps {}
 
 interface TransactionState extends DetailedTransaction {
+  timestamp: ''
+  gasUsed: ''
   error: {
     message: string
     code: string
@@ -36,12 +37,14 @@ const initState: TransactionState = {
     to: '',
     from: '',
     data: '',
-    value: ''
+    value: '',
   },
   error: {
     message: '',
-    code: ''
-  }
+    code: '',
+  },
+  timestamp: '',
+  gasUsed: '',
 }
 
 const InfoList = ({ infos, details }) =>
@@ -49,8 +52,8 @@ const InfoList = ({ infos, details }) =>
     <ListItem key={info.key}>
       <ListItemText
         classes={{
-          primary: styles.txHeader,
-          secondary: styles.subheader
+          primary: styles.infoTitle,
+          secondary: styles.infoValue,
         }}
         primary={info.label}
         secondary={
@@ -85,7 +88,7 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
         },
 
         // complete
-        () => {}
+        () => {},
       )
     }
   }
@@ -94,8 +97,8 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
       return this.setState(state => ({
         error: {
           message: 'Transaction Not Found',
-          code: '-1'
-        }
+          code: '-1',
+        },
       }))
     }
     return this.setState(state => ({ ...tx }))
@@ -106,31 +109,41 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
     { key: 'index', label: 'Index' },
     {
       key: 'content',
-      label: 'Content'
-    }
+      label: 'Content',
+    },
   ]
   private basicInfo = [
     { key: 'from', label: 'From', type: 'account' },
     { key: 'to', label: 'To', type: 'account' },
-    { key: 'value', label: 'value' }
-    // { key: 'data', label: 'data' },
+    { key: 'value', label: 'value' },
+    { key: 'data', label: 'data' },
   ]
 
   private dismissNotification = e => {
     this.setState(state => ({
       error: {
         message: '',
-        code: ''
-      }
+        code: '',
+      },
     }))
   }
   render () {
-    const { hash, blockHash, blockNumber, content, index, error } = this.state
+    const {
+      hash,
+      blockHash,
+      blockNumber,
+      content,
+      index,
+      error,
+      timestamp,
+      gasUsed,
+    } = this.state
     return (
       <React.Fragment>
         {hash ? '' : <LinearProgress />}
         <div className={layouts.main}>
-          <Card>
+          <Card classes={{ root: layouts.cardContainer }}>
+            {/*
             <CardHeader
               title={
                 <div className={styles.txHeader}>
@@ -139,14 +152,58 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
               }
               subheader="time"
             />
+          */}
             <CardContent>
-              <List>
-                <InfoList infos={this.infos} details={this.state} />
-                <InfoList
-                  infos={this.basicInfo}
-                  details={this.state.basicInfo}
-                />
-              </List>
+              <div className={styles.hash}>Transaction</div>
+              <div className={texts.hash}>{hash}</div>
+              <div className={styles.attrs}>
+                {timestamp ? (
+                  <span>
+                    <svg className="icon" aria-hidden="true">
+                      <use xlinkHref="#icon-time" />
+                    </svg>
+                    Time: {new Date(timestamp).toLocaleTimeString()}
+                  </span>
+                ) : null}
+                {gasUsed ? (
+                  <span>
+                    <svg className="icon" aria-hidden="true">
+                      <use xlinkHref="#icon-gas" />
+                    </svg>
+                    Gas Used: {gasUsed}
+                  </span>
+                ) : null}
+              </div>
+              <Divider />
+              <div className={styles.lists}>
+                <List
+                  subheader={
+                    <ListSubheader
+                      component="div"
+                      classes={{ root: styles.listHeaderRoot }}
+                    >
+                      Token
+                    </ListSubheader>
+                  }
+                >
+                  <InfoList
+                    infos={this.basicInfo}
+                    details={this.state.basicInfo}
+                  />
+                </List>
+                <List
+                  subheader={
+                    <ListSubheader
+                      component="div"
+                      classes={{ root: styles.listHeaderRoot }}
+                    >
+                      Block
+                    </ListSubheader>
+                  }
+                >
+                  <InfoList infos={this.infos} details={this.state} />
+                </List>
+              </div>
             </CardContent>
           </Card>
         </div>

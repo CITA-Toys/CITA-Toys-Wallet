@@ -4,3 +4,5 @@ export const isIp = (ip: string) =>
     ip,
   )
 /* eslint-enable import/prefer-default-export */
+
+export const isNull = (value: any) => value === null

@@ -16,21 +16,21 @@ transactions: TransactionFromServer[]
   <List>
     {transactions.map(tx => (
       <ListItem key={tx.hash} classes={{ root: styles.listItemContainer }}>
+        <svg className="icon" aria-hidden="true">
+          <use xlinkHref="#icon-transactionpassword" />
+        </svg>
         <ListItemText
           classes={{ primary: styles.primary, root: styles.listItemTextRoot }}
           primary={
             <React.Fragment>
-              <span>
+              <span className={texts.ellipsis}>
                 Transaction:{' '}
                 <Link
                   to={`/transaction/${tx.hash}`}
                   href={`/transaction/${tx.hash}`}
+                  className={texts.addr}
                 >
-                  <span className={styles.txHash}>
-                    <span className={texts.addr}>
-                      {tx.hash.slice(0, 10)}...{tx.hash.slice(56, 66)}
-                    </span>
-                  </span>
+                  {tx.hash}
                 </Link>
               </span>
               <span className={styles.time}>
@@ -41,7 +41,7 @@ transactions: TransactionFromServer[]
           }
           secondary={
             <div className={styles.txInfo}>
-              <span>
+              <div className={texts.ellipsis}>
                 From:{' '}
                 <Link
                   to={`/account/${tx.from}`}
@@ -49,8 +49,10 @@ transactions: TransactionFromServer[]
                   className={texts.addr}
                 >
                   {tx.from || '_'}
-                </Link>{' '}
-                <br /> To:{' '}
+                </Link>
+              </div>
+              <div className={texts.ellipsis}>
+                To:{' '}
                 <Link
                   to={`/account/${tx.to}`}
                   href={`/account/${tx.to}`}
@@ -58,10 +60,10 @@ transactions: TransactionFromServer[]
                 >
                   {tx.to || '_'}
                 </Link>
-              </span>
-              <span>
+              </div>
+              <div className={texts.ellipsis}>
                 Value: <b className={styles.value}>{tx.value || 0}</b>
-              </span>
+              </div>
             </div>
           }
         />

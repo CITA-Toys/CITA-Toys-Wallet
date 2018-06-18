@@ -1,0 +1,57 @@
+@import '../../styles/color.scss';
+$sidebar-padding: 29px;
+.display {
+  padding: 0 $sidebar-padding;
+  color: $sidebar-text;
+  .item {
+    font-size: 1rem;
+    line-height: 2rem;
+    height: 2rem;
+  }
+  .itemValue {
+    color: $sidebar-bold-text;
+  }
+  .validators {
+    .box {
+      padding: 10px 17px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin-bottom: 41px;
+      &>div {
+        height: 0.875rem;
+        line-height: 1.7rem;
+        height: 1.7rem;
+        max-width: 30vw;
+      }
+    }
+  }
+}
+
+.title {
+  background-color: #f4f7ff;
+  font-size: bold;
+  padding: 0 $sidebar-padding;
+  height: 42px;
+  line-height: 42px;
+  font-weight: bolder;
+}
+
+.fields {
+  display: flex;
+  padding: $sidebar-padding;
+  height: 34px;
+  box-sizing: content-box;
+  input {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    flex: 1;
+  }
+  button {
+    border: none;
+    border-radius: 4px;
+    background-color: $active;
+    color: #FFF;
+    padding: 6px 24px;
+    margin-left: 10px;
+  }
+}

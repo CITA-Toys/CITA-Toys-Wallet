@@ -9,6 +9,8 @@ import CloseIcon from '@material-ui/icons/Close'
 import Typography from '@material-ui/core/Typography'
 import Slide from '@material-ui/core/Slide'
 
+const styles = require('./styles.scss')
+
 function Transition (props) {
   return <Slide direction="up" {...props} />
 }
@@ -18,6 +20,7 @@ interface DialogCompProps {
   on: boolean
   fullScreen?: boolean
   dialogTitle: string
+  maxWidth?: 'xs' | 'sm' | 'md'
   children?: React.ReactNode
 }
 const DialogComp = (props: DialogCompProps) => (
@@ -25,11 +28,12 @@ const DialogComp = (props: DialogCompProps) => (
     fullScreen={props.fullScreen}
     onClose={props.onClose}
     open={props.on}
-    // transition={Transition}
+    maxWidth={props.maxWidth || 'md'}
+    TransitionComponent={Transition}
   >
     {props.fullScreen ? (
-      <AppBar position="sticky">
-        <Toolbar>
+      <AppBar position="sticky" color="default">
+        <Toolbar className={styles.title}>
           <Typography variant="title" color="inherit">
             {props.dialogTitle}
           </Typography>
@@ -51,7 +55,7 @@ const DialogComp = (props: DialogCompProps) => (
 export default class extends React.Component<DialogCompProps, {}> {
   render () {
     return createPortal(<DialogComp {...this.props} />, document.getElementById(
-      'dialog'
+      'dialog',
     ) as HTMLElement)
   }
 }

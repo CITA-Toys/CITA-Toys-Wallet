@@ -22,40 +22,37 @@ const prodConfig = {
     app: path.resolve(__dirname, '../src/index.tsx'),
   },
   module: {
-    rules: [
-      {
-        test: /\.s?css$/,
-        use: ExtractPlugin.extract({
-          fallback: 'style-loader',
-          publicPath: '../',
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                modules: true,
-                importLoaders: 3,
-                localIdentName: '[local]__[name]--[hash:base64:5]',
-                minimize: true,
-              },
+    rules: [{
+      test: /\.s?css$/,
+      use: ExtractPlugin.extract({
+        fallback: 'style-loader',
+        publicPath: '../',
+        use: [{
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              importLoaders: 3,
+              localIdentName: '[local]__[name]--[hash:base64:5]',
+              minimize: true,
             },
-            {
-              loader: 'postcss-loader',
-              options: {
-                ident: 'postcss',
-                sourceMap: false,
-                plugins: () => [AutoprefixerPlugin],
-              },
+          },
+          {
+            loader: 'postcss-loader',
+            options: {
+              ident: 'postcss',
+              sourceMap: false,
+              plugins: () => [AutoprefixerPlugin],
             },
-            'resolve-url-loader',
-            'sass-loader',
-          ],
-        }),
-        include: [
-          path.resolve(__dirname, '../src/'),
-          path.resolve(__dirname, '../node_modules/normalize.css'),
+          },
+          'resolve-url-loader',
+          'sass-loader',
         ],
-      },
-    ],
+      }),
+      include: [
+        path.resolve(__dirname, '../src/'),
+        path.resolve(__dirname, '../node_modules/normalize.css'),
+      ],
+    }, ],
   },
   plugins: [
     new ExtractPlugin('styles/style.[contenthash:base64:5].css'),
@@ -63,6 +60,7 @@ const prodConfig = {
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify('production'),
+        OBSERVABLE_INTERVAL: 1000,
       },
     }),
     new UglifyJSPlugin(),
@@ -70,16 +68,15 @@ const prodConfig = {
       context: __dirname,
       manifest: reactManifest,
     }),
-    new CopyPlugin([
-      {
-        from: path.resolve(__dirname, '../lib'),
-        to: path.resolve(__dirname, '../dist/lib'),
-      },
-    ]),
+    new CopyPlugin([{
+      from: path.resolve(__dirname, '../lib'),
+      to: path.resolve(__dirname, '../dist/lib'),
+    }, ]),
     new HtmlPlugin({
       title: 'Microscope',
       template: path.resolve(__dirname, '../src/templates/index.html'),
       react: `./lib/${manifest['react.js']}`,
+      iconfont: '//at.alicdn.com/t/font_708755_runveiza6pp.js',
       minify: {
         removeComments: true,
         collapseWhitespace: true,

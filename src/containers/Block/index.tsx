@@ -170,81 +170,69 @@ class Block extends React.Component<IBlockProps, IBlockState> {
       <React.Fragment>
         {loading ? <LinearProgress /> : null}
         <div className={layouts.main}>
-          <Card>
-            <CardHeader
-              title={
-                <div className={styles.blockHeader}>
-                  Block: <span className={texts.addr}>{hash}</span>
-                </div>
-              }
-              subheader={`${header.timestamp &&
-                new Date(+header.timestamp).toLocaleString()}`}
-              action={
-                <div className={styles.blockHeader}>
-                  <Link
-                    to={`/height/0x${(+header.number - 1).toString(16)}`}
-                    href={`/height/0x${(+header.number - 1).toString(16)}`}
-                  >
-                    <IconButton>
-                      <BackIcon />
-                    </IconButton>
-                  </Link>
-                  {header.number}
-                  <Link
-                    to={`/height/0x${(+header.number + 1).toString(16)}`}
-                    href={`/height/0x${(+header.number + 1).toString(16)}`}
-                  >
-                    <IconButton>
-                      <NextIcon />
-                    </IconButton>
-                  </Link>
-                </div>
-              }
-              classes={{ subheader: styles.subheader }}
-            />
+          <Card classes={{ root: layouts.cardContainer }}>
             <CardContent>
-              <List>
+              <img
+                src="https://cdn.dribbble.com/users/1358412/screenshots/3234234/fantastic_planet_004.jpg"
+                className={styles.icon}
+                alt="block"
+              />
+              <div className={styles.hash}>Block Hash: {hash}</div>
+              <div className={styles.height}>
+                <Link
+                  to={`/height/0x${(+header.number - 1).toString(16)}`}
+                  href={`/height/0x${(+header.number - 1).toString(16)}`}
+                >
+                  <svg className="icon" aria-hidden="true">
+                    <use xlinkHref="#icon-left" />
+                  </svg>
+                </Link>
+                {header.number}
+                <Link
+                  to={`/height/0x${(+header.number + 1).toString(16)}`}
+                  href={`/height/0x${(+header.number + 1).toString(16)}`}
+                >
+                  <svg
+                    className="icon"
+                    aria-hidden="true"
+                    style={{ transform: 'rotate(180deg)' }}
+                  >
+                    <use xlinkHref="#icon-left" />
+                  </svg>
+                </Link>
+              </div>
+              <List className={styles.items}>
                 <ListItem
                   onClick={this.toggleTransaction(true)}
                   style={{ cursor: 'pointer' }}
                 >
-                  <ListItemText
-                    primary="Count of Transactions"
-                    secondary={transactions.length}
-                  />
+                  <span className={styles.itemTitle}>Transactions</span>
+                  <span>{transactions.length}</span>
                 </ListItem>
                 <ListItem>
-                  <ListItemText
-                    classes={{ secondary: texts.hash }}
-                    primary="Mined By"
-                    secondary={
-                      header.proof &&
+                  <span className={styles.itemTitle}>Proposer</span>
+                  <span className={texts.hash}>
+                    {header.proof &&
                       header.proof.Tendermint &&
-                      header.proof.Tendermint.proposal
-                    }
-                  />
+                      header.proof.Tendermint.proposal}
+                  </span>
                 </ListItem>
                 <ListItem>
-                  <ListItemText
-                    primary="Parent Hash"
-                    secondary={
-                      <Link
-                        to={`/block/${header.prevHash}`}
-                        href={`/block/${header.prevHash}`}
-                        className={texts.addr}
-                      >
-                        {header.prevHash}
-                      </Link>
-                    }
-                  />
+                  <span className={styles.itemTitle}>Parent Hash</span>
+                  <span>
+                    <Link
+                      to={`/block/${header.prevHash}`}
+                      href={`/block/${header.prevHash}`}
+                      className={texts.addr}
+                    >
+                      {header.prevHash}
+                    </Link>
+                  </span>
                 </ListItem>
                 {this.headerInfo.map(item => (
                   <ListItem key={item.key}>
-                    <ListItemText
-                      classes={{ secondary: texts.hash }}
-                      primary={item.label}
-                      secondary={header[item.key]}
-                    />
+                    <span className={styles.itemTitle}>{item.label}</span>
+                    <span>{header[item.key]}</span>
                   </ListItem>
                 ))}
               </List>

@@ -25,27 +25,25 @@ const devConfig = {
     ],
   },
   module: {
-    rules: [
-      {
-        test: /\.s?css$/,
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              importLoaders: 2,
-              localIdentName: '[local]__[name]--[hash:base64:5]',
-            },
+    rules: [{
+      test: /\.s?css$/,
+      use: [
+        'style-loader',
+        {
+          loader: 'css-loader',
+          options: {
+            modules: true,
+            importLoaders: 2,
+            localIdentName: '[local]__[name]--[hash:base64:5]',
           },
-          'sass-loader',
-        ],
-        include: [
-          path.resolve(__dirname, '../src/'),
-          path.resolve(__dirname, '../node_modules/normalize.css'),
-        ],
-      },
-    ],
+        },
+        'sass-loader',
+      ],
+      include: [
+        path.resolve(__dirname, '../src/'),
+        path.resolve(__dirname, '../node_modules/normalize.css'),
+      ],
+    }, ],
   },
   devtool: 'eval',
   plugins: [
@@ -55,6 +53,7 @@ const devConfig = {
     new webpack.DefinePlugin({
       'process.env': {
         NODE_ENV: JSON.stringify('development'),
+        OBSERVABLE_INTERVAL: 10000,
       },
     }),
     new DashboardPlugin(),
@@ -67,6 +66,7 @@ const devConfig = {
       template: path.resolve(__dirname, '../src/templates/index.html'),
       react: `../lib/${manifest['react.js']}`,
       styledComponents: `../lib/${manifest['styledComponents.js']}`,
+      iconfont: '//at.alicdn.com/t/font_708755_runveiza6pp.js',
     }),
   ],
   devServer: {

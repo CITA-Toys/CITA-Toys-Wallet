@@ -1,0 +1,71 @@
+@import '../../styles/color.scss';
+.method {
+  max-width: 650px;
+  margin: 0 auto 57px;
+  &:first-child {
+    margin-top: 102px;
+  }
+  input {
+    border: 1px solid #d3ddec;
+    width: 120px;
+    height: 34px;
+    line-height: 34px;
+    border-radius: 4px;
+    padding: 7px;
+    margin: 8px;
+    box-sizing: border-box;
+  }
+  button {
+    margin: 8px;
+    margin-left: 73px;
+    width: 80px;
+    line-height: 34px;
+    border: none;
+    border-radius: 4px;
+    background: $active;
+    color: #FFF;
+    font-size: 0.875rem;
+  }
+}
+
+.title {
+  line-height: 34px;
+  margin-top: 8px;
+  text-transform: capitalize;
+  &:after {
+    content: ' Method';
+  }
+}
+
+.inputs,
+.outputs {
+  position: relative;
+  line-height: 34px;
+  min-height: 34px;
+  margin-left: 65px;
+  &:before {
+    position: absolute;
+    top: 8px;
+    right: 100%;
+    display: inline-block;
+    width: 65px;
+  }
+}
+
+.inputs {
+  &:before {
+    content: 'Inputs: '
+  }
+}
+
+.outputs {
+  &:before {
+    content: 'Outputs: '
+  }
+}
+
+.noEls {
+  display: inline-block;
+  margin: 8px;
+  color: #CCC;
+}

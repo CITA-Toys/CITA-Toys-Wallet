@@ -1,15 +1,13 @@
 import * as React from 'react'
 import Card from '@material-ui/core/Card'
-import CardActions from '@material-ui/core/CardActions'
 import CardContent from '@material-ui/core/CardContent'
-import CardMedia from '@material-ui/core/CardMedia'
-import Button from '@material-ui/core/Button'
-import Typography from '@material-ui/core/Typography'
+import ArrowIcon from '@material-ui/icons/TrendingFlat'
 
 const styles = require('./styles')
 
 interface StaticCardProps {
   index?: number
+  icon: string
   title: string
   page?: string
   className?: string
@@ -17,24 +15,26 @@ interface StaticCardProps {
 }
 
 export default (props: StaticCardProps) => (
-  <Card className={props.className || ''}>
+  <Card className={props.className || ''} elevation={0}>
     <CardContent
       classes={{
-        root: styles.cardContentRoot
+        root: styles.cardContentRoot,
       }}
     >
-      <Typography
-        variant="headline"
-        align="justify"
-        classes={{ root: styles.titleRoot }}
-      >
-        {props.title}{' '}
+      <h2 className={styles.title}>
+        <span>
+          <svg className="icon" aria-hidden="true">
+            <use xlinkHref={`#icon-${props.icon}`} />
+          </svg>
+          {props.title}{' '}
+        </span>
         {props.page ? (
-          <a href={`/#/${props.page}`} className={styles.page}>
-            查看全部
+          <a href={`/#/${props.page}`} className={styles.more}>
+            More
+            <ArrowIcon />
           </a>
         ) : null}
-      </Typography>
+      </h2>
       {props.children}
     </CardContent>
   </Card>

@@ -1,0 +1,74 @@
+@import '../../styles/color.scss';
+$sidebar-padding: 29px;
+.fields {
+  display: flex;
+  padding: $sidebar-padding;
+  height: 34px;
+  box-sizing: content-box;
+  input {
+    border: 1px solid #ccc;
+    border-right-color: transparent;
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+    flex: 1;
+    &:hover,
+    &:focus {
+      border-color: $active;
+      border-right-color: transparent;
+    }
+  }
+  button {
+    border: none;
+    border-radius: 0;
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+    background-color: $active;
+    color: #FFF;
+    padding: 4px 25px;
+  }
+}
+
+.display {}
+
+.title {
+  background-color: #f4f7ff;
+  font-size: bold;
+  padding: 0 $sidebar-padding;
+  height: 42px;
+  line-height: 42px;
+  font-weight: bolder;
+}
+
+.items {
+  padding: $sidebar-padding;
+  padding-top: 34px;
+  padding-bottom: 43px;
+  tr {
+    font-size: 0.875rem;
+    line-height: 3;
+    height: 3em;
+    td:first-child:after {
+      content: ':';
+    }
+    td:last-child {
+      max-width: 30vw;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+  }
+}
+
+.more {
+  display: block;
+  width: 110px;
+  height: 34px;
+  line-height: 34px;
+  text-align: center;
+  font-size: 0.875rem;
+  border: 1px solid $active;
+  color: $active;
+  border-radius: 4px;
+  margin: 0 auto;
+  margin-top: 31px;
+}

@@ -1,33 +1,19 @@
 import * as React from 'react'
-import { Link } from 'react-router-dom'
-import * as web3 from 'web3'
 import * as web3Utils from 'web3-utils'
 import * as Web3Contract from 'web3-eth-contract'
 import * as web3Abi from 'web3-eth-abi'
 import Card from '@material-ui/core/Card'
 import CardHeader from '@material-ui/core/CardHeader'
 import CardContent from '@material-ui/core/CardContent'
-import AppBar from '@material-ui/core/AppBar'
-
-import List from '@material-ui/core/List'
-
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListSubheader from '@material-ui/core/ListSubheader'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import Tabs from '@material-ui/core/Tabs'
 import Tab from '@material-ui/core/Tab'
 import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
-import IconButton from '@material-ui/core/IconButton'
 import Divider from '@material-ui/core/Divider'
 import LinearProgress from '@material-ui/core/LinearProgress'
 
-import DeleteIcon from '@material-ui/icons/Delete'
-import AddIcon from '@material-ui/icons/Add'
-
 import ERCPanel from '../../components/ERCPanel'
 import TransactionList from '../../components/TransactionList'
+import TransactionTable from '../../containers/TransactionTable'
 import Dialog from '../Dialog'
 
 import { withObservables } from '../../contexts/observables'
@@ -42,8 +28,12 @@ const styles = require('./styles.scss')
 enum AccountType {
   NORMAL = '普通账户',
   ERC20 = 'ERC20',
-  ERC721 = 'ERC721'
+  ERC721 = 'ERC721',
 }
+
+// const initABI = JSON.parse(
+//   '[{"constant":false,"inputs":[{"name":"_value","type":"uint256"},{"name":"_value2","type":"uint256"},{"name":"_value3","type":"uint256"},{"name":"_value4","type":"uint256"}],"name":"set","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"get","outputs":[{"name":"haha","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}]',
+// )
 
 interface Contract {
   methods?: any
@@ -60,13 +50,14 @@ const initState = {
   type: AccountType.NORMAL,
   addr: '',
   abi: [] as ABI,
+  // abi: initABI,
   contract: { _jsonInterface: [] } as Contract,
   balance: '',
   txCount: '',
   creator: '',
   transactions: [] as Transaction[],
   customToken: {
-    name: ''
+    name: '',
   },
 
   normals: [] as LocalAccount[],
@@ -76,20 +67,20 @@ const initState = {
   addrsOn: false,
   normalsAdd: {
     name: '',
-    addr: ''
+    addr: '',
   },
   erc20sAdd: {
     name: '',
-    addr: ''
+    addr: '',
   },
   erc721sAdd: {
     name: '',
-    addr: ''
+    addr: '',
   },
   error: {
     code: '',
-    message: ''
-  }
+    message: '',
+  },
 }
 
 type AccountState = typeof initState
@@ -103,8 +94,13 @@ class Account extends React.Component<AccountProps, AccountState> {
   componentWillReceiveProps (nextProps: AccountProps) {
     const { account } = nextProps.match.params
     if (account && account !== this.props.match.params.account) {
-      this.onMount(account)
+      window.location.reload()
+      // this.onMount(account)
+      // this.forceUpdate(
     }
+  }
+  componentDidCatch (err) {
+    this.handleError(err)
   }
   private onMount = account => {
     this.setState(initState)
@@ -114,27 +110,24 @@ class Account extends React.Component<AccountProps, AccountState> {
   private onTabClick = (e, value) => {
     this.setState(state => ({ panelOn: !!value }))
   }
-  componentDidCatch (err) {
-    this.handleError(err)
-  }
 
   protected readonly addrGroups = [
     {
       key: 'normals',
-      label: AccountType.NORMAL
+      label: AccountType.NORMAL,
     },
     {
       key: 'erc20s',
-      label: AccountType.ERC20
+      label: AccountType.ERC20,
     },
     {
       key: 'erc721s',
-      label: AccountType.ERC721
-    }
+      label: AccountType.ERC721,
+    },
   ]
   private generalInfo = [
     { key: 'balance', label: 'Balance' },
-    { key: 'txCount', label: 'Count of Transactions' }
+    { key: 'txCount', label: 'Count of Transactions' },
   ]
   private fetchInfo = addr => {
     /**
@@ -147,7 +140,7 @@ class Account extends React.Component<AccountProps, AccountState> {
         (balance: string) =>
           this.setState(state => ({ balance: `${+balance}` })),
         error => this.handleError(error),
-        () => {}
+        () => {},
       )
     /**
      * @method get_transaction_count
@@ -155,7 +148,7 @@ class Account extends React.Component<AccountProps, AccountState> {
     this.setState(state => ({ loading: state.loading + 1 }))
     this.props.CITAObservables.getTransactionCount({
       accountAddr: addr,
-      blockNumber: 'latest'
+      blockNumber: 'latest',
     })
       .finally(() => this.setState(state => ({ loading: state.loading - 1 })))
       .subscribe(
@@ -165,7 +158,7 @@ class Account extends React.Component<AccountProps, AccountState> {
         // error
         error => this.handleError(error),
         // complete
-        () => {}
+        () => {},
       )
 
     /**
@@ -174,7 +167,7 @@ class Account extends React.Component<AccountProps, AccountState> {
     this.setState(state => ({ loading: state.loading + 1 }))
     this.props.CITAObservables.getAbi({
       contractAddr: addr,
-      blockNumber: 'latest'
+      blockNumber: 'latest',
     })
       .finally(() => this.setState(state => ({ loading: state.loading - 1 })))
       .subscribe(
@@ -187,7 +180,7 @@ class Account extends React.Component<AccountProps, AccountState> {
             const contract = new Web3Contract(abi, this.state.addr)
             this.setState(state => ({
               abi,
-              contract
+              contract,
             }))
           } catch (err) {
             // console.error(e.stack)
@@ -201,7 +194,7 @@ class Account extends React.Component<AccountProps, AccountState> {
         // complete
         () => {
           // this.setState(state => ({ loading: state.loading - 1 }))
-        }
+        },
       )
   }
   private updateBasicInfo = account => {
@@ -216,7 +209,7 @@ class Account extends React.Component<AccountProps, AccountState> {
         : type
       this.setState({
         addr,
-        type
+        type,
       })
       this.fetchInfo(addr)
     }
@@ -228,7 +221,7 @@ class Account extends React.Component<AccountProps, AccountState> {
     this.setState(state => ({
       normals,
       erc20s,
-      erc721s
+      erc721s,
     }))
   }
   private toggleAddrs = (addrsOn = false) => e => {
@@ -244,8 +237,8 @@ class Account extends React.Component<AccountProps, AccountState> {
         [group]: newList,
         [`${group}Add`]: {
           name: '',
-          addr: ''
-        }
+          addr: '',
+        },
       }
     })
   }
@@ -255,8 +248,8 @@ class Account extends React.Component<AccountProps, AccountState> {
       ...state,
       [`${group}Add`]: {
         ...state[`${group}Add`],
-        [label]: value
-      }
+        [label]: value,
+      },
     }))
   }
   private handleAddrDelete = (group, index) => e => {
@@ -270,13 +263,13 @@ class Account extends React.Component<AccountProps, AccountState> {
         [group]: newList,
         [`${group}Add`]: {
           name: '',
-          addr: ''
-        }
+          addr: '',
+        },
       }
     })
   }
   private handleAbiValueChange = (index: number) => (
-    inputIndex: number
+    inputIndex: number,
   ) => e => {
     const { value } = e.target
     this.setState(state => {
@@ -290,7 +283,7 @@ class Account extends React.Component<AccountProps, AccountState> {
   private handleEthCall = (index: number) => e => {
     const inputs = this.state.abi[index].inputs.map(input => ({
       name: input.name,
-      value: input.value
+      value: input.value,
     }))
     /* eslint-disable no-underscore-dangle */
     const jsonInterface = this.state.contract._jsonInterface[index]
@@ -298,7 +291,7 @@ class Account extends React.Component<AccountProps, AccountState> {
     // send transform data
     const data = web3Abi.encodeFunctionCall(
       jsonInterface,
-      inputs.map(input => input.value)
+      inputs.map(input => input.value),
     )
     this.setState(state => ({ loading: state.loading + 1 }))
     /**
@@ -308,7 +301,7 @@ class Account extends React.Component<AccountProps, AccountState> {
       from: '',
       to: this.state.addr,
       data,
-      blockNumber: 'latest'
+      blockNumber: 'latest',
     })
       .finally(() => this.setState(state => ({ loading: state.loading - 1 })))
       .subscribe(
@@ -334,12 +327,12 @@ class Account extends React.Component<AccountProps, AccountState> {
         // error
         error => this.handleError(error),
         // complete
-        () => {}
+        () => {},
       )
   }
   private handleError = error => {
     this.setState(state => ({
-      error
+      error,
     }))
   }
   private dismissNotification = e => {
@@ -362,38 +355,41 @@ class Account extends React.Component<AccountProps, AccountState> {
       erc20sAdd,
       erc721sAdd,
       abi,
-      error
+      error,
     } = this.state
     return (
       <React.Fragment>
         {loading ? <LinearProgress /> : null}
         <div className={layouts.main}>
-          <Card>
+          <Card classes={{ root: layouts.cardContainer }}>
             <CardHeader
+              // avatar={<Avatar aria-label="Recipe">{addr.slice(2, 3)}</Avatar>}
+              avatar={
+                <img
+                  src="https://cdn.dribbble.com/users/1358412/screenshots/3234234/fantastic_planet_004.jpg"
+                  alt="tx"
+                  className={styles.acountIcon}
+                />
+              }
               title={
                 <div className={styles.accountHeader}>
-                  Account: <span className={texts.addr}>{addr}</span>
+                  <div>
+                    Account: <span className={texts.addr}>{addr}</span>
+                  </div>
+                  <div>
+                    Balance: <span>{balance}</span>
+                  </div>
                 </div>
               }
-              subheader={type}
+              // subheader={type}
               action={
                 <Button onClick={this.toggleAddrs(true)}>管理本地账户</Button>
               }
             />
             <CardContent>
-              <List>
-                {this.generalInfo.map(info => (
-                  <ListItem key={info.key}>
-                    <ListItemText
-                      primary={info.label}
-                      secondary={this.state[info.key]}
-                    />
-                  </ListItem>
-                ))}
-              </List>
               <Tabs value={+panelOn} onChange={this.onTabClick}>
-                <Tab label="Transactions" />
-                {abi && abi.length ? <Tab label="ERC Panel" /> : null}
+                <Tab label={`Transactions(${txCount})`} />
+                {abi && abi.length ? <Tab label="Contract Panel" /> : null}
               </Tabs>
               <Divider />
               {panelOn ? (
@@ -403,7 +399,7 @@ class Account extends React.Component<AccountProps, AccountState> {
                   handleEthCall={this.handleEthCall}
                 />
               ) : (
-                <TransactionList transactions={transactions} />
+                <TransactionTable {...this.props} />
               )}
             </CardContent>
           </Card>

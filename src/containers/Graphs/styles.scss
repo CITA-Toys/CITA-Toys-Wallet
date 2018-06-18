@@ -1,0 +1,29 @@
+.graphs {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 22px -10px 0;
+  &>div {
+    margin: 10px;
+  }
+  .graphContainer {
+    width: 532px;
+    height: 368px;
+  }
+}
+
+@media (max-width: 1200px) {
+  .graphs {
+    justify-content: center;
+    .graphContainer {
+      width: 80vw;
+    }
+  }
+}
+
+@media (max-width: 800px) {
+  .graphs {
+    .graphContainer {
+      width: 100vw;
+    }
+  }
+}

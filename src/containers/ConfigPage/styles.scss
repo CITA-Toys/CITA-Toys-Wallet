@@ -1,0 +1,20 @@
+@import '../../styles/layout.scss';
+.addServer {
+  display: flex;
+  &>div:first-child {
+    width: 80vw;
+  }
+}
+
+.panel {
+  @include boxShadow;
+}
+
+.main {
+  max-width: 680px;
+  margin: 50px auto 0;
+}
+
+.panelTitle {
+  text-transform: capitalize;
+}

@@ -35,11 +35,11 @@ export default ({ blocks }: { blocks: IBlock[] }) => (
           }}
           primary={
             <React.Fragment>
-              <span>
+              <span className={texts.ellipsis}>
                 Hash:{' '}
                 <Link to={`/block/${block.hash}`} href={`/block/${block.hash}`}>
                   <span className={texts.addr} title={block.hash}>
-                    {block.hash.slice(0, 10)}...{block.hash.slice(56, 66)}
+                    {block.hash}
                   </span>
                 </Link>
               </span>
@@ -50,11 +50,15 @@ export default ({ blocks }: { blocks: IBlock[] }) => (
           }
           secondary={
             <React.Fragment>
-              Including <b>{block.body.transactions.length}</b> Transactions.{' '}
-              <br />Proposed by{' '}
-              <span className={texts.highlight}>
-                {block.header.proof.Tendermint.proposal.slice(0, 20)}...
-              </span>
+              <div className={texts.ellipsis}>
+                Including <b>{block.body.transactions.length}</b> Transactions.{' '}
+              </div>
+              <div className={texts.ellipsis}>
+                Proposed by{' '}
+                <span className={texts.highlight}>
+                  {block.header.proof.Tendermint.proposal}
+                </span>
+              </div>
             </React.Fragment>
           }
         />

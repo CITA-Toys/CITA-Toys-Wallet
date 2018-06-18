@@ -1,7 +1,25 @@
 @import '../../styles/color.scss';
-.navs {
+.headerNavIcon {
+  color: #000;
+  margin-right: 31px;
+}
+
+.headerNavs {
   display: flex;
   flex: 1;
+  .navItem {
+    padding: 0 25px;
+  }
+  .activeNav::after {
+    position: absolute;
+    display: block;
+    content: '';
+    width: 100%;
+    height: 4px;
+    top: 53px;
+    left: 0;
+    background: $active;
+  }
 }
 
 .navItem {
@@ -12,16 +30,37 @@
   align-items: center;
 }
 
-@media (max-width: 800px) {
-  .navItem>span {
-    display: none;
-  }
-}
-
 .rightNavs {
   display: flex;
-  justify-content: center;
-  align-items: space-between !important; // .navItem {
-  //   color: $primary-color;
-  // }
+  justify-content: space-between;
+  align-items: center !important;
+}
+
+.activeNav {
+  position: relative;
+  display: block;
+  color: $active;
+  font-weight: 600;
+}
+
+.toolbarRoot {
+  justify-content: space-between;
+  min-height: 89px !important;
+}
+
+.toggleIcon {
+  display: none !important;
+}
+
+@media (max-width: 800px) {
+  .headerNavs,
+  .headerNavIcon {
+    display: none;
+  }
+  .toggleIcon {
+    display: flex !important;
+  }
+  .toolbarRoot {
+    min-height: 56px !important;
+  }
 }

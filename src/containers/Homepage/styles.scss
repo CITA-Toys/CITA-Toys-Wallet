@@ -1,15 +1,6 @@
-.smCards {
-  display: flex;
-  flex-wrap: wrap;
-  &>div {
-    width: 50%; // margin: 0 15px;
-    &:first-child {
-      margin-left: 0px;
-    }
-    &:last-child {
-      margin-right: 0px;
-    }
-  }
+.card {
+  border-radius: 2px;
+  box-shadow: 0 0 10px 0 rgba(170, 170, 170, 0.2) !important;
 }
 
 .listCards {
@@ -34,5 +25,18 @@
     &:last-child {
       margin-left: 10px;
     }
+  }
+}
+
+@media (max-width: 1200px) {
+  .listContainer {
+    flex-direction: column;
+    &>div {
+      width: 100%;
+      margin: 0 !important;
+    }
+  }
+  .card {
+    box-shadow: none !important;
   }
 }

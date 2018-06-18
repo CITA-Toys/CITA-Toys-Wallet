@@ -1,31 +1,49 @@
 import * as React from 'react'
-import Paper from '@material-ui/core/Paper'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
+import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
+import TextField from '@material-ui/core/TextField'
 
 import Typography from '@material-ui/core/Typography'
-import TextField from '@material-ui/core/TextField'
-import Button from '@material-ui/core/Button'
-import Icon from '@material-ui/core/Icon'
-import AddIcon from '@material-ui/icons/Add'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
 import ExpansionPanel from '@material-ui/core/ExpansionPanel'
 import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
-import ExpansionPanelActions from '@material-ui/core/ExpansionPanelActions'
 import Divider from '@material-ui/core/Divider'
-import DeleteIcon from '@material-ui/icons/Delete'
+import Switch from '@material-ui/core/Switch'
 import CITAObservables from '@cita/observables'
 
+import { PanelConfigs } from '../../config/localstorage'
+import { initPanelConfigs } from '../../initValues'
 import { withObservables } from '../../contexts/observables'
 import { withConfig, IConfig } from '../../contexts/config'
 
 const layouts = require('../../styles/layout')
+const styles = require('./styles.scss')
 
-enum Configs {
-  server = 'server',
-  privkey = 'privkey'
+/* eslint-disable no-use-before-define */
+interface ConfigItem {
+  panel: ConfigPanel
+  type: ConfigType
+  key: string
+  title: string
+}
+/* eslint-enable no-use-before-define */
+
+enum ConfigType {
+  DISPLAY,
+  COUNT,
+  ITEMS,
+  VALUE,
+}
+
+enum ConfigPanel {
+  GENERAL = 'general',
+  HEADER = 'header',
+  BLOCK = 'block',
+  TRANSACTION = 'transaction',
+  GRAPH = 'graph',
 }
 
 export interface IConfigPageProps {
@@ -33,159 +51,257 @@ export interface IConfigPageProps {
   CITAObservables: CITAObservables
 }
 
-const initState = {
-  server: '',
-  serverError: false,
-  serverHelperText: '',
-  privkey: '',
-  privkeyError: false,
-  privkeyHelperText: ''
+export interface IConfigPageState {
+  configs: PanelConfigs
 }
-export type IConfigPageState = typeof initState
+
+const initState: IConfigPageState = {
+  configs: initPanelConfigs,
+}
+
+const ConfigItem = ({
+  config,
+  index,
+  value,
+  handleSwitch,
+  handleInput,
+}: {
+config: ConfigItem
+index: number
+value: number | string | boolean | undefined
+handleSwitch: (key: string) => (e: any) => void
+handleInput: (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => void
+}) => (
+  <ListItem key={config.key}>
+    <ListItemText
+      primary={`${config.type === ConfigType.DISPLAY ? 'Display' : 'Set'} ${
+        config.title
+      }`}
+    />
+    <ListItemSecondaryAction>
+      {config.type === ConfigType.DISPLAY ? (
+        <Switch onChange={handleSwitch(config.key)} checked={!!value} />
+      ) : (
+        <div>
+          <TextField value={`${value}`} onChange={handleInput(config.key)} />
+        </div>
+      )}
+    </ListItemSecondaryAction>
+  </ListItem>
+)
+
+const Config = ({ title, configs, values, handleSwitch, handleInput }) => (
+  <ExpansionPanel defaultExpanded classes={{ root: styles.panel }}>
+    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+      <Typography variant="caption" classes={{ caption: styles.panelTitle }}>
+        {`${title} Config`}
+      </Typography>
+    </ExpansionPanelSummary>
+    <Divider />
+    <ExpansionPanelDetails>
+      <List style={{ width: '100%' }}>
+        {configs.map((config, idx) => (
+          <ConfigItem
+            key={config.key}
+            config={config}
+            index={idx}
+            value={values[config.key]}
+            handleSwitch={handleSwitch}
+            handleInput={handleInput}
+          />
+        ))}
+      </List>
+    </ExpansionPanelDetails>
+    <Divider />
+  </ExpansionPanel>
+)
 
 class ConfigPage extends React.Component<IConfigPageProps, IConfigPageState> {
-  state = initState
-  private handleInput = stateLabel => e => {
-    // const value = e.target.value
-    const { value } = e.target
-    this.setState(state => ({
-      ...state,
-      [stateLabel]: value,
-      [`${stateLabel}Error`]: false,
-      [`${stateLabel}HelperText`]: ''
-    }))
-  }
-  private handleSubmit = (actionName: string) => e => {
-    switch (actionName) {
-      case 'addServer': {
-        if (/\d+:\d+/.test(this.state.server)) {
-          this.props.config.addServer(this.state.server)
-          return true
-        }
-        this.setState(state => ({
-          ...state,
-          serverError: true,
-          serverHelperText: 'Invalid Format'
-        }))
-        return false
-      }
-      case 'addPrivkey': {
-        this.props.config.addPrivkey(this.state.privkey)
-        return true
-      }
-      default: {
-        return false
-      }
+  // state: IConfigPageState
+  constructor (props) {
+    super(props)
+    this.state = {
+      configs: this.props.config.panelConfigs,
     }
   }
+  configs = [
+    {
+      panel: ConfigPanel.GENERAL,
+      type: ConfigType.VALUE,
+      key: 'logo',
+      title: 'logo',
+    },
+    {
+      panel: ConfigPanel.HEADER,
+      type: ConfigType.DISPLAY,
+      key: 'TPS',
+      title: 'TPS',
+    },
+    {
+      panel: ConfigPanel.BLOCK,
+      type: ConfigType.DISPLAY,
+      key: 'blockHeight',
+      title: 'height',
+    },
+    {
+      panel: ConfigPanel.BLOCK,
+      type: ConfigType.DISPLAY,
+      key: 'blockHash',
+      title: 'hash',
+    },
+    {
+      panel: ConfigPanel.BLOCK,
+      type: ConfigType.DISPLAY,
+      key: 'blockAge',
+      title: 'age',
+    },
+    {
+      panel: ConfigPanel.BLOCK,
+      type: ConfigType.DISPLAY,
+      key: 'blockTransactions',
+      title: 'transactions',
+    },
+    {
+      panel: ConfigPanel.BLOCK,
+      type: ConfigType.DISPLAY,
+      key: 'blcokGasUsed',
+      title: 'gas used',
+    },
+    {
+      panel: ConfigPanel.BLOCK,
+      type: ConfigType.VALUE,
+      key: 'blockPageSize',
+      title: 'page size',
+    },
+    {
+      panel: ConfigPanel.TRANSACTION,
+      type: ConfigType.DISPLAY,
+      key: 'transactionHash',
+      title: 'hash',
+    },
+    {
+      panel: ConfigPanel.TRANSACTION,
+      type: ConfigType.DISPLAY,
+      key: 'transactionFrom',
+      title: 'from',
+    },
+    {
+      panel: ConfigPanel.TRANSACTION,
+      type: ConfigType.DISPLAY,
+      key: 'transactionTo',
+      title: 'to',
+    },
+    {
+      panel: ConfigPanel.TRANSACTION,
+      type: ConfigType.DISPLAY,
+      key: 'transactionValue',
+      title: 'value',
+    },
+    {
+      panel: ConfigPanel.TRANSACTION,
+      type: ConfigType.DISPLAY,
+      key: 'transactionAge',
+      title: 'age',
+    },
+    {
+      panel: ConfigPanel.TRANSACTION,
+      type: ConfigType.DISPLAY,
+      key: 'transactionBlockNumber',
+      title: 'block number',
+    },
+    {
+      panel: ConfigPanel.TRANSACTION,
+      type: ConfigType.DISPLAY,
+      key: 'transactionGasUsed',
+      title: 'gas used',
+    },
+    {
+      panel: ConfigPanel.TRANSACTION,
+      type: ConfigType.VALUE,
+      key: 'transactionPageSize',
+      title: 'page size',
+    },
+    {
+      panel: ConfigPanel.GRAPH,
+      type: ConfigType.DISPLAY,
+      key: 'graphIPB',
+      title: 'Interval/Block',
+    },
+    {
+      panel: ConfigPanel.GRAPH,
+      type: ConfigType.DISPLAY,
+      key: 'graphTPB',
+      title: 'Transactions/Block',
+    },
+    {
+      panel: ConfigPanel.GRAPH,
+      type: ConfigType.DISPLAY,
+      key: 'graphGasUsedBlock',
+      title: 'Gas Used/Block',
+    },
+    {
+      panel: ConfigPanel.GRAPH,
+      type: ConfigType.DISPLAY,
+      key: 'graphGasUsedTx',
+      title: 'Gas Used/Transaction',
+    },
+    {
+      panel: ConfigPanel.GRAPH,
+      type: ConfigType.DISPLAY,
+      key: 'graphProposals',
+      title: 'Proposals/Block',
+    },
+    {
+      panel: ConfigPanel.GRAPH,
+      type: ConfigType.VALUE,
+      key: 'graphMaxCount',
+      title: 'MaxCount',
+    },
+  ] as ConfigItem[]
+  private handleSwitch = key => (e: any) => {
+    this.setState(state => {
+      const { configs } = this.state
+      const newConfig = { ...configs, [key]: !configs[key] }
+      if (this.props.config.changePanelConfig(newConfig)) {
+        return { configs: newConfig }
+      }
+      return state
+    })
+  }
+  private handleInput = key => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.currentTarget
+    this.setState(state => {
+      const { configs } = state
+      const newConfig = { ...configs, [key]: value }
+      if (this.props.config.changePanelConfig(newConfig)) {
+        return { configs: newConfig }
+      }
+      return state
+    })
+  }
+  private panels = [
+    // ConfigPanel.GENERAL,
+    ConfigPanel.HEADER,
+    ConfigPanel.BLOCK,
+    ConfigPanel.TRANSACTION,
+    ConfigPanel.GRAPH,
+  ]
   render () {
     return (
-      <div className={layouts.main}>
-        <ServerConfig
-          server={this.state.server}
-          serverError={this.state.serverError}
-          serverHelperText={this.state.serverHelperText}
-          serverList={this.props.config.serverList}
-          deleteServer={this.props.config.deleteServer}
-          handleInput={this.handleInput}
-          handleSubmit={this.handleSubmit}
-        />
-        <PrivkeyConfig
-          privkey={this.state.privkey}
-          privkeyError={this.state.privkeyError}
-          privkeyHelperText={this.state.privkeyHelperText}
-          privkeyList={this.props.config.privkeyList}
-          deletePrivkey={this.props.config.deletePrivkey}
-          handleInput={this.handleInput}
-          handleSubmit={this.handleSubmit}
-        />
+      <div className={styles.main}>
+        {this.panels.map(panel => (
+          <Config
+            title={panel}
+            key={panel}
+            configs={this.configs.filter(config => config.panel === panel)}
+            values={this.state.configs}
+            handleSwitch={this.handleSwitch}
+            handleInput={this.handleInput}
+          />
+        ))}
       </div>
     )
   }
 }
-
-const ServerConfig = ({
-  server,
-  serverError,
-  serverHelperText,
-  serverList,
-  deleteServer,
-  handleInput,
-  handleSubmit
-}) => (
-  <ExpansionPanel defaultExpanded>
-    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-      <Typography variant="headline">Server List</Typography>
-    </ExpansionPanelSummary>
-    <Divider />
-    <ExpansionPanelDetails>
-      <List style={{ width: '100%' }}>
-        {serverList.map((_server, idx) => (
-          <ListItem>
-            <ListItemText primary={_server} />
-            <DeleteIcon onClick={() => deleteServer(idx)} />
-          </ListItem>
-        ))}
-      </List>
-    </ExpansionPanelDetails>
-    <Divider />
-    <ExpansionPanelActions>
-      <TextField
-        value={server}
-        onChange={handleInput('server')}
-        label="Add New Server"
-        placeholder="host:port"
-        error={serverError}
-        helperText={serverHelperText}
-        fullWidth
-      />
-      <Button variant="flat" onClick={handleSubmit('addServer')}>
-        Add
-      </Button>
-    </ExpansionPanelActions>
-  </ExpansionPanel>
-)
-
-const PrivkeyConfig = ({
-  privkey,
-  privkeyError,
-  privkeyHelperText,
-  privkeyList,
-  deletePrivkey,
-  handleInput,
-  handleSubmit
-}) => (
-  <ExpansionPanel>
-    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-      <Typography variant="headline">Privkey List</Typography>
-    </ExpansionPanelSummary>
-    <Divider />
-    <ExpansionPanelDetails>
-      <List style={{ width: '100%' }}>
-        {privkeyList.map((_privkey, idx) => (
-          <ListItem>
-            <ListItemText primary={_privkey} />
-            <DeleteIcon onClick={() => deletePrivkey(idx)} />
-          </ListItem>
-        ))}
-      </List>
-    </ExpansionPanelDetails>
-    <Divider />
-    <ExpansionPanelActions>
-      <TextField
-        value={privkey}
-        onChange={handleInput('privkey')}
-        label="Add New Privkey"
-        // placeholder="host:port"
-        error={privkeyError}
-        helperText={privkeyHelperText}
-        fullWidth
-      />
-      <Button variant="flat" onClick={handleSubmit('addPrivkey')}>
-        Add
-      </Button>
-    </ExpansionPanelActions>
-  </ExpansionPanel>
-)
 
 export default withConfig(withObservables(ConfigPage))

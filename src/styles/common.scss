@@ -1,9 +1,17 @@
+@import './color.scss';
+header {
+  background: #FFF !important;
+  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.1) !important;
+}
+
 body {
   min-height: 100vh;
-  background: #eee;
+  background: rgba(255, 255, 255, 0.05);
+  overflow-x: hidden;
 }
 
 a {
+  // color: $addr;
   text-decoration: none !important;
 }
 
@@ -11,4 +19,36 @@ ul {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+footer {
+  background-color: #141830;
+  color: #FFF;
+  font-size: 0.875rem;
+  padding-top: 34px;
+  padding-bottom: 61px;
+  margin-top: 142px;
+}
+
+@media (max-width: 800px) {
+  header {
+    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12) !important;
+  }
+  footer {
+    margin-top: 27px;
+  }
+}
+
+* {
+  outline: none;
+}
+
+:global {
+  .icon {
+    width: 1em;
+    height: 1em;
+    vertical-align: -0.15em;
+    fill: currentColor;
+    overflow: hidden;
+  }
 }
