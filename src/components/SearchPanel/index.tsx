@@ -208,7 +208,6 @@ class SearchPanel extends React.Component<SearchPanelProps, SearchPanelState> {
         case SearchType.TRANSACTION: {
           return CITAObservables.getTransaction(keyword).subscribe(
             transaction => {
-              console.log(transaction)
               this.setState(state => Object.assign({}, state, { transaction }))
             },
           )

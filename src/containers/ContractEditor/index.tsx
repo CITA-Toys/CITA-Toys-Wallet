@@ -17,7 +17,7 @@ const initEditorState = {
   resultError: false,
   resultErrorText: '',
   privKeys: ['test', 'tset2', 'test3'],
-  selectedKey: 'test'
+  selectedKey: 'test',
 }
 
 type IContractEditorState = typeof initEditorState
@@ -40,17 +40,16 @@ class ContractEditor extends React.Component<
         this.setState(state => ({
           result,
           resultError: false,
-          resultErrorText: ''
+          resultErrorText: '',
         }))
       },
       error => {
-        console.log(String(error))
         this.setState({
           result: error.message,
           resultError: true,
-          resultErrorText: 'Error Received'
+          resultErrorText: 'Error Received',
         })
-      }
+      },
     )
   }
   private handleChange = name => e => {

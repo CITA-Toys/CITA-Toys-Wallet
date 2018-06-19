@@ -85,9 +85,6 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       this.togglePanel('')()
     }
   }
-  private onPanelActivate = () => {
-    console.log('onPanelActivate')
-  }
   private onSearch$: Subject<any>
   private getChainMetadata = ip => {
     if (isIp(ip)) {

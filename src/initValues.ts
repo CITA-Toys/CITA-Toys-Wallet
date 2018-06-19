@@ -2,6 +2,8 @@ import { LocalAccount } from './components/LocalAccounts/index'
 import { IBlock, IBlockHeader, Transaction, Metadata } from './typings'
 import { PanelConfigs } from './config/localstorage'
 
+const isDesktop = window.innerWidth >= 800
+console.log(isDesktop)
 export const initHeader: IBlockHeader = {
   timestamp: '',
   prevHash: '',
@@ -50,16 +52,16 @@ export const initPanelConfigs: PanelConfigs = {
   TPS: true,
   blockHeight: true,
   blockHash: true,
-  blockAge: true,
+  blockAge: isDesktop,
   blockTransactions: true,
-  blcokGasUsed: true,
+  blockGasUsed: isDesktop,
   blockPageSize: 10,
   transactionHash: true,
-  transactionFrom: true,
-  transactionTo: true,
-  transactionValue: true,
-  transactionAge: true,
-  transactionGasUsed: true,
+  transactionFrom: isDesktop,
+  transactionTo: isDesktop,
+  transactionValue: isDesktop,
+  transactionAge: isDesktop,
+  transactionGasUsed: isDesktop,
   transactionBlockNumber: true,
   transactionPageSize: 10,
   graphIPB: true,

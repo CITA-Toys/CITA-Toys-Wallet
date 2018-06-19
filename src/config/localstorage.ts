@@ -10,7 +10,7 @@ export interface PanelConfigs {
   blockHash: boolean
   blockAge: boolean
   blockTransactions: boolean
-  blcokGasUsed: boolean
+  blockGasUsed: boolean
   blockPageSize: number
   transactionHash: boolean
   transactionFrom: boolean

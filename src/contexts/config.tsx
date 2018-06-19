@@ -25,10 +25,8 @@ const getPanelConfigs = (defaultConfig: PanelConfigs = initPanelConfigs) => {
   const localConfigs = window.localStorage.getItem(LOCAL_STORAGE.PANEL_CONFIGS)
   if (localConfigs) {
     try {
-      console.log(localConfigs)
       return JSON.parse(localConfigs)
     } catch (e) {
-      console.log(e)
       return defaultConfig
     }
   }
