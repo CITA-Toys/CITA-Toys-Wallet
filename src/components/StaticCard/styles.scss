@@ -1,4 +1,4 @@
-$pageButtonColor: #637494;
+@import '../../styles/color.scss';
 .title {
   display: flex;
   justify-content: space-between;
@@ -7,6 +7,7 @@ $pageButtonColor: #637494;
   padding-right: 0px;
   padding-bottom: 0px;
   font-size: 1.125rem;
+  color: $heavyText;
   svg {
     font-size: 1.5rem;
     margin-right: 10px;
@@ -15,7 +16,7 @@ $pageButtonColor: #637494;
 
 .more {
   font-size: 0.875rem;
-  color: $pageButtonColor; // border: 2px solid $pageButtonColor;
+  color: $plainText;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -44,7 +45,7 @@ $pageButtonColor: #637494;
       display: block;
       top: 0;
       bottom: 0;
-      width: 16px;
+      width: 32px;
       background: #f7f8fa;
     }
     &:before {

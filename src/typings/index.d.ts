@@ -1,5 +1,6 @@
 import CITAObservables from '@cita/observables'
 import { IConfig } from '../contexts/config'
+import i18n from '../config/i18n'
 import './block.d'
 
 export * from './block'
@@ -22,6 +23,12 @@ export interface IContainerProps {
     pathname: string
     search: string
   }
+
+  i18n: typeof i18n
+  t: (key: string) => string
+  // i18n: {
+
+  // }
 }
 
 export interface ABIElement {

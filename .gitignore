@@ -6,6 +6,7 @@
 
 # Dependency Directories
 node_modules
+locale/*
 
 # DLL
 dll

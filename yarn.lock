@@ -123,6 +123,10 @@
     "@types/events" "*"
     "@types/node" "*"
 
+"@types/i18next@*":
+  version "8.4.3"
+  resolved "https://registry.npmjs.org/@types/i18next/-/i18next-8.4.3.tgz#9136a9551bf5bf7169aa9f3125c1743f1f8dd6de"
+
 "@types/jss@^9.5.3":
   version "9.5.3"
   resolved "https://registry.npmjs.org/@types/jss/-/jss-9.5.3.tgz#0c106de3fe0b324cd4173fac7dab26c12cda624e"
@@ -151,6 +155,13 @@
   resolved "https://registry.npmjs.org/@types/react-dom/-/react-dom-16.0.6.tgz#f1a65a4e7be8ed5d123f8b3b9eacc913e35a1a3c"
   dependencies:
     "@types/node" "*"
+    "@types/react" "*"
+
+"@types/react-i18next@^7.6.1":
+  version "7.6.1"
+  resolved "https://registry.npmjs.org/@types/react-i18next/-/react-i18next-7.6.1.tgz#62162cc796a78db4c11b3d82d76d3a0d94a9b6eb"
+  dependencies:
+    "@types/i18next" "*"
     "@types/react" "*"
 
 "@types/react-loadable@^5.3.3":

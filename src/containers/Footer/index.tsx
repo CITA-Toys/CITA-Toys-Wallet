@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { createPortal } from 'react-dom'
+import { I18n, translate } from 'react-i18next'
 
 const layout = require('../../styles/layout.scss')
 const styles = require('./styles.scss')
@@ -16,15 +17,14 @@ interface Contact {
   url: string
 }
 
-class Footer extends React.Component {
+class Footer extends React.Component<{ t: (key: string) => string }, any> {
   state = {
     overview: {
-      title: 'Overview',
-      content:
-        'Microscope is a blockchain explorer.\n Microscope is a blockchain explorer.',
+      title: 'overview',
+      content: 'Across the Microscope, we can reach every cell in the nervos',
     },
     products: {
-      title: '其他产品',
+      title: 'other product',
       items: [
         {
           logo:
@@ -43,49 +43,51 @@ class Footer extends React.Component {
       ] as Product[],
     },
     contacts: {
-      title: '联系我们',
+      title: 'contact us',
       items: [
         {
           icon: 'email',
-          title: 'E-mail',
-          url: 'contact@cryptape.com',
+          title: 'contact@cryptape.com',
+          url: 'mailto:contact@cryptape.com',
         },
         {
           icon: 'group',
           title: 'Nervos-AppChain 开发者群组',
           url: 'https://t.me/joinchat/GkxnS1L8xTx_c1InzeC0Cw',
         },
-        // {
-        //   icon: 'telegram',
-        //   title: 'Telegram',
-        //   url: '..',
-        // },
+        {
+          icon: 'wechat',
+          title: '微信公众号',
+          url:
+            'https://mp.weixin.qq.com/mp/profile_ext?action=home&__biz=MzUzNzg4NTAzOA==&scene=124&#wechat_redirect',
+        },
       ] as Contact[],
     },
   }
   render () {
     const { overview, products, contacts } = this.state
+    const { t } = this.props
     return (
       <div className={`${styles.footer} ${layout.center}`}>
         <div className={styles.overview}>
-          <h1>{overview.title}</h1>
+          <h1>{t(overview.title)}</h1>
           <p>{overview.content}</p>
         </div>
         <div className={styles.products}>
-          <h1>{products.title}</h1>
+          <h1>{t(products.title)}</h1>
           <div>
             {products.items.map(item => (
               <div key={item.title}>
                 <a href={item.url} rel="noreferrer noopener" target="_blank">
                   <img src={item.logo} alt={item.title} />
                 </a>
-                <p>{item.overview}</p>
+                <p>{t(item.overview)}</p>
               </div>
             ))}
           </div>
         </div>
         <div className={styles.contacts}>
-          <h1>{contacts.title}</h1>
+          <h1>{t(contacts.title)}</h1>
           {contacts.items.map(item => (
             <a
               key={item.title}
@@ -96,7 +98,7 @@ class Footer extends React.Component {
               <svg className="icon" aria-hidden="true">
                 <use xlinkHref={`#icon-${item.icon}`} />
               </svg>
-              <span>{item.title}</span>
+              <span>{t(item.title)}</span>
             </a>
           ))}
         </div>
@@ -105,5 +107,9 @@ class Footer extends React.Component {
   }
 }
 
+const TransFooter = translate('microscope')(Footer)
+
 export default () =>
-  createPortal(<Footer />, document.getElementById('footer') as HTMLElement)
+  createPortal(<TransFooter />, document.getElementById(
+    'footer',
+  ) as HTMLElement)

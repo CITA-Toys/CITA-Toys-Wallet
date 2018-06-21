@@ -5,9 +5,15 @@ header {
 }
 
 body {
+  display: flex;
+  flex-direction: column;
   min-height: 100vh;
   background: rgba(255, 255, 255, 0.05);
   overflow-x: hidden;
+}
+
+main {
+  flex: 1;
 }
 
 a {
@@ -19,6 +25,13 @@ ul {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+table {
+  color: $tableText;
+  thead {
+    color: $heavyText;
+  }
 }
 
 footer {
@@ -40,15 +53,31 @@ footer {
 }
 
 * {
-  outline: none;
+  outline: none; // box-sizing: border-box;
 }
 
 :global {
+  .active {
+    background-color: $primary;
+    border-color: $primary;
+    color: #fff !important;
+  }
   .icon {
     width: 1em;
     height: 1em;
     vertical-align: -0.15em;
     fill: currentColor;
     overflow: hidden;
+  }
+  .linearProgressRoot {
+    position: absolute !important;
+    width: 100vw;
+    top: 89px;
+    left: 0;
+  }
+  @media (max-width:800px) {
+    .linearProgressRoot {
+      top: 56px;
+    }
   }
 }

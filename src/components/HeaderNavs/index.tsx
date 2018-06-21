@@ -1,10 +1,11 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
+import { translate } from 'react-i18next'
 import Typography from '@material-ui/core/Typography'
 
 const styles = require('../../containers/Header/styles.scss')
 
-const HeaderNavs = ({ containers, pathname }) => (
+const HeaderNavs = ({ containers, pathname, t }) => (
   <React.Fragment>
     <Link to="/" href="/" className={styles.headerNavIcon}>
       <Typography variant="title" color="inherit">
@@ -21,11 +22,11 @@ const HeaderNavs = ({ containers, pathname }) => (
               pathname === container.path ? styles.activeNav : ''
             }`}
           >
-            <span>{container.name}</span>
+            <span>{t(container.name)}</span>
           </Link>
         </Typography>
       ))}
     </div>
   </React.Fragment>
 )
-export default HeaderNavs
+export default translate('microscope')(HeaderNavs)

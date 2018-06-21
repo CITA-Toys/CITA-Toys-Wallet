@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
+import { translate } from 'react-i18next'
 import SearchIcon from '@material-ui/icons/Search'
 import { withObservables } from '../../contexts/observables'
 import {
@@ -38,127 +39,135 @@ const searchGen = keyword => {
   }
 }
 
-const BlockDisplay = ({ block }: { block: IBlock }) => (
-  <div className={styles.display}>
-    <div className={styles.title}>Block</div>
-    <table className={styles.items}>
-      <tbody>
-        <tr>
-          <td>Hash</td>
-          <td>{block.hash}</td>
-        </tr>
-        <tr>
-          <td>Height</td>
-          <td>{+block.header.number}</td>
-        </tr>
-        <tr>
-          <td>Prev Hash</td>
-          <td>{block.header.prevHash}</td>
-        </tr>
-        <tr>
-          <td>Validator</td>
-          <td>{block.header.proof.Tendermint.proposal}</td>
-        </tr>
-        <tr>
-          <td>Time</td>
-          <td>{new Date(block.header.timestamp).toLocaleDateString()}</td>
-        </tr>
-        <tr>
-          <td>Gas Used</td>
-          <td>{block.header.gasUsed}</td>
-        </tr>
-      </tbody>
-    </table>
-    <Link
-      to={`/block/${block.hash}`}
-      href={`/block/${block.hash}`}
-      className={styles.more}
-    >
-      Detail
-    </Link>
-  </div>
+const BlockDisplay = translate('microscope')(
+  ({ block, t }: { block: IBlock; t: (key: string) => string }) => (
+    <div className={styles.display}>
+      <div className={styles.title}>Block</div>
+      <table className={styles.items}>
+        <tbody>
+          <tr>
+            <td>{t('hash')}</td>
+            <td>{block.hash}</td>
+          </tr>
+          <tr>
+            <td>{t('height')}</td>
+            <td>{+block.header.number}</td>
+          </tr>
+          <tr>
+            <td>{t('prev hash')}</td>
+            <td>{block.header.prevHash}</td>
+          </tr>
+          <tr>
+            <td>{t('validator')}</td>
+            <td>{block.header.proof.Tendermint.proposal}</td>
+          </tr>
+          <tr>
+            <td>{t('time')}</td>
+            <td>{new Date(block.header.timestamp).toLocaleDateString()}</td>
+          </tr>
+          <tr>
+            <td>{t('gas used')}</td>
+            <td>{block.header.gasUsed}</td>
+          </tr>
+        </tbody>
+      </table>
+      <Link
+        to={`/block/${block.hash}`}
+        href={`/block/${block.hash}`}
+        className={styles.more}
+      >
+        {t('detail')}
+      </Link>
+    </div>
+  ),
 )
 
-const TransactionDisplay = ({ tx }: { tx: Transaction }) =>
-  tx.basicInfo ? (
-    <div className={styles.display}>
-      <div className={styles.title}>Transaction</div>
-      <table className={styles.items}>
-        <tbody>
-          <tr>
-            <td>From</td>
-            <td>{tx.basicInfo.from}</td>
-          </tr>
-          <tr>
-            <td>To</td>
-            <td>{tx.basicInfo.to}</td>
-          </tr>
-          <tr>
-            <td>Value</td>
-            <td>{tx.basicInfo.value}</td>
-          </tr>
-        </tbody>
-      </table>
-      <Link
-        to={`/transaction/${tx.hash}`}
-        href={`/transaction/${tx.hash}`}
-        className={styles.more}
-      >
-        Detail
-      </Link>
-    </div>
-  ) : (
-    <div className={styles.display}>
-      <div className={styles.title}>Transaction</div>
-      <table className={styles.items}>
-        <tbody>
-          <tr>
-            <td>Content</td>
-            <td>{tx.content}</td>
-          </tr>
-        </tbody>
-      </table>
-      <Link
-        to={`/transaction/${tx.hash}`}
-        href={`/transaction/${tx.hash}`}
-        className={styles.more}
-      >
-        Detail
-      </Link>
-    </div>
-  )
+const TransactionDisplay = translate('microscope')(
+  ({ tx, t }: { tx: Transaction; t: (key: string) => string }) =>
+    tx.basicInfo ? (
+      <div className={styles.display}>
+        <div className={styles.title}>Transaction</div>
+        <table className={styles.items}>
+          <tbody>
+            <tr>
+              <td>{t('from')}</td>
+              <td>{tx.basicInfo.from}</td>
+            </tr>
+            <tr>
+              <td>{t('to')}</td>
+              <td>{tx.basicInfo.to}</td>
+            </tr>
+            <tr>
+              <td>{t('value')}</td>
+              <td>{tx.basicInfo.value}</td>
+            </tr>
+          </tbody>
+        </table>
+        <Link
+          to={`/transaction/${tx.hash}`}
+          href={`/transaction/${tx.hash}`}
+          className={styles.more}
+        >
+          {t('detail')}
+        </Link>
+      </div>
+    ) : (
+      <div className={styles.display}>
+        <div className={styles.title}>Transaction</div>
+        <table className={styles.items}>
+          <tbody>
+            <tr>
+              <td>{t('content')}</td>
+              <td>{tx.content}</td>
+            </tr>
+          </tbody>
+        </table>
+        <Link
+          to={`/transaction/${tx.hash}`}
+          href={`/transaction/${tx.hash}`}
+          className={styles.more}
+        >
+          {t('detail')}
+        </Link>
+      </div>
+    ),
+)
 
-const AccountDisplay = ({
-  balance,
-  txCount,
-  addr,
-}: {
-balance: string
-txCount: number
-addr: string
-}) => (
-  <div className={styles.display}>
-    <div className={styles.title}>Account</div>
-    <table className={styles.items}>
-      <tbody>
-        <tr>
-          <td>Balance</td>
-          <td>{balance}</td>
-        </tr>
-        <tr>
-          <td>Transactions</td>
-          <td>{txCount}</td>
-        </tr>
-      </tbody>
-    </table>
-    <Link
-      to={`/account/${addr}`}
-      href={`/account/${addr}`}
-      className={styles.more}
-    >
-      Detail
-    </Link>
-  </div>
+const AccountDisplay = translate('microscope')(
+  ({
+    balance,
+    txCount,
+    addr,
+    t,
+  }: {
+  balance: string
+  txCount: number
+  addr: string
+  t: (key: string) => string
+  }) => (
+    <div className={styles.display}>
+      <div className={styles.title}>{t('account')}</div>
+      <table className={styles.items}>
+        <tbody>
+          <tr>
+            <td>{t('balance')}</td>
+            <td>{balance}</td>
+          </tr>
+          <tr>
+            <td>{t('transactions')}</td>
+            <td>{txCount}</td>
+          </tr>
+        </tbody>
+      </table>
+      <Link
+        to={`/account/${addr}`}
+        href={`/account/${addr}`}
+        className={styles.more}
+      >
+        {t('detail')}
+      </Link>
+    </div>
+  ),
 )
 
 const initState = {

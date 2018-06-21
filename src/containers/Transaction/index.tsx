@@ -12,6 +12,7 @@ import Divider from '@material-ui/core/Divider'
 import { withObservables } from '../../contexts/observables'
 import { IContainerProps, DetailedTransaction } from '../../typings/'
 import ErrorNotification from '../../components/ErrorNotification'
+import hideLoader from '../../utils/hideLoader'
 
 const layouts = require('../../styles/layout.scss')
 const texts = require('../../styles/text.scss')
@@ -92,6 +93,9 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
       )
     }
   }
+  componentDidMount () {
+    hideLoader()
+  }
   private handleReturnedTx = (tx: DetailedTransaction) => {
     if (!tx) {
       return this.setState(state => ({
@@ -140,7 +144,13 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
     } = this.state
     return (
       <React.Fragment>
-        {hash ? '' : <LinearProgress />}
+        {hash ? null : (
+          <LinearProgress
+            classes={{
+              root: 'linearProgressRoot',
+            }}
+          />
+        )}
         <div className={layouts.main}>
           <Card classes={{ root: layouts.cardContainer }}>
             {/*

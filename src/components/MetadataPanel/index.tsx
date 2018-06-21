@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { translate } from 'react-i18next'
 import { Metadata } from '../../typings'
 
 const styles = require('./styles.scss')
@@ -13,25 +14,27 @@ const list = [
   { name: 'Block Interval', value: 'blockInterval' },
 ]
 
-const MetadataRender = ({ metadata }: { metadata: Metadata }) => (
-  <div className={styles.display}>
-    {list.map(item => (
-      <div key={item.name} className={styles.item}>
-        {item.name}:{' '}
-        <span className={styles.itemValue}>{metadata[item.value]}</span>
-      </div>
-    ))}
-    <div className={styles.validators}>
-      <div className={styles.item}>Validators:</div>
-      <div className={styles.box}>
-        {metadata.validators.map((validator, index) => (
-          <div key={validator} className={text.ellipsis}>
-            {index + 1}: {validator}
-          </div>
-        ))}
+const MetadataRender = translate('microscope')(
+  ({ metadata, t }: { metadata: Metadata; t: (key: string) => string }) => (
+    <div className={styles.display}>
+      {list.map(item => (
+        <div key={item.name} className={`${styles.item} ${text.ellipsis}`}>
+          {t(item.name)}:{' '}
+          <span className={styles.itemValue}>{metadata[item.value]}</span>
+        </div>
+      ))}
+      <div className={styles.validators}>
+        <div className={styles.item}>{t('validators')}:</div>
+        <div className={styles.box}>
+          {metadata.validators.map((validator, index) => (
+            <div key={validator} className={`${text.ellipsis} ${text.hash}`}>
+              {index + 1}: {validator}
+            </div>
+          ))}
+        </div>
       </div>
     </div>
-  </div>
+  ),
 )
 
 interface MetadataPanelProps {
@@ -41,6 +44,7 @@ interface MetadataPanelProps {
   handleInput: (key: string) => (e: any) => void
   switchChain: (e) => void
   handleKeyUp: (e: React.KeyboardEvent<HTMLInputElement>) => void
+  t: (key: string) => string
 }
 
 const MetadataPanel: React.SFC<MetadataPanelProps> = ({
@@ -50,19 +54,25 @@ const MetadataPanel: React.SFC<MetadataPanelProps> = ({
   handleInput,
   handleKeyUp,
   switchChain,
+  t,
 }) => (
   <div>
-    <div className={styles.title}>Active Chain:</div>
+    <div className={styles.title}>
+      {t('active')} {t('chain')}:
+    </div>
     <MetadataRender metadata={metadata} />
-    <div className={styles.title}>Other Chain</div>
+    <div className={styles.title}>
+      {t('other')} {t('chain')}
+    </div>
     <div className={styles.fields}>
       <input
         type="text"
         onChange={handleInput('searchIp')}
+        placeholder="ip:port"
         value={searchIp}
         onKeyUp={handleKeyUp}
       />
-      <button onClick={switchChain}>切换</button>
+      <button onClick={switchChain}>{t('switch')}</button>
     </div>
     {searchResult.chainId !== '' ? (
       <MetadataRender metadata={searchResult} />
@@ -70,4 +80,4 @@ const MetadataPanel: React.SFC<MetadataPanelProps> = ({
   </div>
 )
 
-export default MetadataPanel
+export default translate('microscope')(MetadataPanel)

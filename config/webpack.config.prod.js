@@ -76,7 +76,6 @@ const prodConfig = {
       title: 'Microscope',
       template: path.resolve(__dirname, '../src/templates/index.html'),
       react: `./lib/${manifest['react.js']}`,
-      iconfont: '//at.alicdn.com/t/font_708755_runveiza6pp.js',
       minify: {
         removeComments: true,
         collapseWhitespace: true,

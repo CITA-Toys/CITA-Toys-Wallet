@@ -7,20 +7,6 @@ interface MetadataProps {
   onOpen: () => void
   children: React.ReactChild
 }
-// class RightSidebar extends React.Component<MetadataProps, {}> {
-//   render() {
-//     return (
-//       <SwipeableDrawer
-//         anchor="right"
-//         open={this.props.on}
-//         onClose={this.props.onClose}
-//         onOpen={this.props.onOpen}
-//       >
-//         {this.props.children}
-//       </SwipeableDrawer>
-//     )
-//   }
-// }
 
 const RightSidebar: React.SFC<MetadataProps> = ({
   on,

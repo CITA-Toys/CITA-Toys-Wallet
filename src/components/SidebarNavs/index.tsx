@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
+import { translate } from 'react-i18next'
 import Typography from '@material-ui/core/Typography'
 import Toolbar from '@material-ui/core/Toolbar'
 import Drawer from '@material-ui/core/Drawer'
@@ -12,7 +13,7 @@ import AppBar from '@material-ui/core/AppBar'
 
 const styles = require('../../containers/Header/styles.scss')
 
-const SidebarNavs = ({ open, containers, pathname, toggleSideNavs }) => (
+const SidebarNavs = ({ open, containers, pathname, toggleSideNavs, t }) => (
   <Drawer open={open} onClose={toggleSideNavs()}>
     <AppBar position="sticky">
       <Toolbar
@@ -20,7 +21,12 @@ const SidebarNavs = ({ open, containers, pathname, toggleSideNavs }) => (
           root: styles.toolbarRoot,
         }}
       >
-        <Link to="/" href="/" style={{ color: '#000', marginRight: '31px' }}>
+        <Link
+          to="/"
+          href="/"
+          onClick={toggleSideNavs()}
+          style={{ color: '#000', marginRight: '31px' }}
+        >
           <Typography variant="title" color="inherit">
             {(process.env.APP_NAME as string).toUpperCase()}
           </Typography>
@@ -34,24 +40,6 @@ const SidebarNavs = ({ open, containers, pathname, toggleSideNavs }) => (
         </IconButton>
       </Toolbar>
     </AppBar>
-    {/*
-    <div className={styles.navs}>
-      {containers.filter(container => container.nav).map(container => (
-        <Typography variant="subheading" key={container.name}>
-          <Link
-            to={container.path}
-            href={container.path}
-            className={`${styles.navItem} ${
-              pathname === container.path ? styles.activeNav : ''
-            }`}
-            onClick={toggleSideNavs()}
-          >
-            <span>{container.name}</span>
-          </Link>
-        </Typography>
-      ))}
-    </div>
-    */}
     <List>
       {containers.filter(container => container.nav).map(container => (
         <ListItem key={container.name}>
@@ -65,7 +53,7 @@ const SidebarNavs = ({ open, containers, pathname, toggleSideNavs }) => (
                 }`}
                 onClick={toggleSideNavs()}
               >
-                <span>{container.name}</span>
+                <span>{t(container.name)}</span>
               </Link>
             }
           />
@@ -74,4 +62,4 @@ const SidebarNavs = ({ open, containers, pathname, toggleSideNavs }) => (
     </List>
   </Drawer>
 )
-export default SidebarNavs
+export default translate('microscope')(SidebarNavs)

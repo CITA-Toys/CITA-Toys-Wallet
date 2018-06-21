@@ -1,10 +1,10 @@
 @import '../../styles/color.scss';
 @mixin button {
   color: #FFF;
-  background: $active;
+  background: $primary;
   border: none;
   border-radius: 4px;
-  padding: 7px 22px;
+  padding: 9px 20px;
   cursor: pointer;
 }
 
@@ -18,15 +18,18 @@
   justify-content: space-between;
   align-items: flex-end;
   border-bottom: 1px solid #e2e9f2;
+  color: $plainText;
   font-size: 0.875rem;
+  text-transform: capitalize;
   .selector {
     color: #FFF;
-    background: $active;
+    background: $primary;
   }
   padding-bottom: 5px;
   margin-bottom: 28px;
   button {
     @include button;
+    text-transform: inherit;
   }
 }
 
@@ -39,7 +42,7 @@
   thead {
     height: 55px;
     line-height: 55px;
-    font-size: bolder;
+    font-weight: bolder;
     background-color: rgba(38, 71, 253, 0.06);
     border: 1px solid rgba(38, 71, 253, 0.3);
     th {
@@ -71,6 +74,7 @@
     display: flex;
     justify-content: center;
     align-content: center;
+    color: $plainText;
     border: 1px solid #d9d9d9;
     border-radius: 4px;
     margin: 0 4px;
@@ -79,10 +83,10 @@
 }
 
 :global {
-  .active {
+  .primary {
     color: #fff !important;
-    background-color: $active !important;
-    border-color: $active !important;
+    background-color: $primary !important;
+    border-color: $primary !important;
   }
   .btn-first-page,
   .btn-prev-page,

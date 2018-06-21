@@ -1,12 +1,16 @@
 import * as React from 'react'
 import { createPortal } from 'react-dom'
+import { translate } from 'react-i18next'
 import { Subject, Subscription } from '@reactivex/rxjs'
 import axios, { AxiosResponse, AxiosPromise } from 'axios'
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
+import Menu from '@material-ui/core/Menu'
+import MenuItem from '@material-ui/core/MenuItem'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import IconButton from '@material-ui/core/IconButton'
+import TranslateIcon from '@material-ui/icons/Translate'
 import MenuIcon from '@material-ui/icons/Menu'
 import CloseIcon from '@material-ui/icons/Close'
 import FingerprintIcon from '@material-ui/icons/Fingerprint'
@@ -51,6 +55,9 @@ const initState = {
   ipb: 0,
   peerCount: 0,
   block: initBlock,
+  anchorEl: undefined,
+  lngOpen: false,
+  lng: window.localStorage.getItem('i18nextLng'),
 }
 type HeaderState = typeof initState
 interface HeaderProps extends IContainerProps {}
@@ -62,6 +69,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     this.fetchStatus()
   }
   componentDidMount () {
+    // console.log(this.props)
+
     this.searchSubscription = this.onSearch$
       .debounceTime(1000)
       .subscribe(({ key, value }) => {
@@ -73,7 +82,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       blockNumber: 'latest',
     }).subscribe(
       (metadata: Metadata) => {
-        this.setState(state => ({ ...state, metadata }))
+        this.setState({
+          metadata: {
+            ...metadata,
+            genesisTimestamp: new Date(
+              metadata.genesisTimestamp,
+            ).toLocaleString(),
+          },
+        })
       },
       error => {
         console.error(error)
@@ -97,9 +113,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         })
         .then((res: AxiosResponse) => {
           if (res.data && res.data.result) {
-            this.setState(state => ({
-              otherMetadata: res.data.result,
-            }))
+            this.setState({
+              otherMetadata: {
+                ...res.data.result,
+                genesisTimestamp: new Date(
+                  res.data.result.genesisTimestamp,
+                ).toLocaleString(),
+              },
+            })
           } else {
             throw new Error('Error Response')
           }
@@ -160,8 +181,17 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       [key]: value,
     }))
   }
+  private toggleLngMenu = (lngOpen = false) => e => {
+    this.setState({ lngOpen, anchorEl: e.currentTarget })
+  }
 
-  switchChain = () => {
+  private changeLng = (lng = 'en') => e => {
+    this.setState({ lngOpen: false })
+    // this.props.i18n.changeLanguage(lng)
+    window.localStorage.setItem('i18nextLng', lng)
+    window.location.reload()
+  }
+  private switchChain = () => {
     this.props.CITAObservables.setServer(
       this.state.searchIp.startsWith('http')
         ? this.state.searchIp
@@ -174,9 +204,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     window.location.reload()
   }
   private searchSubscription: Subscription
+  private translations = ['zh', 'en', 'ja-JP', 'ko', 'de', 'it', 'fr']
   render () {
+    const { anchorEl, lngOpen } = this.state
     const {
       location: { pathname },
+      t,
     } = this.props
     return createPortal(
       <React.Fragment>
@@ -213,7 +246,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                   className={styles.navItem}
                   onClick={this.togglePanel('statistics')}
                 >
-                  TPS: {this.state.tps.toFixed(2)}
+                  {t('TPS')}: {this.state.tps.toFixed(2)}
                 </Button>
               ) : null}
               <IconButton
@@ -222,9 +255,20 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               >
                 <SearchIcon />
               </IconButton>
-              <Button className={styles.navItem} onClick={this.togglePanel('')}>
-                CN
-              </Button>
+              <IconButton onClick={this.toggleLngMenu(true)}>
+                <TranslateIcon />
+              </IconButton>
+              <Menu
+                open={lngOpen}
+                anchorEl={anchorEl}
+                onClose={this.toggleLngMenu()}
+              >
+                {this.translations.map(lng => (
+                  <MenuItem onClick={this.changeLng(lng)} key={lng}>
+                    {t(lng).toUpperCase()}
+                  </MenuItem>
+                ))}
+              </Menu>
             </div>
           </Toolbar>
         </AppBar>
@@ -233,7 +277,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           onClose={this.togglePanel('')}
           onOpen={() => {}}
         >
-          <div>
+          <div className={styles.rightSidebarContent}>
             <AppBar color="default" position="sticky">
               <Toolbar
                 classes={{
@@ -278,4 +322,4 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   }
 }
 
-export default withConfig(withObservables(Header))
+export default translate('microscope')(withConfig(withObservables(Header)))

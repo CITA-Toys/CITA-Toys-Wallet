@@ -1,3 +1,4 @@
+@import '../../styles/color.scss';
 @import '../../styles/layout.scss';
 .addServer {
   display: flex;
@@ -8,6 +9,7 @@
 
 .panel {
   @include boxShadow;
+  text-transform: capitalize;
 }
 
 .main {
@@ -17,4 +19,16 @@
 
 .panelTitle {
   text-transform: capitalize;
+}
+
+.switchColorPrimary {
+  // color: blue !important;
+}
+
+.switchChecked.switchColorSecondary {
+  color: $secondary !important;
+}
+
+.switchChecked.switchColorSecondary+.switchBar {
+  background-color: $secondary !important;
 }

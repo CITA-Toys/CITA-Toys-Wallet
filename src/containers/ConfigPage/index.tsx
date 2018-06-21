@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { translate } from 'react-i18next'
 import List from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
@@ -18,6 +19,7 @@ import { PanelConfigs } from '../../config/localstorage'
 import { initPanelConfigs } from '../../initValues'
 import { withObservables } from '../../contexts/observables'
 import { withConfig, IConfig } from '../../contexts/config'
+import hideLoader from '../../utils/hideLoader'
 
 const layouts = require('../../styles/layout')
 const styles = require('./styles.scss')
@@ -49,6 +51,7 @@ enum ConfigPanel {
 export interface IConfigPageProps {
   config: IConfig
   CITAObservables: CITAObservables
+  t: (key: string) => string
 }
 
 export interface IConfigPageState {
@@ -59,61 +62,96 @@ const initState: IConfigPageState = {
   configs: initPanelConfigs,
 }
 
-const ConfigItem = ({
-  config,
-  index,
-  value,
-  handleSwitch,
-  handleInput,
-}: {
-config: ConfigItem
-index: number
-value: number | string | boolean | undefined
-handleSwitch: (key: string) => (e: any) => void
-handleInput: (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => void
-}) => (
-  <ListItem key={config.key}>
-    <ListItemText
-      primary={`${config.type === ConfigType.DISPLAY ? 'Display' : 'Set'} ${
-        config.title
-      }`}
-    />
-    <ListItemSecondaryAction>
-      {config.type === ConfigType.DISPLAY ? (
-        <Switch onChange={handleSwitch(config.key)} checked={!!value} />
-      ) : (
-        <div>
-          <TextField value={`${value}`} onChange={handleInput(config.key)} />
-        </div>
-      )}
-    </ListItemSecondaryAction>
-  </ListItem>
+const ConfigItem = translate('microscope')(
+  ({
+    config,
+    index,
+    value,
+    handleSwitch,
+    handleInput,
+    t,
+  }: {
+  config: ConfigItem
+  index: number
+  value: number | string | boolean | undefined
+  handleSwitch: (key: string) => (e: any) => void
+  handleInput: (
+    key: string,
+  ) => (e: React.ChangeEvent<HTMLInputElement>) => void
+  t: (key: string) => string
+  }) => (
+    <ListItem key={config.key}>
+      <ListItemText
+        primary={
+          <React.Fragment>
+            {t(config.type === ConfigType.DISPLAY ? 'display' : 'set')}{' '}
+            {t(config.title)}
+          </React.Fragment>
+          // ' ' +
+        }
+      />
+      <ListItemSecondaryAction>
+        {config.type === ConfigType.DISPLAY ? (
+          <Switch
+            classes={{
+              bar: styles.switchBar,
+              checked: styles.switchChecked,
+              colorPrimary: styles.switchColorPrimary,
+              colorSecondary: styles.switchColorSecondary,
+            }}
+            onChange={handleSwitch(config.key)}
+            checked={!!value}
+          />
+        ) : (
+          <div>
+            <TextField value={`${value}`} onChange={handleInput(config.key)} />
+          </div>
+        )}
+      </ListItemSecondaryAction>
+    </ListItem>
+  ),
 )
 
-const Config = ({ title, configs, values, handleSwitch, handleInput }) => (
-  <ExpansionPanel defaultExpanded classes={{ root: styles.panel }}>
-    <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
-      <Typography variant="caption" classes={{ caption: styles.panelTitle }}>
-        {`${title} Config`}
-      </Typography>
-    </ExpansionPanelSummary>
-    <Divider />
-    <ExpansionPanelDetails>
-      <List style={{ width: '100%' }}>
-        {configs.map((config, idx) => (
-          <ConfigItem
-            key={config.key}
-            config={config}
-            index={idx}
-            value={values[config.key]}
-            handleSwitch={handleSwitch}
-            handleInput={handleInput}
-          />
-        ))}
-      </List>
-    </ExpansionPanelDetails>
-    <Divider />
-  </ExpansionPanel>
+const Config = translate('microscope')(
+  ({
+    title,
+    configs,
+    values,
+    handleSwitch,
+    handleInput,
+    t,
+  }: {
+  title: any
+  configs: any
+  values: any
+  handleSwitch: any
+  handleInput: any
+  t: any
+  }) => (
+    <ExpansionPanel defaultExpanded classes={{ root: styles.panel }}>
+      <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
+        <Typography variant="caption" classes={{ caption: styles.panelTitle }}>
+          {t(title)} {t('config')}
+        </Typography>
+      </ExpansionPanelSummary>
+      <Divider />
+      <ExpansionPanelDetails>
+        <List style={{ width: '100%' }}>
+          {configs.map((config, idx) => (
+            <ConfigItem
+              key={config.key}
+              config={config}
+              index={idx}
+              value={values[config.key]}
+              handleSwitch={handleSwitch}
+              handleInput={handleInput}
+            />
+          ))}
+        </List>
+      </ExpansionPanelDetails>
+      <Divider />
+    </ExpansionPanel>
+  ),
 )
 
 class ConfigPage extends React.Component<IConfigPageProps, IConfigPageState> {
@@ -124,7 +162,39 @@ class ConfigPage extends React.Component<IConfigPageProps, IConfigPageState> {
       configs: this.props.config.panelConfigs,
     }
   }
-  configs = [
+
+  componentDidMount () {
+    hideLoader()
+  }
+  private handleSwitch = key => (e: any) => {
+    this.setState(state => {
+      const { configs } = this.state
+      const newConfig = { ...configs, [key]: !configs[key] }
+      if (this.props.config.changePanelConfig(newConfig)) {
+        return { configs: newConfig }
+      }
+      return state
+    })
+  }
+  private handleInput = key => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.currentTarget
+    this.setState(state => {
+      const { configs } = state
+      const newConfig = { ...configs, [key]: value }
+      if (this.props.config.changePanelConfig(newConfig)) {
+        return { configs: newConfig }
+      }
+      return state
+    })
+  }
+  private panels = [
+    // ConfigPanel.GENERAL,
+    ConfigPanel.HEADER,
+    ConfigPanel.BLOCK,
+    ConfigPanel.TRANSACTION,
+    ConfigPanel.GRAPH,
+  ]
+  private configs = [
     {
       panel: ConfigPanel.GENERAL,
       type: ConfigType.VALUE,
@@ -164,7 +234,7 @@ class ConfigPage extends React.Component<IConfigPageProps, IConfigPageState> {
     {
       panel: ConfigPanel.BLOCK,
       type: ConfigType.DISPLAY,
-      key: 'blcokGasUsed',
+      key: 'blockGasUsed',
       title: 'gas used',
     },
     {
@@ -258,34 +328,6 @@ class ConfigPage extends React.Component<IConfigPageProps, IConfigPageState> {
       title: 'MaxCount',
     },
   ] as ConfigItem[]
-  private handleSwitch = key => (e: any) => {
-    this.setState(state => {
-      const { configs } = this.state
-      const newConfig = { ...configs, [key]: !configs[key] }
-      if (this.props.config.changePanelConfig(newConfig)) {
-        return { configs: newConfig }
-      }
-      return state
-    })
-  }
-  private handleInput = key => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.currentTarget
-    this.setState(state => {
-      const { configs } = state
-      const newConfig = { ...configs, [key]: value }
-      if (this.props.config.changePanelConfig(newConfig)) {
-        return { configs: newConfig }
-      }
-      return state
-    })
-  }
-  private panels = [
-    // ConfigPanel.GENERAL,
-    ConfigPanel.HEADER,
-    ConfigPanel.BLOCK,
-    ConfigPanel.TRANSACTION,
-    ConfigPanel.GRAPH,
-  ]
   render () {
     return (
       <div className={styles.main}>

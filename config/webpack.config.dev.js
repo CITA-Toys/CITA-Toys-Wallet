@@ -66,7 +66,6 @@ const devConfig = {
       template: path.resolve(__dirname, '../src/templates/index.html'),
       react: `../lib/${manifest['react.js']}`,
       styledComponents: `../lib/${manifest['styledComponents.js']}`,
-      iconfont: '//at.alicdn.com/t/font_708755_runveiza6pp.js',
     }),
   ],
   devServer: {

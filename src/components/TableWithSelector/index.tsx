@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
+import { translate } from 'react-i18next'
 import Paper from '@material-ui/core/Paper'
 import Pager from 'react-pager'
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft'
@@ -47,8 +48,8 @@ export interface TableWithSelectorProps {
   handlePageChanged?: (pageNo: number) => void
 }
 
-export default class TableWithSelector extends React.Component<
-  TableWithSelectorProps,
+class TableWithSelector extends React.Component<
+  TableWithSelectorProps & { t: (key: string) => string },
   any
   > {
   state = {
@@ -82,14 +83,14 @@ export default class TableWithSelector extends React.Component<
   }
   render () {
     const { on, selectorsValue } = this.state
-    const { headers, items, selectors, pageSize, pageNo, count } = this.props
+    const { headers, items, selectors, pageSize, pageNo, count, t } = this.props
     const total = Math.ceil(count / pageSize)
     const activeParams = paramsFilter(this.props.selectorsValue)
     return (
       <Paper className={`${layout.center} ${styles.container}`}>
         <Dialog
           on={!!on}
-          dialogTitle="高级选择器"
+          dialogTitle={t('advanced selector')}
           onClose={this.showDialog(false)}
           maxWidth="md"
         >
@@ -98,12 +99,12 @@ export default class TableWithSelector extends React.Component<
               selector =>
                 selector.items ? (
                   <div key={selector.key} className={styles.rangeSelector}>
-                    <span className={styles.title}>{selector.text}</span>
+                    <span className={styles.title}>{t(selector.text)}</span>
                     {selector.items.map(item => (
                       <input
                         key={item.key}
                         value={selectorsValue[item.key]}
-                        placeholder={item.text}
+                        placeholder={t(item.text)}
                         onChange={this.handleSelectorInput(item.key)}
                       />
                     ))}
@@ -113,28 +114,32 @@ export default class TableWithSelector extends React.Component<
                     <span className={styles.title}>{selector.text}</span>
                     <input
                       value={selectorsValue[selector.key]}
-                      placeholder={selector.text}
+                      placeholder={t(selector.text)}
                       onChange={this.handleSelectorInput(selector.key)}
                     />
                   </div>
                 ),
             )}
-            <button onClick={this.handleSubmit}>Submit</button>
+            <button onClick={this.handleSubmit}>{t('submit')}</button>
           </div>
         </Dialog>
         <div className={styles.options}>
           <span>
-            当前搜索参数:
+            {t('current params')}:{' '}
             {Object.keys(activeParams)
               .map(key => `${key}: ${activeParams[key]}`)
               .join(', ')}
           </span>
-          <button onClick={this.showDialog(true)}>高级选择器</button>
+          <button onClick={this.showDialog(true)}>
+            {t('advanced selector')}
+          </button>
         </div>
         <table className={styles.table}>
           <thead>
             <tr>
-              {headers.map(header => <th key={header.key}>{header.key}</th>)}
+              {headers.map(header => (
+                <th key={header.key}>{t(header.text)}</th>
+              ))}
             </tr>
           </thead>
           <tbody>
@@ -185,3 +190,4 @@ export default class TableWithSelector extends React.Component<
   }
 }
 // export default TableWithSelector
+export default translate('microscope')(TableWithSelector)

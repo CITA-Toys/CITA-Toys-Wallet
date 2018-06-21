@@ -1,4 +1,11 @@
 .title {
   display: flex;
   justify-content: space-between;
+  h2 {
+    text-transform: capitalize;
+  }
+}
+
+.dialogTitle {
+  text-transform: capitalize;
 }

@@ -28,11 +28,17 @@ $sidebar-padding: 29px;
   }
 }
 
-.display {}
+@media(min-width: 800px) {
+  .fields {
+    input {
+      min-width: 320px;
+    }
+  }
+}
 
 .title {
   background-color: #f4f7ff;
-  font-size: bold;
+  font-weight: bold;
   padding: 0 $sidebar-padding;
   height: 42px;
   line-height: 42px;
@@ -71,4 +77,8 @@ $sidebar-padding: 29px;
   border-radius: 4px;
   margin: 0 auto;
   margin-top: 31px;
+}
+
+.display {
+  text-transform: capitalize;
 }

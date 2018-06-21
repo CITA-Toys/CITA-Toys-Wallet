@@ -16,6 +16,7 @@ import {
 } from '../../typings/'
 import { BarOption, PieOption } from '../../config/graph'
 import { fetchTransactions, fetchStatistics } from '../../utils/fetcher'
+import hideLoader from '../../utils/hideLoader'
 
 const layout = require('../../styles/layout.scss')
 const styles = require('./styles.scss')
@@ -95,6 +96,7 @@ class Graphs extends React.Component<GraphsProps, GraphState> {
   }
 
   componentDidMount () {
+    hideLoader()
     this.initGraphs()
   }
   // private graphSource: any[] = []

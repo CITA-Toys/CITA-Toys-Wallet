@@ -3,7 +3,6 @@ import { IBlock, IBlockHeader, Transaction, Metadata } from './typings'
 import { PanelConfigs } from './config/localstorage'
 
 const isDesktop = window.innerWidth >= 800
-console.log(isDesktop)
 export const initHeader: IBlockHeader = {
   timestamp: '',
   prevHash: '',

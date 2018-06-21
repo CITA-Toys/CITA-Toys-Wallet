@@ -1,12 +1,15 @@
 import * as React from 'react'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import TableWithSelector, {
   TableWithSelectorProps,
   SelectorType,
 } from '../../components/TableWithSelector'
+import ErrorNotification from '../../components/ErrorNotification'
 import { fetchTransactions } from '../../utils/fetcher'
 import { withConfig } from '../../contexts/config'
 import { TransactionFromServer, IContainerProps } from '../../typings'
 import paramsFilter from '../../utils/paramsFilter'
+import hideLoader from '../../utils/hideLoader'
 
 interface AdvancedSelectors {
   selectorsValue: {
@@ -14,13 +17,20 @@ interface AdvancedSelectors {
   }
 }
 
-const initialState: TableWithSelectorProps & AdvancedSelectors = {
+const initialState: TableWithSelectorProps &
+AdvancedSelectors & {
+loading: boolean
+error: {
+code: string
+message: string
+}
+} = {
   headers: [
     { key: 'hash', text: 'hash', href: '/transaction/' },
     { key: 'from', text: 'from', href: '/account/' },
     { key: 'to', text: 'to', href: '/account/' },
     { key: 'value', text: 'value' },
-    { key: 'blockNumber', text: 'block number', href: '/height/' },
+    { key: 'blockNumber', text: 'height', href: '/height/' },
     { key: 'gasUsed', text: 'gas used' },
     { key: 'age', text: 'age' },
   ],
@@ -56,6 +66,11 @@ const initialState: TableWithSelectorProps & AdvancedSelectors = {
     valueTo: '',
     account: '',
   },
+  loading: false,
+  error: {
+    code: '',
+    message: '',
+  },
 }
 
 interface TransactionTableProps extends IContainerProps {}
@@ -71,6 +86,7 @@ class TransactionTable extends React.Component<
     this.setPageSize()
   }
   componentDidMount () {
+    hideLoader()
     this.fetchTransactions({
       ...this.state.selectorsValue,
       offset: this.state.pageNo * this.state.pageSize,
@@ -131,32 +147,47 @@ class TransactionTable extends React.Component<
 
   private fetchTransactions = (
     params: { [index: string]: string | number } = {},
-  ) =>
-    fetchTransactions(paramsFilter(params)).then(
-      ({
-        result,
-      }: {
-      result: { transactions: TransactionFromServer[]; count: number }
-      }) => {
-        this.setState(state =>
-          Object.assign({}, state, {
-            count: result.count,
-            items: result.transactions.map(tx => ({
-              key: tx.hash,
-              blockNumber: tx.blockNumber,
-              hash: tx.hash,
-              from: tx.from,
-              to: tx.to,
-              value: tx.value,
-              age: `${Math.round((Date.now() - tx.timestamp) / 1000)}s ago`,
-              gasUsed: tx.gasUsed,
-            })),
-          }),
-        )
-      },
-    )
+  ) => {
+    this.setState({ loading: true })
+    return fetchTransactions(paramsFilter(params))
+      .then(
+        ({
+          result,
+        }: {
+        result: { transactions: TransactionFromServer[]; count: number }
+        }) =>
+          this.setState(state =>
+            Object.assign({}, state, {
+              loading: false,
+              count: result.count,
+              items: result.transactions.map(tx => ({
+                key: tx.hash,
+                blockNumber: tx.blockNumber,
+                hash: tx.hash,
+                from: tx.from,
+                to: tx.to,
+                value: tx.value,
+                age: `${Math.round((Date.now() - tx.timestamp) / 1000)}s ago`,
+                gasUsed: tx.gasUsed,
+              })),
+            }),
+          ),
+      )
+      .catch(err => {
+        this.handleError(err)
+      })
+  }
+  private handleError = error => {
+    this.setState({
+      error,
+      loading: false,
+    })
+  }
 
-  handlePageChanged = newPage => {
+  private dismissNotification = e => {
+    this.setState(state => ({ error: { message: '', code: '' } }))
+  }
+  private handlePageChanged = newPage => {
     const offset = newPage * this.state.pageSize
     const limit = this.state.pageSize
     this.fetchTransactions({
@@ -177,19 +208,34 @@ class TransactionTable extends React.Component<
       count,
       pageSize,
       pageNo,
+      loading,
+      error,
     } = this.state
     return (
-      <TableWithSelector
-        headers={headers}
-        items={items}
-        selectorsValue={selectorsValue}
-        selectors={selectors}
-        onSubmit={this.onSearch}
-        count={count}
-        pageSize={pageSize}
-        pageNo={pageNo}
-        handlePageChanged={this.handlePageChanged}
-      />
+      <React.Fragment>
+        {loading ? (
+          <LinearProgress
+            classes={{
+              root: 'linearProgressRoot',
+            }}
+          />
+        ) : null}
+        <TableWithSelector
+          headers={headers}
+          items={items}
+          selectorsValue={selectorsValue}
+          selectors={selectors}
+          onSubmit={this.onSearch}
+          count={count}
+          pageSize={pageSize}
+          pageNo={pageNo}
+          handlePageChanged={this.handlePageChanged}
+        />
+        <ErrorNotification
+          error={error}
+          dismissNotification={this.dismissNotification}
+        />
+      </React.Fragment>
     )
   }
 }

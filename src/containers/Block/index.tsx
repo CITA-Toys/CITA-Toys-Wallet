@@ -24,6 +24,7 @@ import { IContainerProps, IBlock } from '../../typings'
 import Dialog from '../Dialog/'
 import TransactionList from '../../components/TransactionList/'
 import ErrorNotification from '../../components/ErrorNotification'
+import hideLoader from '../../utils/hideLoader'
 
 const layouts = require('../../styles/layout')
 const texts = require('../../styles/text.scss')
@@ -71,6 +72,9 @@ class Block extends React.Component<IBlockProps, IBlockState> {
   readonly state = initState
   componentWillMount () {
     this.onMount(this.props.match.params)
+  }
+  componentDidMount () {
+    hideLoader()
   }
   componentWillReceiveProps (nextProps: IBlockProps) {
     const { blockHash, height } = nextProps.match.params
@@ -168,7 +172,13 @@ class Block extends React.Component<IBlockProps, IBlockState> {
     } = this.state
     return (
       <React.Fragment>
-        {loading ? <LinearProgress /> : null}
+        {loading ? (
+          <LinearProgress
+            classes={{
+              root: 'linearProgressRoot',
+            }}
+          />
+        ) : null}
         <div className={layouts.main}>
           <Card classes={{ root: layouts.cardContainer }}>
             <CardContent>

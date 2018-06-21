@@ -1,21 +1,27 @@
 import * as React from 'react'
+import LinearProgress from '@material-ui/core/LinearProgress'
 import TableWithSelector, {
   TableWithSelectorProps,
   SelectorType,
 } from '../../components/TableWithSelector'
+import ErrorNotification from '../../components/ErrorNotification'
 import { fetchBlocks } from '../../utils/fetcher'
 import { BlockFromServer } from '../../typings/block'
 import paramsFilter from '../../utils/paramsFilter'
 import { withConfig } from '../../contexts/config'
 import { IContainerProps } from '../../typings'
-import { isNull } from '../../utils/validators'
+import hideLoader from '../../utils/hideLoader'
 
 interface BlockSelectors {
   selectorsValue: {
     [index: string]: number | string
   }
 }
-type BlockTableState = TableWithSelectorProps & BlockSelectors
+type BlockTableState = TableWithSelectorProps &
+  BlockSelectors & {
+    loading: boolean
+    error: { code: string; message: string }
+  }
 interface BlockTableProps extends IContainerProps {}
 
 const initialState: BlockTableState = {
@@ -56,6 +62,11 @@ const initialState: BlockTableState = {
     transactionFrom: '',
     transactionTo: '',
   },
+  loading: false,
+  error: {
+    code: '',
+    message: '',
+  },
 }
 
 class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
@@ -68,6 +79,7 @@ class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
   }
 
   componentDidMount () {
+    hideLoader()
     this.fetchBlock({
       ...this.state.selectorsValue,
       offset: this.state.pageNo * this.state.pageSize,
@@ -134,15 +146,17 @@ class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
       this.setState({ pageNo: newPage })
     })
   }
-  private fetchBlock = (params: { [index: string]: string | number } = {}) =>
-    fetchBlocks(paramsFilter(params)).then(
-      ({
-        result,
-      }: {
-      result: { blocks: BlockFromServer[]; count: number }
-      }) => {
-        this.setState(state =>
-          Object.assign({}, state, {
+  private fetchBlock = (params: { [index: string]: string | number } = {}) => {
+    this.setState({ loading: true })
+    return fetchBlocks(paramsFilter(params))
+      .then(
+        ({
+          result,
+        }: {
+        result: { blocks: BlockFromServer[]; count: number }
+        }) => {
+          this.setState({
+            loading: false,
             count: result.count,
             items: result.blocks.map(block => ({
               key: block.hash,
@@ -151,13 +165,25 @@ class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
               age: `${Math.round(
                 (Date.now() - block.header.timestamp) / 1000,
               )}s ago`,
-              transactions: block.transactionsCount,
+              transactions: `${block.transactionsCount}`,
               gasUsed: block.header.gasUsed,
             })),
-          }),
-        )
-      },
-    )
+          })
+        },
+      )
+      .catch(err => {
+        this.handleError(err)
+      })
+  }
+  private handleError = error => {
+    this.setState(state => ({
+      error,
+      loading: false,
+    }))
+  }
+  private dismissNotification = e => {
+    this.setState(state => ({ error: { message: '', code: '' } }))
+  }
 
   render () {
     const {
@@ -168,19 +194,34 @@ class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
       count,
       pageSize,
       pageNo,
+      loading,
+      error,
     } = this.state
     return (
-      <TableWithSelector
-        headers={headers}
-        items={items}
-        selectorsValue={selectorsValue}
-        selectors={selectors}
-        onSubmit={this.onSearch}
-        count={count}
-        pageSize={pageSize}
-        pageNo={pageNo}
-        handlePageChanged={this.handlePageChanged}
-      />
+      <React.Fragment>
+        {loading ? (
+          <LinearProgress
+            classes={{
+              root: 'linearProgressRoot',
+            }}
+          />
+        ) : null}
+        <TableWithSelector
+          headers={headers}
+          items={items}
+          selectorsValue={selectorsValue}
+          selectors={selectors}
+          onSubmit={this.onSearch}
+          count={count}
+          pageSize={pageSize}
+          pageNo={pageNo}
+          handlePageChanged={this.handlePageChanged}
+        />
+        <ErrorNotification
+          error={error}
+          dismissNotification={this.dismissNotification}
+        />
+      </React.Fragment>
     )
   }
 }

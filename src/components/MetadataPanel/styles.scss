@@ -3,6 +3,7 @@ $sidebar-padding: 29px;
 .display {
   padding: 0 $sidebar-padding;
   color: $sidebar-text;
+  text-transform: capitalize;
   .item {
     font-size: 1rem;
     line-height: 2rem;
@@ -22,6 +23,12 @@ $sidebar-padding: 29px;
         line-height: 1.7rem;
         height: 1.7rem;
         max-width: 30vw;
+        @media (max-width: 800px) {
+          max-width: 80vw;
+        }
+        @media (max-width: 500px) {
+          max-width: 50vw;
+        }
       }
     }
   }
@@ -29,11 +36,12 @@ $sidebar-padding: 29px;
 
 .title {
   background-color: #f4f7ff;
-  font-size: bold;
+  font-weight: bold;
   padding: 0 $sidebar-padding;
   height: 42px;
   line-height: 42px;
   font-weight: bolder;
+  text-transform: capitalize;
 }
 
 .fields {
@@ -50,8 +58,9 @@ $sidebar-padding: 29px;
     border: none;
     border-radius: 4px;
     background-color: $active;
-    color: #FFF;
+    color: #fff;
     padding: 6px 24px;
     margin-left: 10px;
+    text-transform: capitalize;
   }
 }

@@ -8,9 +8,94 @@
   <meta name="keywords" content="blockchain,etheruem,bitcoin,neros,whitepaper,common knowledge base">
   <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500">
   <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Code+Pro">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Press+Start+2P">
+
   <title>
     <%= htmlWebpackPlugin.options.title %>
   </title>
+  <style>
+    div.loader {
+      position: absolute;
+      width: 100vw;
+      height: 100vh;
+      background: black;
+      text-align: center;
+      z-index: 999;
+      top: 0;
+      left: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      letter-spacing: 4px;
+      font-family: 'Press Start 2P', cursive;
+      text-transform: capitalize;
+      text-rendering: optimizeSpeed;
+      display: none;
+    }
+
+
+    div.loader span {
+      color: #FFF;
+      animation: blur 2s infinite;
+      font-family: inherit;
+      filter: blur(50px);
+    }
+
+    @keyframes blur {
+      50%,
+      80% {
+        filter: blur(0px);
+      }
+    }
+
+    div.loader span:nth-of-type(1) {
+      animation-delay: 0s;
+    }
+
+    div.loader span:nth-of-type(2) {
+      animation-delay: 0.04s;
+    }
+
+    div.loader span:nth-of-type(3) {
+      animation-delay: 0.08s;
+    }
+
+    div.loader span:nth-of-type(4) {
+      animation-delay: 0.12s;
+    }
+
+    div.loader span:nth-of-type(5) {
+      animation-delay: 0.2s;
+    }
+
+    div.loader span:nth-of-type(6) {
+      animation-delay: 0.24s;
+    }
+
+    div.loader span:nth-of-type(7) {
+      animation-delay: 0.28s;
+    }
+
+    div.loader span:nth-of-type(8) {
+      animation-delay: 0.32s;
+    }
+
+    div.loader span:nth-of-type(9) {
+      animation-delay: 0.36s;
+    }
+
+    div.loader span:nth-of-type(10) {
+      animation-delay: 0.4s;
+    }
+
+    @media (max-width: 375px) {
+      div.loader {
+        font-size: 1.4rem;
+      }
+    }
+  </style>
 </head>
 
 <body>
@@ -20,7 +105,19 @@
   <main id="root"></main>
   <footer id="footer"></footer>
   <dialog id="dialog"></dialog>
-  <script src="<%= htmlWebpackPlugin.options.iconfont %>"></script>
+  <div class="loader" id="loader">
+    <span>m</span>
+    <span>i</span>
+    <span>c</span>
+    <span>r</span>
+    <span>o</span>
+    <span>s</span>
+    <span>c</span>
+    <span>o</span>
+    <span>p</span>
+    <span>e</span>
+  </div>
+  <script src="//at.alicdn.com/t/font_708755_4ubp7eibxdw.js"></script>
   <script src="<%= htmlWebpackPlugin.options.react %>"></script>
   <script type="text/javascript">
     (function () {
@@ -29,6 +126,8 @@
       }
     })()
   </script>
+  <script id="locizify" projectid="e5b160ba-e177-4afc-938c-c6e0348b85a2" debug="true" apikey="849a1e1b-0c9b-428d-9422-cfde06034e49"
+    saveMissing="true" referencelng="en" fallbacklng="en" src="https://unpkg.com/locizify@^2.3.0"></script>
 </body>
 
 </html>

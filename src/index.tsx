@@ -1,12 +1,19 @@
 import * as React from 'react'
 import { render } from 'react-dom'
+import { I18nextProvider } from 'react-i18next'
 import 'normalize.css'
-import './config/i18n'
+
+import i18n from './config/i18n'
 import './styles/common'
 import App from './App'
 
 const mount = (Comp: any) =>
-  render(<Comp />, document.getElementById('root') as HTMLElement)
+  render(
+    <I18nextProvider i18n={i18n}>
+      <Comp />
+    </I18nextProvider>,
+    document.getElementById('root') as HTMLElement,
+  )
 
 mount(App)
 

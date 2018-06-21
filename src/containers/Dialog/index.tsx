@@ -47,7 +47,7 @@ const DialogComp = (props: DialogCompProps) => (
         </Toolbar>
       </AppBar>
     ) : (
-      <DialogTitle>{props.dialogTitle}</DialogTitle>
+      <DialogTitle classes={{root: styles.dialogTitle }}>{props.dialogTitle}</DialogTitle>
     )}
     {props.children}
   </Dialog>

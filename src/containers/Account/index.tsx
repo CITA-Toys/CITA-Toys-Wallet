@@ -12,7 +12,6 @@ import Divider from '@material-ui/core/Divider'
 import LinearProgress from '@material-ui/core/LinearProgress'
 
 import ERCPanel from '../../components/ERCPanel'
-import TransactionList from '../../components/TransactionList'
 import TransactionTable from '../../containers/TransactionTable'
 import Dialog from '../Dialog'
 
@@ -20,6 +19,7 @@ import { withObservables } from '../../contexts/observables'
 import { IContainerProps, Transaction, ABI } from '../../typings'
 import LocalAccounts, { LocalAccount } from '../../components/LocalAccounts'
 import ErrorNotification from '../../components/ErrorNotification'
+import hideLoader from '../../utils/hideLoader'
 
 const layouts = require('../../styles/layout.scss')
 const texts = require('../../styles/text.scss')
@@ -30,10 +30,6 @@ enum AccountType {
   ERC20 = 'ERC20',
   ERC721 = 'ERC721',
 }
-
-// const initABI = JSON.parse(
-//   '[{"constant":false,"inputs":[{"name":"_value","type":"uint256"},{"name":"_value2","type":"uint256"},{"name":"_value3","type":"uint256"},{"name":"_value4","type":"uint256"}],"name":"set","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"get","outputs":[{"name":"haha","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"}]',
-// )
 
 interface Contract {
   methods?: any
@@ -90,6 +86,9 @@ class Account extends React.Component<AccountProps, AccountState> {
   componentWillMount () {
     const { account } = this.props.match.params
     this.onMount(account)
+  }
+  componentDidMount () {
+    hideLoader()
   }
   componentWillReceiveProps (nextProps: AccountProps) {
     const { account } = nextProps.match.params
@@ -357,11 +356,16 @@ class Account extends React.Component<AccountProps, AccountState> {
     } = this.state
     return (
       <React.Fragment>
-        {loading ? <LinearProgress /> : null}
+        {loading ? (
+          <LinearProgress
+            classes={{
+              root: 'linearProgressRoot',
+            }}
+          />
+        ) : null}
         <div className={layouts.main}>
           <Card classes={{ root: layouts.cardContainer }}>
             <CardHeader
-              // avatar={<Avatar aria-label="Recipe">{addr.slice(2, 3)}</Avatar>}
               avatar={
                 <img
                   src="https://cdn.dribbble.com/users/1358412/screenshots/3234234/fantastic_planet_004.jpg"
@@ -379,7 +383,6 @@ class Account extends React.Component<AccountProps, AccountState> {
                   </div>
                 </div>
               }
-              // subheader={type}
               action={
                 <Button onClick={this.toggleAddrs(true)}>管理本地账户</Button>
               }

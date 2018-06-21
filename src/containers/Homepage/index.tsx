@@ -1,5 +1,6 @@
 import * as React from 'react'
 import LinearProgress from '@material-ui/core/LinearProgress'
+import { translate } from 'react-i18next'
 import { IContainerProps, IBlock, TransactionFromServer } from '../../typings'
 import { withObservables } from '../../contexts/observables'
 import { fetch10Transactions } from '../../utils/fetcher'
@@ -7,6 +8,7 @@ import StaticCard from '../../components/StaticCard'
 import BlockList from '../../components/HomepageLists/BlockList'
 import TransactionList from '../../components/HomepageLists/TransactionList'
 import ErrorNotification from '../../components/ErrorNotification'
+import hideLoader from '../../utils/hideLoader'
 
 const layout = require('../../styles/layout.scss')
 const texts = require('../../styles/text.scss')
@@ -42,6 +44,9 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
         () => {},
       )
     this.transactionHistory()
+  }
+  componentDidMount () {
+    hideLoader()
   }
   private blkInfo = [
     { key: 'height', label: '出块高度' },
@@ -82,13 +87,20 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
     this.setState(state => ({ error: { message: '', code: '' } }))
   }
   render () {
+    const { t } = this.props
     return (
       <React.Fragment>
-        {this.state.loading ? <LinearProgress /> : null}
+        {this.state.loading ? (
+          <LinearProgress
+            classes={{
+              root: 'linearProgressRoot',
+            }}
+          />
+        ) : null}
         <div className={`${layout.main} ${styles.listContainer}`}>
           <StaticCard
-            icon="block"
-            title="最新10个区块"
+            icon="orange-block"
+            title={t('Latest 10 Blocks')}
             page="blocks"
             className={styles.card}
           >
@@ -96,7 +108,7 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
           </StaticCard>
           <StaticCard
             icon="transfer-2"
-            title="最新10笔交易"
+            title={t('Latest 10 Transactions')}
             page="transactions"
             className={styles.card}
           >
@@ -111,4 +123,5 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
     )
   }
 }
-export default withObservables(Homepage)
+
+export default translate('microscope')(withObservables(Homepage))

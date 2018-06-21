@@ -1,11 +1,11 @@
 @import './color.scss';
 * {
-  font-family: Helvetica, Arial, Georgia, Consolas;
+  font-family: "Microsoft YaHei", Helvetica, Arial, Georgia, Consolas; // color: $plainText;
 }
 
 %hash {
-  font-family: monospace !important;
-  font-size: 1.2rem !important;
+  font-family: 'Source Code Pro', monospace !important;
+  font-size: inherit !important;
   text-decoration: none;
   word-break: break-all;
   word-wrap: break-word;
@@ -19,15 +19,22 @@
 
 .addr {
   @extend %hash;
-  color: $addr;
+  color: $primaryText;
 }
 
 .hash {
   @extend %hash;
-  color: $hash;
+  color: $plainText;
 }
 
 .highlight {
   @extend %hash;
-  color: $highlight;
+  color: $secondary;
+}
+
+@media (max-width: 370px) {
+  html,
+  body {
+    font-size: 14px;
+  }
 }
