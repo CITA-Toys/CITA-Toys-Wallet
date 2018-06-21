@@ -5,9 +5,9 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import AppBar from '@material-ui/core/AppBar/'
 import Toolbar from '@material-ui/core/Toolbar/'
 import IconButton from '@material-ui/core/IconButton/'
-import CloseIcon from '@material-ui/icons/Close'
 import Typography from '@material-ui/core/Typography'
 import Slide from '@material-ui/core/Slide'
+import CloseIcon from '@material-ui/icons/Close'
 
 const styles = require('./styles.scss')
 
@@ -47,7 +47,12 @@ const DialogComp = (props: DialogCompProps) => (
         </Toolbar>
       </AppBar>
     ) : (
-      <DialogTitle classes={{root: styles.dialogTitle }}>{props.dialogTitle}</DialogTitle>
+      <DialogTitle classes={{ root: styles.dialogTitle }}>
+        {props.dialogTitle}
+        <IconButton onClick={props.onClose} aria-label="Close">
+          <CloseIcon />
+        </IconButton>
+      </DialogTitle>
     )}
     {props.children}
   </Dialog>

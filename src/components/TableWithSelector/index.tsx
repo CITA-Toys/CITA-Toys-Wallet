@@ -95,31 +95,38 @@ class TableWithSelector extends React.Component<
           maxWidth="md"
         >
           <div className={styles.dialog}>
-            {selectors.map(
-              selector =>
-                selector.items ? (
-                  <div key={selector.key} className={styles.rangeSelector}>
-                    <span className={styles.title}>{t(selector.text)}</span>
-                    {selector.items.map(item => (
-                      <input
-                        key={item.key}
-                        value={selectorsValue[item.key]}
-                        placeholder={t(item.text)}
-                        onChange={this.handleSelectorInput(item.key)}
-                      />
-                    ))}
-                  </div>
-                ) : (
-                  <div key={selector.key} className={styles.singleSelector}>
-                    <span className={styles.title}>{selector.text}</span>
-                    <input
-                      value={selectorsValue[selector.key]}
-                      placeholder={t(selector.text)}
-                      onChange={this.handleSelectorInput(selector.key)}
-                    />
-                  </div>
-                ),
-            )}
+            <div className={styles.fields}>
+              <div className={styles.titles}>
+                {selectors.map(selector => (
+                  <span className={styles.title}>{t(selector.text)}</span>
+                ))}
+              </div>
+              <div className={styles.inputs}>
+                {selectors.map(
+                  selector =>
+                    selector.items ? (
+                      <div key={selector.key} className={styles.rangeSelector}>
+                        {selector.items.map(item => (
+                          <input
+                            key={item.key}
+                            value={selectorsValue[item.key]}
+                            placeholder={t(item.text)}
+                            onChange={this.handleSelectorInput(item.key)}
+                          />
+                        ))}
+                      </div>
+                    ) : (
+                      <div key={selector.key} className={styles.singleSelector}>
+                        <input
+                          value={selectorsValue[selector.key]}
+                          placeholder={t(selector.text)}
+                          onChange={this.handleSelectorInput(selector.key)}
+                        />
+                      </div>
+                    ),
+                )}
+              </div>
+            </div>
             <button onClick={this.handleSubmit}>{t('submit')}</button>
           </div>
         </Dialog>
