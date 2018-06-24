@@ -3,7 +3,7 @@
 /* eslint-enable */
 import { Observable, ReplaySubject } from 'rxjs'
 import * as React from 'react'
-import CITAObservables from '@cita/observables'
+import CITAObservables from '@nervos/observables'
 
 export const initObservables: CITAObservables = new CITAObservables({
   server:

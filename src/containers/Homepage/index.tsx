@@ -99,7 +99,7 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
         ) : null}
         <div className={`${layout.main} ${styles.listContainer}`}>
           <StaticCard
-            icon="orange-block"
+            icon="blocks"
             title={t('Latest 10 Blocks')}
             page="blocks"
             className={styles.card}

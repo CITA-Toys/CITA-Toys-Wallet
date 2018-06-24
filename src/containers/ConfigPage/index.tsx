@@ -13,7 +13,7 @@ import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
 import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
 import Divider from '@material-ui/core/Divider'
 import Switch from '@material-ui/core/Switch'
-import CITAObservables from '@cita/observables'
+import CITAObservables from '@nervos/observables'
 
 import { PanelConfigs } from '../../config/localstorage'
 import { initPanelConfigs } from '../../initValues'

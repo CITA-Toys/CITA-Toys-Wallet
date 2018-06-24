@@ -16,7 +16,7 @@
     "@cita/web3-plugin" "^1.0.27"
     "@reactivex/rxjs" "^5.5.8"
 
-"@cita/web3-plugin@^1.0.25", "@cita/web3-plugin@^1.0.27":
+"@cita/web3-plugin@^1.0.27":
   version "1.0.27"
   resolved "https://registry.npmjs.org/@cita/web3-plugin/-/web3-plugin-1.0.27.tgz#c4fcb85678cb139982cfb8380cdeba4b7b19ecfa"
   dependencies:
@@ -71,6 +71,21 @@
 "@most/prelude@^1.4.0":
   version "1.7.1"
   resolved "https://registry.npmjs.org/@most/prelude/-/prelude-1.7.1.tgz#7c70ab6a68bb20481db51ebfbba23fceb502d239"
+
+"@nervos/observables@^0.17.1":
+  version "0.17.1"
+  resolved "https://registry.npmjs.org/@nervos/observables/-/observables-0.17.1.tgz#69195af00a93557cb8ea58ae92845ce186707b3a"
+  dependencies:
+    "@nervos/web3-plugin" "^0.17.5"
+    "@reactivex/rxjs" "^5.5.8"
+
+"@nervos/web3-plugin@^0.17.5":
+  version "0.17.5"
+  resolved "https://registry.npmjs.org/@nervos/web3-plugin/-/web3-plugin-0.17.5.tgz#1ba3172dac0824a9fb4494dd6dc68c4fe802847a"
+  dependencies:
+    "@types/google-protobuf" "^3.2.7"
+    axios "^0.18.0"
+    google-protobuf "^3.5.0"
 
 "@reactivex/rxjs@^5.5.6", "@reactivex/rxjs@^5.5.8":
   version "5.5.11"
