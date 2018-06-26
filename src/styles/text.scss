@@ -1,10 +1,10 @@
 @import './color.scss';
 * {
-  font-family: "Microsoft YaHei", Helvetica, Arial, Georgia, Consolas; // color: $plainText;
+  font-family: Helvetica, Roboto, Arial, Georgia, Consolas; // color: $plainText;
 }
 
 %hash {
-  font-family: 'Source Code Pro', monospace !important;
+  font-family: Rotobo, Helvetica, monospace !important;
   font-size: inherit !important;
   text-decoration: none;
   word-break: break-all;
@@ -28,8 +28,8 @@
 }
 
 .highlight {
-  @extend %hash;
-  color: $secondary;
+  // @extend %hash;
+  // color: $secondary;
 }
 
 @media (max-width: 370px) {

@@ -1,8 +1,6 @@
 import * as React from 'react'
-import Slide from '@material-ui/core/Slide'
-import IconButton from '@material-ui/core/IconButton'
-import Snackbar from '@material-ui/core/Snackbar'
-import CloseIcon from '@material-ui/icons/Close'
+import { Slide, IconButton, Snackbar } from '@material-ui/core'
+import { Close as CloseIcon } from '@material-ui/icons'
 
 const texts = require('../../styles/text.scss')
 

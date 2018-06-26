@@ -1,6 +1,5 @@
 import * as React from 'react'
-import List from '@material-ui/core/List'
-import Divider from '@material-ui/core/Divider'
+import { List, Divider } from '@material-ui/core'
 import { ABI, ABIElement } from '../../typings'
 
 const styles = require('./styles.scss')

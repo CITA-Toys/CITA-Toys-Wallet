@@ -1,8 +1,6 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
+import { List, ListItem, ListItemText } from '@material-ui/core'
 import { Transaction } from '../../typings/'
 
 const texts = require('../../styles/text.scss')

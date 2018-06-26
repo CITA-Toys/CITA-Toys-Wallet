@@ -1,5 +1,5 @@
 import * as React from 'react'
-import LinearProgress from '@material-ui/core/LinearProgress'
+import { LinearProgress } from '@material-ui/core'
 import TableWithSelector, {
   TableWithSelectorProps,
   SelectorType,

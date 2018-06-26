@@ -1,13 +1,15 @@
 import * as React from 'react'
 import { createPortal } from 'react-dom'
-import Dialog from '@material-ui/core/Dialog'
-import DialogTitle from '@material-ui/core/DialogTitle'
-import AppBar from '@material-ui/core/AppBar/'
-import Toolbar from '@material-ui/core/Toolbar/'
-import IconButton from '@material-ui/core/IconButton/'
-import Typography from '@material-ui/core/Typography'
-import Slide from '@material-ui/core/Slide'
-import CloseIcon from '@material-ui/icons/Close'
+import {
+  Dialog,
+  DialogTitle,
+  AppBar,
+  Toolbar,
+  IconButton,
+  Typography,
+  Slide,
+} from '@material-ui/core'
+import { Close as CloseIcon } from '@material-ui/icons'
 
 const styles = require('./styles.scss')
 

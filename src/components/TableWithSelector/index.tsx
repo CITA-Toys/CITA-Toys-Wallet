@@ -1,12 +1,14 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { translate } from 'react-i18next'
-import Paper from '@material-ui/core/Paper'
+import { Paper } from '@material-ui/core'
 import Pager from 'react-pager'
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft'
-import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight'
-import SkipNext from '@material-ui/icons/SkipNext'
-import SkipPrevious from '@material-ui/icons/SkipPrevious'
+import {
+  KeyboardArrowLeft,
+  KeyboardArrowRight,
+  SkipNext,
+  SkipPrevious,
+} from '@material-ui/icons'
 
 import Dialog from '../../containers/Dialog'
 import paramsFilter from '../../utils//paramsFilter'

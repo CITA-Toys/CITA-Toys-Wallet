@@ -1,14 +1,9 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { translate } from 'react-i18next'
-import SearchIcon from '@material-ui/icons/Search'
+import { Search as SearchIcon } from '@material-ui/icons'
 import { withObservables } from '../../contexts/observables'
-import {
-  IContainerProps,
-  IBlock,
-  Transaction,
-  TransactionFromServer,
-} from '../../typings'
+import { IContainerProps, IBlock, Transaction } from '../../typings'
 import { initBlock, initTransaction } from '../../initValues'
 
 const styles = require('./styles.scss')

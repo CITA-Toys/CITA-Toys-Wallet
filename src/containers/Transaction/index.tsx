@@ -1,13 +1,15 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
-import LinearProgress from '@material-ui/core/LinearProgress'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import List from '@material-ui/core/List'
-import ListSubheader from '@material-ui/core/ListSubheader'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import Divider from '@material-ui/core/Divider'
+import {
+  LinearProgress,
+  Card,
+  CardContent,
+  List,
+  ListSubheader,
+  ListItem,
+  ListItemText,
+  Divider,
+} from '@material-ui/core'
 
 import { withObservables } from '../../contexts/observables'
 import { IContainerProps, DetailedTransaction } from '../../typings/'

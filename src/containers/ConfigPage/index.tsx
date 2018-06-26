@@ -1,18 +1,21 @@
 import * as React from 'react'
 import { translate } from 'react-i18next'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
-import TextField from '@material-ui/core/TextField'
 
-import Typography from '@material-ui/core/Typography'
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import ExpansionPanel from '@material-ui/core/ExpansionPanel'
-import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary'
-import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails'
-import Divider from '@material-ui/core/Divider'
-import Switch from '@material-ui/core/Switch'
+import {
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
+  TextField,
+  Typography,
+  ExpansionPanel,
+  ExpansionPanelSummary,
+  ExpansionPanelDetails,
+  Divider,
+  Switch,
+} from '@material-ui/core'
+import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons'
+
 import CITAObservables from '@nervos/observables'
 
 import { PanelConfigs } from '../../config/localstorage'
@@ -21,7 +24,7 @@ import { withObservables } from '../../contexts/observables'
 import { withConfig, IConfig } from '../../contexts/config'
 import hideLoader from '../../utils/hideLoader'
 
-const layouts = require('../../styles/layout')
+// const layouts = require('../../styles/layout')
 const styles = require('./styles.scss')
 
 /* eslint-disable no-use-before-define */

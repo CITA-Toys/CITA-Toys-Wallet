@@ -3,22 +3,26 @@ import { createPortal } from 'react-dom'
 import { translate } from 'react-i18next'
 import { Subject, Subscription } from '@reactivex/rxjs'
 import axios, { AxiosResponse, AxiosPromise } from 'axios'
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import Menu from '@material-ui/core/Menu'
-import MenuItem from '@material-ui/core/MenuItem'
-import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
-import IconButton from '@material-ui/core/IconButton'
-import TranslateIcon from '@material-ui/icons/Translate'
-import MenuIcon from '@material-ui/icons/Menu'
-import CloseIcon from '@material-ui/icons/Close'
-import FingerprintIcon from '@material-ui/icons/Fingerprint'
-import SettingsIcon from '@material-ui/icons/Settings'
-import ViewCarouselIcon from '@material-ui/icons/ViewCarousel'
-import FormatShapesIcon from '@material-ui/icons/FormatShapes'
-import GraphicIcon from '@material-ui/icons/GraphicEq'
-import SearchIcon from '@material-ui/icons/Search'
+import {
+  AppBar,
+  Toolbar,
+  Menu,
+  MenuItem,
+  Typography,
+  Button,
+  IconButton,
+} from '@material-ui/core'
+import {
+  Translate as TranslateIcon,
+  Menu as MenuIcon,
+  Close as CloseIcon,
+  Fingerprint as FingerprintIcon,
+  Settings as SettingsIcon,
+  ViewCarousel as ViewCarouselIcon,
+  FormatShapes as FormatShapesIcon,
+  GraphicEq as GraphicIcon,
+  Search as SearchIcon,
+} from '@material-ui/icons'
 import { containers } from '../../Routes'
 import HeaderNavs from '../../components/HeaderNavs'
 import SidebarNavs from '../../components/SidebarNavs'
@@ -107,7 +111,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       axios
         .post(`http://${ip}`, {
           jsonrpc: '2.0',
-          method: 'cita_getMetaData',
+          method: 'getMetaData',
           params: ['latest'],
           id: 1,
         })

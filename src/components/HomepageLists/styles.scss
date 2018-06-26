@@ -47,8 +47,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  background-color: $primary-color;
+  align-items: center; // background-color: $primary-color;
   background-image: url('http://47.97.171.140:8082/images/BlockBg.png');
   background-size: cover;
   min-width: 100px;
@@ -66,6 +65,7 @@
 }
 
 .time {
+  font-size: 12px;
   color: $plainText;
   position: absolute;
   top: 25px;

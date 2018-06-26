@@ -1,7 +1,6 @@
 import * as React from 'react'
-import Card from '@material-ui/core/Card'
-import CardContent from '@material-ui/core/CardContent'
-import ArrowIcon from '@material-ui/icons/TrendingFlat'
+import { Card, CardContent } from '@material-ui/core'
+import { TrendingFlat as ArrowIcon } from '@material-ui/icons'
 
 const styles = require('./styles')
 

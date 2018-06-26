@@ -1,22 +1,12 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
-import LinearProgress from '@material-ui/core/LinearProgress'
-import Paper from '@material-ui/core/Paper'
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import CardContent from '@material-ui/core/CardContent'
-import CardActions from '@material-ui/core/CardActions'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import Snackbar from '@material-ui/core/Snackbar/'
-import Typography from '@material-ui/core/Typography'
-
-import ExpandMore from '@material-ui/icons/ExpandMore'
-import IconButton from '@material-ui/core/IconButton'
-import BackIcon from '@material-ui/icons/ArrowBack'
-import NextIcon from '@material-ui/icons/ArrowForward'
-import CloseIcon from '@material-ui/icons/Close'
+import {
+  LinearProgress,
+  Card,
+  CardContent,
+  List,
+  ListItem,
+} from '@material-ui/core'
 
 import { withConfig } from '../../contexts/config'
 import { withObservables } from '../../contexts/observables'

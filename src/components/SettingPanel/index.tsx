@@ -1,18 +1,9 @@
 import * as React from 'react'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import { Metadata } from '../../containers/Header'
+import { List, ListItem, ListItemText } from '@material-ui/core'
+import { Metadata } from '../../typings'
 
 const texts = require('../../styles/text')
 
-/* eslint-disable no-restricted-globals */
-// interface Settings {
-//   id: string
-//   name: string
-//   operator: string
-// }
-/* eslint-enable no-restricted-globals */
 export default ({ metadata }: { metadata: Metadata }) => (
   <List>
     <ListItem>
@@ -44,7 +35,7 @@ export default ({ metadata }: { metadata: Metadata }) => (
     <ListItem>
       <ListItemText
         primary={`Genesis Time: ${new Date(
-          +metadata.genesisTimestamp
+          +metadata.genesisTimestamp,
         ).toLocaleString()}`}
       />
     </ListItem>

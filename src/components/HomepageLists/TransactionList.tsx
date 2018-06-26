@@ -1,9 +1,7 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { translate } from 'react-i18next'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
+import { List, ListItem, ListItemText } from '@material-ui/core'
 import { Transaction, TransactionFromServer } from '../../typings/'
 
 const texts = require('../../styles/text.scss')

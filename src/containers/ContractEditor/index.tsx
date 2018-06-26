@@ -1,10 +1,12 @@
 import * as React from 'react'
-import Paper from '@material-ui/core/Paper'
-import Button from '@material-ui/core/Button'
-import TextField from '@material-ui/core/TextField'
-import Typography from '@material-ui/core/Typography'
-import Divider from '@material-ui/core/Divider'
-import MenuItem from '@material-ui/core/MenuItem'
+import {
+  Paper,
+  Button,
+  TextField,
+  Typography,
+  Divider,
+  MenuItem,
+} from '@material-ui/core'
 import { withConfig } from '../../contexts/config'
 import { withObservables } from '../../contexts/observables'
 import { IContainerProps } from '../../typings/'

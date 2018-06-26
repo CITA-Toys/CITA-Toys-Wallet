@@ -12,6 +12,8 @@ const list = [
   { name: 'Website', value: 'website' },
   { name: 'Genesis Time', value: 'genesisTimestamp' },
   { name: 'Block Interval', value: 'blockInterval' },
+  { name: 'token name', value: 'tokenName' },
+  { name: 'token symbol', value: 'tokenSymbol' },
 ]
 
 const MetadataRender = translate('microscope')(
@@ -25,13 +27,15 @@ const MetadataRender = translate('microscope')(
       ))}
       <div className={styles.validators}>
         <div className={styles.item}>{t('validators')}:</div>
-        <div className={styles.box}>
-          {metadata.validators.map((validator, index) => (
-            <div key={validator} className={`${text.ellipsis} ${text.hash}`}>
-              {index + 1}: {validator}
-            </div>
-          ))}
-        </div>
+        {metadata.validators && metadata.validators.length ? (
+          <div className={styles.box}>
+            {metadata.validators.map((validator, index) => (
+              <div key={validator} className={`${text.ellipsis} ${text.hash}`}>
+                {index + 1}: {validator}
+              </div>
+            ))}
+          </div>
+        ) : null}
       </div>
     </div>
   ),

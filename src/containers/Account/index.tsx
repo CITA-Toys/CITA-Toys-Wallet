@@ -2,14 +2,17 @@ import * as React from 'react'
 import * as web3Utils from 'web3-utils'
 import * as Web3Contract from 'web3-eth-contract'
 import * as web3Abi from 'web3-eth-abi'
-import Card from '@material-ui/core/Card'
-import CardHeader from '@material-ui/core/CardHeader'
-import CardContent from '@material-ui/core/CardContent'
-import Tabs from '@material-ui/core/Tabs'
-import Tab from '@material-ui/core/Tab'
-import Button from '@material-ui/core/Button'
-import Divider from '@material-ui/core/Divider'
-import LinearProgress from '@material-ui/core/LinearProgress'
+
+import {
+  Card,
+  CardHeader,
+  CardContent,
+  Tabs,
+  Tab,
+  Button,
+  Divider,
+  LinearProgress,
+} from '@material-ui/core'
 
 import ERCPanel from '../../components/ERCPanel'
 import TransactionTable from '../../containers/TransactionTable'

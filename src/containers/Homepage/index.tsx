@@ -1,5 +1,5 @@
 import * as React from 'react'
-import LinearProgress from '@material-ui/core/LinearProgress'
+import { LinearProgress } from '@material-ui/core'
 import { translate } from 'react-i18next'
 import { IContainerProps, IBlock, TransactionFromServer } from '../../typings'
 import { withObservables } from '../../contexts/observables'
@@ -11,7 +11,7 @@ import ErrorNotification from '../../components/ErrorNotification'
 import hideLoader from '../../utils/hideLoader'
 
 const layout = require('../../styles/layout.scss')
-const texts = require('../../styles/text.scss')
+// const texts = require('../../styles/text.scss')
 const styles = require('./styles.scss')
 
 interface HomepageProps extends IContainerProps {}

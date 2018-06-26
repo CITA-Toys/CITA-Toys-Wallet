@@ -1,15 +1,17 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { translate } from 'react-i18next'
-import Typography from '@material-ui/core/Typography'
-import Toolbar from '@material-ui/core/Toolbar'
-import Drawer from '@material-ui/core/Drawer'
-import List from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
-import ListItemText from '@material-ui/core/ListItemText'
-import IconButton from '@material-ui/core/IconButton'
-import MenuIcon from '@material-ui/icons/Menu'
-import AppBar from '@material-ui/core/AppBar'
+import {
+  Typography,
+  Toolbar,
+  Drawer,
+  List,
+  ListItem,
+  ListItemText,
+  IconButton,
+  AppBar,
+} from '@material-ui/core'
+import { Menu as MenuIcon } from '@material-ui/icons'
 
 const styles = require('../../containers/Header/styles.scss')
 

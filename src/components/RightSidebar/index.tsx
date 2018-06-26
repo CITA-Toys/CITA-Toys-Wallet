@@ -1,5 +1,5 @@
 import * as React from 'react'
-import SwipeableDrawer from '@material-ui/core/SwipeableDrawer'
+import { SwipeableDrawer } from '@material-ui/core'
 
 interface MetadataProps {
   on: boolean
