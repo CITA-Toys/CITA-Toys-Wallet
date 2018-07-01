@@ -6,11 +6,15 @@ import { List, ListItem, ListItemText } from '@material-ui/core'
 import { IBlock } from '../../typings/'
 
 const texts = require('../../styles/text.scss')
-const styles = require('./styles.scss')
+const styles = require('./homepageList.scss')
 
 export default translate('microscope')(
   ({ blocks, t }: { blocks: IBlock[]; t: (key: string) => string }) => (
-    <List>
+    <List
+      classes={{
+        padding: styles.listPadding,
+      }}
+    >
       {blocks.map((block: IBlock) => (
         <ListItem
           key={block.hash}

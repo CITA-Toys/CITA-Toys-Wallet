@@ -1,7 +1,7 @@
 @import './color.scss';
 header {
   background: #FFF !important;
-  box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.1) !important;
+  box-shadow: 0 5px 6px 0 rgba(170, 170, 170, 0.07);
 }
 
 body {
@@ -17,7 +17,6 @@ main {
 }
 
 a {
-  // color: $addr;
   text-decoration: none !important;
 }
 
@@ -32,6 +31,10 @@ table {
   thead {
     color: $heavyText;
   }
+}
+
+input {
+  padding: 5px 10px;
 }
 
 footer {

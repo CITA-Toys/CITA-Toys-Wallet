@@ -107,16 +107,23 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
         },
       }))
     }
+    if (tx.basicInfo) {
+      /* eslint-disable */
+      const { data } = tx.basicInfo
+      tx.basicInfo.data = (data as any).map(int => int.toString(16)).join('')
+      /* eslint-enable */
+    }
+    // tx.basicInfo.data = tx.basicInfo.data.map(int => int.toString(16)).join()
     return this.setState(state => ({ ...tx }))
   }
   private infos = [
     { key: 'blockHash', label: 'Block Hash', type: 'block' },
     { key: 'blockNumber', label: 'Height', type: 'height' },
     { key: 'index', label: 'Index' },
-    {
-      key: 'content',
-      label: 'Content',
-    },
+    // {
+    //   key: 'content',
+    //   label: 'Content',
+    // },
   ]
   private basicInfo = [
     { key: 'from', label: 'From', type: 'account' },
@@ -136,10 +143,10 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
   render () {
     const {
       hash,
-      blockHash,
-      blockNumber,
-      content,
-      index,
+      // blockHash,
+      // blockNumber,
+      // content,
+      // index,
       error,
       timestamp,
       gasUsed,
@@ -194,7 +201,7 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
                       component="div"
                       classes={{ root: styles.listHeaderRoot }}
                     >
-                      Token
+                      Transaction
                     </ListSubheader>
                   }
                 >

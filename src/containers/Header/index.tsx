@@ -282,7 +282,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           onOpen={() => {}}
         >
           <div className={styles.rightSidebarContent}>
-            <AppBar color="default" position="sticky">
+            <AppBar color="default" position="sticky" elevation={0}>
               <Toolbar
                 classes={{
                   root: styles.toolbarRoot,

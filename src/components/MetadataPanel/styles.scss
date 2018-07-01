@@ -8,6 +8,9 @@ $sidebar-padding: 29px;
     font-size: 1rem;
     line-height: 2rem;
     height: 2rem;
+    span {
+      text-transform: none;
+    }
   }
   .itemValue {
     color: $sidebar-bold-text;

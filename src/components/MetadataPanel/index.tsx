@@ -12,8 +12,8 @@ const list = [
   { name: 'Website', value: 'website' },
   { name: 'Genesis Time', value: 'genesisTimestamp' },
   { name: 'Block Interval', value: 'blockInterval' },
-  { name: 'token name', value: 'tokenName' },
-  { name: 'token symbol', value: 'tokenSymbol' },
+  { name: 'Token Name', value: 'tokenName' },
+  { name: 'Token Symbol', value: 'tokenSymbol' },
 ]
 
 const MetadataRender = translate('microscope')(
@@ -26,7 +26,7 @@ const MetadataRender = translate('microscope')(
         </div>
       ))}
       <div className={styles.validators}>
-        <div className={styles.item}>{t('validators')}:</div>
+        <div className={styles.item}>{t('Validators')}:</div>
         {metadata.validators && metadata.validators.length ? (
           <div className={styles.box}>
             {metadata.validators.map((validator, index) => (

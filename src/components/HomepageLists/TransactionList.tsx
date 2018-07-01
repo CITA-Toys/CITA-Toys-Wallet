@@ -5,7 +5,7 @@ import { List, ListItem, ListItemText } from '@material-ui/core'
 import { Transaction, TransactionFromServer } from '../../typings/'
 
 const texts = require('../../styles/text.scss')
-const styles = require('./styles.scss')
+const styles = require('./homepageList.scss')
 
 export default translate('microscope')(
   ({

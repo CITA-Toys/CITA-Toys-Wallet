@@ -19,7 +19,8 @@
       position: absolute;
       width: 100vw;
       height: 100vh;
-      background: black;
+      color: #202214;
+      background: #202214;
       text-align: center;
       z-index: 999;
       top: 0;
@@ -36,7 +37,8 @@
 
 
     div.loader span {
-      color: #FFF;
+      color: #202214;
+      /* color: #FFF; */
       animation: blur 2s infinite;
       font-family: inherit;
       filter: blur(50px);
@@ -45,6 +47,7 @@
     @keyframes blur {
       50%,
       80% {
+        color: #FFF;
         filter: blur(0px);
       }
     }
@@ -94,6 +97,7 @@
         font-size: 1.4rem;
       }
     }
+
   </style>
 </head>
 
@@ -124,6 +128,7 @@
         navigator.serviceWorker.register('./service-worker.js')
       }
     })()
+
   </script>
   <script id="locizify" projectid="e5b160ba-e177-4afc-938c-c6e0348b85a2" debug="false" apikey="849a1e1b-0c9b-428d-9422-cfde06034e49"
     saveMissing="false" referencelng="en" fallbacklng="en" src="https://unpkg.com/locizify@^2.3.0"></script>

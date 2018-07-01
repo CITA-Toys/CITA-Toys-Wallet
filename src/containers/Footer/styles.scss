@@ -40,6 +40,9 @@ $col-span: 92px;
       margin: 0 10px;
       img {
         width: 100%;
+        &:last-child {
+          height: 74px;
+        }
       }
     }
   }

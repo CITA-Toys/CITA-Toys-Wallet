@@ -21,14 +21,12 @@
 
 .listItemContainer {
   width: auto !important;
-  padding: 0 !important;
-  padding-top: 25px !important;
-  padding-bottom: 16px !important;
+  padding: 16px 0 !important;
   margin-left: 33px;
   display: flex;
   align-items: stretch !important;
   height: 123px;
-  border-bottom: 1px solid $border-grey;
+  border-bottom: 1px solid $divider;
   text-transform: capitalize;
   svg {
     font-size: 1.5rem;
@@ -47,7 +45,7 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center; // background-color: $primary-color;
+  align-items: center;
   background-image: url('http://47.97.171.140:8082/images/BlockBg.png');
   background-size: cover;
   min-width: 100px;
@@ -80,7 +78,7 @@
 }
 
 .value {
-  padding: 0px 8px; // background: #e2e9f2;
+  padding: 0px 8px;
   border-radius: 4px;
 }
 
@@ -92,4 +90,8 @@
       border-bottom: none;
     }
   }
+}
+
+.listPadding {
+  padding: 0;
 }

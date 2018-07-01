@@ -1,6 +1,6 @@
 $primary-color: #415dfc;
 $light-grey: #637494;
-$border-grey: #d3ddec;
+// $border-grey: #d3ddec;
 $addr: #3e56ff;
 $codeColor: #0d904f;
 $highlight: rgba(109, 165, 255, 1) !important;
@@ -14,8 +14,8 @@ $primary: #2647fd; // button, icon, input, color block
 $secondary: #f15a29; // secondary button, status
 $bg: #fdfdfd; // background color;
 $statusBg: #FFF; // status bar background
-$divider: #e2e9f2;
-$inputBorder: #d3ddec;
+$divider: rgba(226, 233, 242, 0.6);
+$inputBorder: rgba(211, 221, 236, 0.6);
 $shaodow: rgba(0, 0, 0, 0.1);
 $primaryText: #2647fd; // highlight text
 $heavyText: #061027; // important text
