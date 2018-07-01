@@ -48,7 +48,7 @@ class Footer extends React.Component<{ t: (key: string) => string }, any> {
         {
           icon: 'email',
           title: 'contact@cryptape.com',
-          url: 'mailto:contact@cryptape.com',
+          url: 'mailto:appchain.contact@cryptape.com',
         },
         {
           icon: 'group',
