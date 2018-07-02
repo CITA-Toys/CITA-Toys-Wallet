@@ -10,13 +10,13 @@ AppChain 的每一个运营者都可以部署一个自己专用的 Microscope �
 
 ---
 
-## AppChain 链切换
+# AppChain 链切换
 
 Microscope 支持多条 AppChain 之间的切换, 用户只需要点击右上角 `链名称`, 在呼出的侧边栏中输入指定 AppChain 的地址及端口号即可完成 Microscope 数据源的切换.
 
 ---
 
-## 索引及统计功能
+# 索引及统计功能
 
 要实现 AppChain 上索引及统计功能, 需要加入相应链的缓存服务 AgeraONE[https://github.com/Keith-CY/agera_one].
 
@@ -24,7 +24,7 @@ Microscope 支持多条 AppChain 之间的切换, 用户只需要点击右上角
 
 ---
 
-## Microscope 二次开发方法:
+# Microscope 二次开发方法:
 
 - 进入工程目录后执行 `git clone https://github.com/cryptape/Microscope` 获取项目
 
@@ -40,7 +40,7 @@ Microscope 支持多条 AppChain 之间的切换, 用户只需要点击右上角
 
 ---
 
-## AgeraONE 二次开发方法:
+# AgeraONE 二次开发方法:
 
 - 进入工程目录后执行 `git clone https://github.com/Keith-CY/agera_one` 获取项目
 
