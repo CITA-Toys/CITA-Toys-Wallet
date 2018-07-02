@@ -1,6 +1,6 @@
 # Microscope 简介
 
-Microscope 是一款功能完备的区块链数据访问平台。
+[Microscope](https://github.com/cryptape/Microscope) 是一款功能完备的区块链数据访问平台。
 
 通过 Microscope 您可以访问指定 AppChain 上的区块, 交易, 账号(含合约) 数据, 对合约执行 Call 调用, 以及查看 AppChain 实时性能.
 
@@ -21,8 +21,6 @@ Microscope 支持多条 AppChain 之间的切换, 用户只需要点击右上角
 要实现 AppChain 上索引及统计功能, 需要加入相应链的缓存服务 AgeraONE[https://github.com/Keith-CY/agera_one].
 
 基于 AgeraONE, Microscope 可以实现区块 , 交易的索引及 AppChain 性能的评估.
-
-浏览器 Microscope 地址: https://github.com/cryptape/Microscope
 
 ---
 
