@@ -28,26 +28,30 @@ Microscope 支持多条 AppChain 之间的切换, 用户只需要点击右上角
 
 ## Microscope 二次开发方法:
 
-- 进入工程目录后执行 git clone https://github.com/cryptape/Microscope 获取项目
+- 进入工程目录后执行 `git clone https://github.com/cryptape/Microscope` 获取项目
 
-- 编辑 config/webpack.config.base.js 中 http://121.196.*.*:1337 为缓存服务器的地址和端口
+- 编辑 `config/webpack.config.base.js` 中 `http://121.196.*.*:1337` 为缓存服务器的地址和端口
 
-- 执行 yarn add 安装依赖
+- 执行 `yarn add` 安装依赖
 
-- 执行 yarn start 进入开发模式
+- 执行 `yarn run dll` 打包动态依赖
 
-- 执行 yarn run build 将项目打包到 dists 目录下, 用 nginx 部署到服务器即可
+- 执行 `yarn start` 进入开发模式
+
+- 执行 `yarn run build` 将项目打包到 `dist` 目录下, 用 `nginx` 部署到服务器即可
 
 ---
 
 ## AgeraONE 二次开发方法:
 
-- 进入工程目录后执行 git clone https://github.com/Keith-CY/agera_one 获取项目
+- 进入工程目录后执行 `git clone https://github.com/Keith-CY/agera_one` 获取项目
 
-- 在工程目录下执行 cp config/dev.secret.exs.example config/dev.secret.exs 创建秘钥文件
+- 在工程目录下执行 `cp config/dev.secret.exs.example config/dev.secret.exs` 创建秘钥文件
 
-- 修改 dev.secret.exs 中的 localhost:1337 为缓存服务器要缓存的链的地址和端口
+- 修改 `dev.secret.exs` 中的 `localhost:1337` 为缓存服务器要缓存的链的地址和端口
 
-- 在工程目录下执行 mix phx.server 进入开发模式
+-  执行 `mix ecto:migrate` 配置数据库
 
-- 在工程目录下执行 elixir —detached -S mix phx.server 进入生产模式
+- 在工程目录下执行 `mix phx.server` 进入开发模式
+
+- 在工程目录下执行 `elixir —detached -S mix phx.server` 进入生产模式
