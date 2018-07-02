@@ -28,7 +28,7 @@ class Footer extends React.Component<{ t: (key: string) => string }, any> {
       items: [
         {
           logo:
-            'http://nervos.org/images/logo-fd71390dd58d38f3ea30de42ab713791.png',
+            'https://uploads-ssl.webflow.com/5b10cb31f2733b937fe55ab5/5b185b65683265ce7a42c13c_nervos%20logo.png',
           title: 'Nervos AppChain',
           url: 'http://nervos.org/',
           overview: 'Nervos AppChain',

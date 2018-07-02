@@ -4,7 +4,7 @@ $col-span: 92px;
   @media (max-width: 800px) {
     flex-direction: column;
     align-items: center;
-    &>div {
+    & > div {
       max-width: 90vw;
       text-align: center;
       padding: 0;
@@ -30,19 +30,19 @@ $col-span: 92px;
   width: 584px;
   padding: 0 $col-span;
   box-sizing: border-box;
-  &>div {
+  & > div {
     display: flex;
     justify-content: space-between;
     flex-wrap: wrap;
     margin: 0 -10px;
-    &>div {
+    & > div {
       width: 190px;
       margin: 0 10px;
       img {
-        width: 100%;
-        &:last-child {
-          height: 74px;
-        }
+        // width: 100%;
+        // &:last-child {
+        height: 74px;
+        // }
       }
     }
   }
