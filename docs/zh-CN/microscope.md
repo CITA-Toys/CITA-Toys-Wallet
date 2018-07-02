@@ -1,6 +1,6 @@
 # Microscope 简介
 
-Microscope 是一款类 Etherscan 的区块链数据访问平台。
+Microscope 是一款功能完备的区块链数据访问平台。
 
 通过 Microscope 您可以访问指定 AppChain 上的区块, 交易, 账号(含合约) 数据, 对合约执行 Call 调用, 以及查看 AppChain 实时性能.
 
