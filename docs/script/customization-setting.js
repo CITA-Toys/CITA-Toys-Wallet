@@ -6,5 +6,7 @@ var customization = {
 
     name: 'Microscope', // name of this document
 
-    homepage: `${default_language}/microscope.md`,// the home page, extension name '.md' cannot be omitted.
+    homepage: 'microscope.md',// the home page, extension name '.md' cannot be omitted.
+
+    
 }

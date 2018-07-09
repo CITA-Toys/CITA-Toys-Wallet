@@ -1,1 +1,1 @@
-- [Microscope 简介](zh-CN/microscope.md)
+- [Microscope 简介](microscope.md)
