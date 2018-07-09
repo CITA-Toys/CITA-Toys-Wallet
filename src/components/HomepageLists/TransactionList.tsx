@@ -22,9 +22,11 @@ export default translate('microscope')(
     >
       {transactions.map(tx => (
         <ListItem key={tx.hash} classes={{ root: styles.listItemContainer }}>
-          <svg className="icon" aria-hidden="true">
-            <use xlinkHref="#icon-transactionpassword" />
-          </svg>
+          <img
+            src={`${process.env.PUBLIC}/microscopeIcons/transaction.png`}
+            alt="transaction"
+            className={styles.txIcon}
+          />
           <ListItemText
             classes={{ primary: styles.primary, root: styles.listItemTextRoot }}
             primary={

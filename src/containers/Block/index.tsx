@@ -171,7 +171,7 @@ class Block extends React.Component<IBlockProps, IBlockState> {
             }}
           />
         ) : null}
-        <Banner bg="http://47.97.171.140:8082/banner/banner-Block.png">
+        <Banner bg={`${process.env.PUBLIC}/banner/banner-Block.png`}>
           <div>Block</div>
           <div className={styles.height}>
             <Link

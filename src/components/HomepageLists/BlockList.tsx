@@ -22,7 +22,13 @@ export default translate('microscope')(
             root: styles.listItemContainer,
           }}
         >
-          <div className={styles.blockIcon}>
+          <div
+            className={styles.blockIcon}
+            style={{
+              backgroundImage: `url(${`${process.env.PUBLIC
+              }/images/BlockBg.png`})`,
+            }}
+          >
             <span>{t('block')}</span>
             <Link
               to={`/height/${block.header.number}`}

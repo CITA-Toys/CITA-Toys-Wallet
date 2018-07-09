@@ -13,7 +13,7 @@
 }
 
 .main {
-  max-width: 680px;
+  // max-width: 680px;
   margin: 50px auto 0;
 }
 
@@ -26,9 +26,17 @@
 }
 
 .switchChecked.switchColorSecondary {
-  color: $secondary !important;
+  color: #fff !important;
 }
 
 .switchChecked.switchColorSecondary+.switchBar {
-  background-color: $secondary !important;
+  background-color: $primary !important;
+}
+
+.switchBar {
+  width: 38px !important;
+  height: 22px !important;
+  border-radius: 11px !important;
+  margin-top: -11px !important;
+  margin-left: -19px !important;
 }

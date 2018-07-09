@@ -92,17 +92,13 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
     return (
       <React.Fragment>
         {this.state.loading ? (
-          <LinearProgress
-            classes={{
-              root: 'linearProgressRoot',
-            }}
-          />
+          <LinearProgress classes={{ root: 'linearProgressRoot' }} />
         ) : null}
         <div className={layout.main}>
           <Grid container spacing={24}>
             <Grid item md={6} sm={12} xs={12}>
               <StaticCard
-                icon="blocks"
+                icon="/microscopeIcons/blocks.png"
                 title={t('Latest 10 Blocks')}
                 page="blocks"
                 className={styles.card}
@@ -112,7 +108,7 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
             </Grid>
             <Grid item md={6} sm={12} xs={12}>
               <StaticCard
-                icon="transfer-2"
+                icon="/microscopeIcons/transactions.png"
                 title={t('Latest 10 Transactions')}
                 page="transactions"
                 className={styles.card}
