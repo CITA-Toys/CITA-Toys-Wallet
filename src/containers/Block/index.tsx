@@ -8,6 +8,8 @@ import {
   ListItem,
 } from '@material-ui/core'
 
+import Banner from '../../components/Banner'
+
 import { withConfig } from '../../contexts/config'
 import { withObservables } from '../../contexts/observables'
 import { IContainerProps, IBlock } from '../../typings'
@@ -18,7 +20,7 @@ import hideLoader from '../../utils/hideLoader'
 
 const layouts = require('../../styles/layout')
 const texts = require('../../styles/text.scss')
-const styles = require('./styles')
+const styles = require('./block.scss')
 
 interface IBlockState extends IBlock {
   loading: number
@@ -169,38 +171,45 @@ class Block extends React.Component<IBlockProps, IBlockState> {
             }}
           />
         ) : null}
+        <Banner bg="http://47.97.171.140:8082/banner/banner-Block.png">
+          <div>Block</div>
+          <div className={styles.height}>
+            <Link
+              to={`/height/0x${(+header.number - 1).toString(16)}`}
+              href={`/height/0x${(+header.number - 1).toString(16)}`}
+            >
+              <svg className="icon" aria-hidden="true">
+                <use xlinkHref="#icon-left" />
+              </svg>
+            </Link>
+            # {header.number}
+            <Link
+              to={`/height/0x${(+header.number + 1).toString(16)}`}
+              href={`/height/0x${(+header.number + 1).toString(16)}`}
+            >
+              <svg
+                className="icon"
+                aria-hidden="true"
+                style={{ transform: 'rotate(180deg)' }}
+              >
+                <use xlinkHref="#icon-left" />
+              </svg>
+            </Link>
+          </div>
+        </Banner>
         <div className={layouts.main}>
+          <Card
+            classes={{
+              root: styles.hashCardRoot,
+            }}
+          >
+            <CardContent>
+              <div className={styles.hashTitle}>Block Hash</div>
+              <div className={styles.hashText}>{hash}</div>
+            </CardContent>
+          </Card>
           <Card classes={{ root: layouts.cardContainer }}>
             <CardContent>
-              <img
-                src="https://cdn.dribbble.com/users/1358412/screenshots/3234234/fantastic_planet_004.jpg"
-                className={styles.icon}
-                alt="block"
-              />
-              <div className={styles.hash}>Block Hash: {hash}</div>
-              <div className={styles.height}>
-                <Link
-                  to={`/height/0x${(+header.number - 1).toString(16)}`}
-                  href={`/height/0x${(+header.number - 1).toString(16)}`}
-                >
-                  <svg className="icon" aria-hidden="true">
-                    <use xlinkHref="#icon-left" />
-                  </svg>
-                </Link>
-                {header.number}
-                <Link
-                  to={`/height/0x${(+header.number + 1).toString(16)}`}
-                  href={`/height/0x${(+header.number + 1).toString(16)}`}
-                >
-                  <svg
-                    className="icon"
-                    aria-hidden="true"
-                    style={{ transform: 'rotate(180deg)' }}
-                  >
-                    <use xlinkHref="#icon-left" />
-                  </svg>
-                </Link>
-              </div>
               <List className={styles.items}>
                 <ListItem
                   onClick={this.toggleTransaction(true)}

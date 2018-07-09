@@ -37,7 +37,9 @@ import { isIp } from '../../utils/validators'
 import { fetchStatistics } from '../../utils/fetcher'
 import { initBlock, initMetadata } from '../../initValues'
 
-const styles = require('./styles')
+const styles = require('./header.scss')
+
+const LOGO = `${process.env.PUBLIC}/images/microscopeLogo.svg`
 const layout = require('../../styles/layout')
 
 const icons = {
@@ -231,12 +233,17 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             >
               <MenuIcon />
             </IconButton>
-            <HeaderNavs containers={containers} pathname={pathname} />
+            <HeaderNavs
+              containers={containers}
+              pathname={pathname}
+              logo={LOGO}
+            />
             <SidebarNavs
               open={this.state.sidebarNavs}
               containers={containers}
               pathname={pathname}
               toggleSideNavs={this.toggleSideNavs}
+              logo={LOGO}
             />
             <div className={styles.rightNavs}>
               <Button

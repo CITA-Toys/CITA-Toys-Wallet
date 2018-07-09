@@ -15,7 +15,11 @@ export default translate('microscope')(
   transactions: TransactionFromServer[]
   t: (key: string) => string
   }) => (
-    <List>
+    <List
+      classes={{
+        padding: styles.listPadding,
+      }}
+    >
       {transactions.map(tx => (
         <ListItem key={tx.hash} classes={{ root: styles.listItemContainer }}>
           <svg className="icon" aria-hidden="true">
@@ -64,7 +68,10 @@ export default translate('microscope')(
                   </Link>
                 </div>
                 <div className={texts.ellipsis}>
-                  {t('value')}: <b className={styles.value}>{tx.value || 0}</b>
+                  {t('value')}:{' '}
+                  <span className={styles.value} title={`${tx.value}`}>
+                    {tx.value || 0}
+                  </span>
                 </div>
               </div>
             }

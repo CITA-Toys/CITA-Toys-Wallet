@@ -49,6 +49,7 @@
   justify-content: space-between;
   min-height: 89px !important;
   text-transform: capitalize;
+  padding: 0 !important;
 }
 
 .toggleIcon {
@@ -70,4 +71,8 @@
 
 .rightSidebarContent {
   max-width: 100vw;
+}
+
+.headerLogo {
+  height: 75px;
 }

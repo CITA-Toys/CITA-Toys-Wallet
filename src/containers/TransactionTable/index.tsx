@@ -5,6 +5,7 @@ import TableWithSelector, {
   SelectorType,
 } from '../../components/TableWithSelector'
 import ErrorNotification from '../../components/ErrorNotification'
+import Banner from '../../components/Banner'
 import { fetchTransactions } from '../../utils/fetcher'
 import { withConfig } from '../../contexts/config'
 import { TransactionFromServer, IContainerProps } from '../../typings'
@@ -49,21 +50,21 @@ message: string
       key: 'to',
       text: 'to',
     },
-    {
-      type: SelectorType.RANGE,
-      key: 'value',
-      text: 'value',
-      items: [
-        { key: 'valueFrom', text: 'min value' },
-        { key: 'valueTo', text: 'max value' },
-      ],
-    },
+    // {
+    //   type: SelectorType.RANGE,
+    //   key: 'value',
+    //   text: 'value',
+    //   items: [
+    //     { key: 'valueFrom', text: 'min value' },
+    //     { key: 'valueTo', text: 'max value' },
+    //   ],
+    // },
   ],
   selectorsValue: {
     from: '',
     to: '',
-    valueFrom: '',
-    valueTo: '',
+    // valueFrom: '',
+    // valueTo: '',
     account: '',
   },
   loading: false,
@@ -73,7 +74,10 @@ message: string
   },
 }
 
-interface TransactionTableProps extends IContainerProps {}
+interface TransactionTableProps extends IContainerProps {
+  inset?: boolean
+  showInOut?: boolean
+}
 type TransactionTableState = typeof initialState
 class TransactionTable extends React.Component<
   TransactionTableProps,
@@ -119,8 +123,8 @@ class TransactionTable extends React.Component<
     const params = {
       from: '',
       to: '',
-      valueFrom: '',
-      valueTo: '',
+      // valueFrom: '',
+      // valueTo: '',
       pageNo: '',
       account: '',
     }
@@ -211,6 +215,8 @@ class TransactionTable extends React.Component<
       loading,
       error,
     } = this.state
+    const { inset = false, showInOut = false } = this.props
+    const activeParams = paramsFilter(selectorsValue)
     return (
       <React.Fragment>
         {loading ? (
@@ -219,6 +225,14 @@ class TransactionTable extends React.Component<
               root: 'linearProgressRoot',
             }}
           />
+        ) : null}
+        {!inset ? (
+          <Banner bg={`${process.env.PUBLIC}/banner/banner-Transaction.png`}>
+            Current Search:{' '}
+            {Object.keys(activeParams)
+              .map(key => `${key}: ${activeParams[key]}`)
+              .join(', ')}
+          </Banner>
         ) : null}
         <TableWithSelector
           headers={headers}
@@ -230,6 +244,8 @@ class TransactionTable extends React.Component<
           pageSize={pageSize}
           pageNo={pageNo}
           handlePageChanged={this.handlePageChanged}
+          showInout={showInOut}
+          inset={inset}
         />
         <ErrorNotification
           error={error}

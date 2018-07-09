@@ -11,6 +11,8 @@ import {
   Divider,
 } from '@material-ui/core'
 
+import Banner from '../../components/Banner'
+
 import { withObservables } from '../../contexts/observables'
 import { IContainerProps, DetailedTransaction } from '../../typings/'
 import ErrorNotification from '../../components/ErrorNotification'
@@ -18,7 +20,7 @@ import hideLoader from '../../utils/hideLoader'
 
 const layouts = require('../../styles/layout.scss')
 const texts = require('../../styles/text.scss')
-const styles = require('./styles.scss')
+const styles = require('./transaction.scss')
 
 interface TransactionProps extends IContainerProps {}
 
@@ -75,6 +77,22 @@ const InfoList = ({ infos, details }) =>
       />
     </ListItem>
   ))
+
+const Info = ({ title, infos, details }) => (
+  <List
+    subheader={
+      <ListSubheader component="div" classes={{ root: styles.listHeaderRoot }}>
+        {title}
+      </ListSubheader>
+    }
+    classes={{
+      root: styles.listRoot,
+    }}
+  >
+    <Divider style={{ margin: '0 0 0 24px' }} light />
+    <InfoList infos={infos} details={details} />
+  </List>
+)
 class Transaction extends React.Component<TransactionProps, TransactionState> {
   readonly state = initState
   componentWillMount () {
@@ -107,7 +125,7 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
         },
       }))
     }
-    if (tx.basicInfo) {
+    if (tx.basicInfo && tx.basicInfo.data) {
       /* eslint-disable */
       const { data } = tx.basicInfo
       tx.basicInfo.data = (data as any).map(int => int.toString(16)).join('')
@@ -120,10 +138,6 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
     { key: 'blockHash', label: 'Block Hash', type: 'block' },
     { key: 'blockNumber', label: 'Height', type: 'height' },
     { key: 'index', label: 'Index' },
-    // {
-    //   key: 'content',
-    //   label: 'Content',
-    // },
   ]
   private basicInfo = [
     { key: 'from', label: 'From', type: 'account' },
@@ -141,16 +155,7 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
     }))
   }
   render () {
-    const {
-      hash,
-      // blockHash,
-      // blockNumber,
-      // content,
-      // index,
-      error,
-      timestamp,
-      gasUsed,
-    } = this.state
+    const { hash, error, timestamp, gasUsed } = this.state
     return (
       <React.Fragment>
         {hash ? null : (
@@ -160,68 +165,51 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
             }}
           />
         )}
+        <Banner bg={`${process.env.PUBLIC}/banner/banner-Transaction.png`}>
+          <div className={styles.hashTitle}>Transaction</div>
+          <div className={styles.hashText}>{hash}</div>
+        </Banner>
+
         <div className={layouts.main}>
-          <Card classes={{ root: layouts.cardContainer }}>
-            {/*
-            <CardHeader
-              title={
-                <div className={styles.txHeader}>
-                  Transaction: <span className={texts.addr}>{hash}</span>
-                </div>
-              }
-              subheader="time"
-            />
-          */}
+          <Card classes={{ root: styles.hashCardRoot }}>
             <CardContent>
-              <div className={styles.hash}>Transaction</div>
-              <div className={texts.hash}>{hash}</div>
               <div className={styles.attrs}>
                 {timestamp ? (
                   <span>
                     <svg className="icon" aria-hidden="true">
                       <use xlinkHref="#icon-time" />
                     </svg>
-                    Time: {new Date(timestamp).toLocaleTimeString()}
+                    <span className={styles.attrTitle}>Time: </span>
+                    {new Date(timestamp).toLocaleString()}
                   </span>
                 ) : null}
                 {gasUsed ? (
                   <span>
-                    <svg className="icon" aria-hidden="true">
-                      <use xlinkHref="#icon-gas" />
-                    </svg>
-                    Gas Used: {gasUsed}
+                    <img
+                      src={
+                        `${process.env.PUBLIC
+                        }/microscopeIcons/petrol_barrel.png`
+                      }
+                      alt="gas used"
+                      className={styles.gasIcon}
+                    />
+
+                    <span className={styles.attrTitle}>Gas Used: </span>
+                    {gasUsed}
                   </span>
                 ) : null}
               </div>
-              <Divider />
+            </CardContent>
+          </Card>
+          <Card classes={{ root: layouts.cardContainer }}>
+            <CardContent>
               <div className={styles.lists}>
-                <List
-                  subheader={
-                    <ListSubheader
-                      component="div"
-                      classes={{ root: styles.listHeaderRoot }}
-                    >
-                      Transaction
-                    </ListSubheader>
-                  }
-                >
-                  <InfoList
-                    infos={this.basicInfo}
-                    details={this.state.basicInfo}
-                  />
-                </List>
-                <List
-                  subheader={
-                    <ListSubheader
-                      component="div"
-                      classes={{ root: styles.listHeaderRoot }}
-                    >
-                      Block
-                    </ListSubheader>
-                  }
-                >
-                  <InfoList infos={this.infos} details={this.state} />
-                </List>
+                <Info
+                  title="Transaction"
+                  infos={this.basicInfo}
+                  details={this.state.basicInfo}
+                />
+                <Info title="Block" infos={this.infos} details={this.state} />
               </div>
             </CardContent>
           </Card>

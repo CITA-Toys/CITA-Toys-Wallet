@@ -7,6 +7,8 @@ const DashboardPlugin = require('webpack-dashboard/plugin')
 
 const baseConfig = require('./webpack.config.base')
 
+require('dotenv').config()
+
 const manifest = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, '../lib/manifest.json')),
 )
@@ -54,6 +56,7 @@ const devConfig = {
       'process.env': {
         NODE_ENV: JSON.stringify('development'),
         OBSERVABLE_INTERVAL: 10000,
+        PUBLIC: JSON.stringify(process.env.PUBLIC),
       },
     }),
     new DashboardPlugin(),

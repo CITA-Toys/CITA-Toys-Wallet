@@ -13,9 +13,16 @@ import {
 } from '@material-ui/core'
 import { Menu as MenuIcon } from '@material-ui/icons'
 
-const styles = require('../../containers/Header/styles.scss')
+const styles = require('../../containers/Header/header.scss')
 
-const SidebarNavs = ({ open, containers, pathname, toggleSideNavs, t }) => (
+const SidebarNavs = ({
+  open,
+  containers,
+  pathname,
+  toggleSideNavs,
+  logo,
+  t,
+}) => (
   <Drawer open={open} onClose={toggleSideNavs()}>
     <AppBar position="sticky">
       <Toolbar
@@ -30,7 +37,7 @@ const SidebarNavs = ({ open, containers, pathname, toggleSideNavs, t }) => (
           style={{ color: '#000', marginRight: '31px' }}
         >
           <Typography variant="title" color="inherit">
-            {(process.env.APP_NAME as string).toUpperCase()}
+            <img src={logo} alt="logo" className={styles.headerLogo} />
           </Typography>
         </Link>
         <IconButton

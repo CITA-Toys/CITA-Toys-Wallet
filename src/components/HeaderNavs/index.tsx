@@ -3,13 +3,13 @@ import { Link } from 'react-router-dom'
 import { translate } from 'react-i18next'
 import { Typography } from '@material-ui/core'
 
-const styles = require('../../containers/Header/styles.scss')
+const styles = require('../../containers/Header/header.scss')
 
-const HeaderNavs = ({ containers, pathname, t }) => (
+const HeaderNavs = ({ containers, pathname, logo, t }) => (
   <React.Fragment>
     <Link to="/" href="/" className={styles.headerNavIcon}>
       <Typography variant="title" color="inherit">
-        {(process.env.APP_NAME as string).toUpperCase()}
+        <img src={logo} alt="logo" className={styles.headerLogo} />
       </Typography>
     </Link>
     <div className={styles.headerNavs}>

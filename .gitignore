@@ -25,3 +25,6 @@ yarn-error
 scripts
 cita-toys-wallet
 
+
+# secret
+.env

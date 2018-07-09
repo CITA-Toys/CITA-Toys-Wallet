@@ -1,6 +1,8 @@
 const path = require('path')
 const webpack = require('webpack')
 
+require('dotenv').config()
+
 module.exports = {
   output: {
     path: path.resolve(__dirname, '../dist'),
@@ -10,15 +12,12 @@ module.exports = {
   module: {
     rules: [{
         test: /\.tsx?/,
-        use: [
-          'react-hot-loader/webpack',
-          {
-            loader: 'ts-loader',
-            options: {
-              configFile: path.resolve(__dirname, './tsconfig.json'),
-            },
+        use: ['react-hot-loader/webpack', {
+          loader: 'ts-loader',
+          options: {
+            configFile: path.resolve(__dirname, './tsconfig.json'),
           },
-        ],
+        }, ],
         include: /src/,
       },
       {
@@ -43,8 +42,8 @@ module.exports = {
   plugins: [
     new webpack.DefinePlugin({
       'process.env': {
-        CITA_SERVER: JSON.stringify('http://121.196.200.225:1337'),
-        APP_NAME: JSON.stringify('Microscope'),
+        CITA_SERVER: JSON.stringify(process.env.CITA_SERVER),
+        APP_NAME: JSON.stringify(process.env.APP_NAME),
       },
     }),
   ],

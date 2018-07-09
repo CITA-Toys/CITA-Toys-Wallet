@@ -11,7 +11,13 @@
   padding: 0 0 0 17px;
   h2 {
     display: flex;
-    justify-content: space-between;
+    justify-content: center;
     align-items: center;
+    button {
+      position: absolute;
+      top: 10px;
+      right: 0;
+      font-weight: 100;
+    }
   }
 }

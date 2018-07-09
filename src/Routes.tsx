@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { HashRouter as Router, Route } from 'react-router-dom'
 import Bundle from './components/Bundle'
-// import AsyncLoader from './components/AsyncLoader'
 
 export const containers = [
   { path: '/', name: 'Header', component: 'Header', nav: false },

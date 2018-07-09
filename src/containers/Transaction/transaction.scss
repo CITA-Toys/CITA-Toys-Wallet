@@ -1,0 +1,90 @@
+@import '../../styles/color.scss';
+@import '../../styles/common.scss';
+.infoValue {
+  word-wrap: break-word;
+  word-break: break-all;
+  margin-bottom: 18px;
+  font-size: 1.125rem !important;
+  color: #000 !important;
+}
+
+.infoTitle {
+  font-size: 1.125rem !important;
+  color: $plainText !important;
+}
+
+.hash {
+  height: 29px;
+  margin-top: 17px;
+  margin-bottom: 12px;
+  font-size: 1.5rem; // font-weight: bold;
+  color: $plainText;
+  word-break: break-all;
+}
+
+.lists {
+  display: flex;
+  margin-top: 84px;
+  &>ul {
+    width: 50%;
+  }
+}
+
+.listHeaderRoot {
+  // font-weight: 100 !important;
+  font-size: 1.25rem !important;
+  color: $tableText !important;
+}
+
+@media (max-width: 800px) {
+  .lists {
+    flex-direction: column;
+    margin-top: 15px;
+  }
+  .attrs {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+.hashCardRoot {
+  @include boxShadow;
+  margin-bottom: 20px;
+  padding-top: 8px;
+  .hashTitle {
+    font-size: 24px;
+  }
+  .hashText {
+    font-size: 16px;
+    color: $plainText;
+  }
+}
+
+.attrs {
+  display: flex;
+  font-size: 18px;
+  &>span {
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+  .attrTitle {
+    font-size: 1.125rem;
+    color: $plainText !important;
+    margin: 0 20px 0 10px;
+  }
+  svg {
+    font-size: 24px;
+    color: $primary;
+    margin-left: 24px;
+  }
+}
+
+.gasIcon {
+  height: 30px;
+  margin-left: 24px;
+}
+
+.listRoot {
+  margin-right: 31px !important;
+}
