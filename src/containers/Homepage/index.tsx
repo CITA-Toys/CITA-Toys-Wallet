@@ -8,11 +8,9 @@ import StaticCard from '../../components/StaticCard'
 import BlockList from '../../components/HomepageLists/BlockList'
 import TransactionList from '../../components/HomepageLists/TransactionList'
 import ErrorNotification from '../../components/ErrorNotification'
-// import HomeChart from '../../components/HomeChart'
 import hideLoader from '../../utils/hideLoader'
 
 const layout = require('../../styles/layout.scss')
-// const texts = require('../../styles/text.scss')
 const styles = require('./homepage.scss')
 
 interface HomepageProps extends IContainerProps {}
@@ -95,7 +93,7 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
           <LinearProgress classes={{ root: 'linearProgressRoot' }} />
         ) : null}
         <div className={layout.main}>
-          <Grid container spacing={24}>
+          <Grid container spacing={window.innerWidth > 800 ? 24 : 0}>
             <Grid item md={6} sm={12} xs={12}>
               <StaticCard
                 icon="/microscopeIcons/blocks.png"

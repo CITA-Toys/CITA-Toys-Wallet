@@ -89,7 +89,7 @@ const Info = ({ title, infos, details }) => (
       root: styles.listRoot,
     }}
   >
-    <Divider style={{ margin: '0 0 0 24px' }} light />
+    <Divider classes={{ root: styles.divider }} light />
     <InfoList infos={infos} details={details} />
   </List>
 )
@@ -186,10 +186,9 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
                 {gasUsed ? (
                   <span>
                     <img
-                      src={
-                        `${process.env.PUBLIC
-                        }/microscopeIcons/petrol_barrel.png`
-                      }
+                      src={`${
+                        process.env.PUBLIC
+                      }/microscopeIcons/petrol_barrel.svg`}
                       alt="gas used"
                       className={styles.gasIcon}
                     />
@@ -202,7 +201,7 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
             </CardContent>
           </Card>
           <Card classes={{ root: layouts.cardContainer }}>
-            <CardContent>
+            <CardContent classes={{ root: styles.cardContentRoot }}>
               <div className={styles.lists}>
                 <Info
                   title="Transaction"

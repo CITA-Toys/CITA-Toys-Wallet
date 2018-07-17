@@ -16,7 +16,7 @@ interface StaticCardProps {
 export default (props: StaticCardProps) => (
   <Card className={props.className || ''} elevation={0}>
     <h2 className={styles.title}>
-      <img src={`${process.env.PUBLIC}${props.icon}`} alt={props.icon} />
+      <img src={`${process.env.PUBLIC}${props.icon}`} alt="icon" />
       <span>{props.title}</span>
       {props.page ? (
         <a href={`/#/${props.page}`} className={styles.more}>

@@ -14,19 +14,12 @@ import {
 } from '@material-ui/core'
 import {
   Translate as TranslateIcon,
-  Menu as MenuIcon,
   Close as CloseIcon,
-  Fingerprint as FingerprintIcon,
-  Settings as SettingsIcon,
-  ViewCarousel as ViewCarouselIcon,
-  FormatShapes as FormatShapesIcon,
-  GraphicEq as GraphicIcon,
-  Search as SearchIcon,
 } from '@material-ui/icons'
 import { containers } from '../../Routes'
 import HeaderNavs from '../../components/HeaderNavs'
 import SidebarNavs from '../../components/SidebarNavs'
-import { IContainerProps, IBlock, Metadata } from '../../typings'
+import { IContainerProps, Metadata } from '../../typings'
 import RightSidebar from '../../components/RightSidebar'
 import MetadataPanel from '../../components/MetadataPanel'
 import BriefStatisticsPanel from '../../components/BriefStatistics'
@@ -42,13 +35,6 @@ const styles = require('./header.scss')
 const LOGO = `${process.env.PUBLIC}/images/microscopeLogo.svg`
 const layout = require('../../styles/layout')
 
-const icons = {
-  Possession: <FingerprintIcon />,
-  Blocks: <ViewCarouselIcon />,
-  ContractEditor: <FormatShapesIcon />,
-  Config: <SettingsIcon />,
-  Graphs: <GraphicIcon />,
-}
 const initState = {
   keyword: '',
   metadata: initMetadata,
@@ -231,7 +217,10 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               onClick={this.toggleSideNavs(true)}
               classes={{ root: styles.toggleIcon }}
             >
-              <MenuIcon />
+              <img
+                src={`${process.env.PUBLIC}/microscopeIcons/expand.png`}
+                alt="expand"
+              />
             </IconButton>
             <HeaderNavs
               containers={containers}
@@ -264,7 +253,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 className={styles.navItem}
                 onClick={this.togglePanel('search')}
               >
-                <SearchIcon />
+                <svg className="icon" aria-hidden="true">
+                  <use xlinkHref="#icon-magnifier" />
+                </svg>
               </IconButton>
               <IconButton onClick={this.toggleLngMenu(true)}>
                 <TranslateIcon />

@@ -16,5 +16,6 @@
     "allowSyntheticDefaultImports": false
   },
   "exclude": ["node_modules", "dist", "scripts", "webpack"],
-  "types": ["typePatches"]
+  "types": ["typePatches"],
+  "compileOnSave": false,
 }

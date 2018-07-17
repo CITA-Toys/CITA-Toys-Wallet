@@ -11,7 +11,6 @@ import {
   IconButton,
   AppBar,
 } from '@material-ui/core'
-import { Menu as MenuIcon } from '@material-ui/icons'
 
 const styles = require('../../containers/Header/header.scss')
 
@@ -24,7 +23,7 @@ const SidebarNavs = ({
   t,
 }) => (
   <Drawer open={open} onClose={toggleSideNavs()}>
-    <AppBar position="sticky">
+    <AppBar position="sticky" classes={{ root: styles.sidebarNavs }}>
       <Toolbar
         classes={{
           root: styles.toolbarRoot,
@@ -45,7 +44,10 @@ const SidebarNavs = ({
           onClick={toggleSideNavs()}
           classes={{ root: styles.toggleIcon }}
         >
-          <MenuIcon />
+          <img
+            src={`${process.env.PUBLIC}/microscopeIcons/expand.png`}
+            alt="expand"
+          />
         </IconButton>
       </Toolbar>
     </AppBar>
@@ -62,6 +64,19 @@ const SidebarNavs = ({
                 }`}
                 onClick={toggleSideNavs()}
               >
+                {pathname === container.path ? (
+                  <img
+                    src={container.iconActive}
+                    alt="icon"
+                    style={{ marginRight: '8px' }}
+                  />
+                ) : (
+                  <img
+                    src={container.icon}
+                    alt="icon"
+                    style={{ marginRight: '8px' }}
+                  />
+                )}
                 <span>{t(container.name)}</span>
               </Link>
             }

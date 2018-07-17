@@ -215,16 +215,6 @@ class Account extends React.Component<AccountProps, AccountState> {
       this.fetchInfo(addr)
     }
   }
-  // private loadAddrList = () => {
-  //   const normals = JSON.parse(window.localStorage.getItem('normals') || '[]')
-  //   const erc20s = JSON.parse(window.localStorage.getItem('erc20s') || '[]')
-  //   const erc721s = JSON.parse(window.localStorage.getItem('erc721s') || '[]')
-  //   this.setState(state => ({
-  //     normals,
-  //     erc20s,
-  //     erc721s,
-  //   }))
-  // }
   private toggleAddrs = (addrsOn = false) => e => {
     this.setState(state => ({ addrsOn }))
   }
@@ -369,10 +359,10 @@ class Account extends React.Component<AccountProps, AccountState> {
         ) : null}
 
         <Banner bg={`${process.env.PUBLIC}/banner/banner-Account.png`}>
-          <div>
+          <div style={{ fontSize: '14px' }}>
             Account: <span>{addr}</span>
           </div>
-          <div>
+          <div style={{ fontSize: '14px' }}>
             Balance: <span>{balance}</span>
           </div>
         </Banner>

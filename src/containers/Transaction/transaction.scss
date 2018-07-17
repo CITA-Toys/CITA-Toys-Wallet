@@ -11,6 +11,7 @@
 .infoTitle {
   font-size: 1.125rem !important;
   color: $plainText !important;
+  padding-bottom: 8px;
 }
 
 .hash {
@@ -27,11 +28,13 @@
   margin-top: 84px;
   &>ul {
     width: 50%;
+    @media (max-width: 800px) {
+      width: 100%;
+    }
   }
 }
 
 .listHeaderRoot {
-  // font-weight: 100 !important;
   font-size: 1.25rem !important;
   color: $tableText !important;
 }
@@ -44,6 +47,9 @@
   .attrs {
     display: flex;
     flex-direction: column;
+    span:last-child {
+      margin-top: 10px;
+    }
   }
 }
 
@@ -51,18 +57,41 @@
   @include boxShadow;
   margin-bottom: 20px;
   padding-top: 8px;
-  .hashTitle {
-    font-size: 24px;
+  @media (max-width: 800px) {
+    padding-top: 0;
   }
-  .hashText {
+}
+
+.hashTitle {
+  font-size: 24px;
+  @media (max-width: 800px) {
     font-size: 16px;
-    color: $plainText;
+  }
+}
+
+.hashText {
+  font-size: 16px;
+  word-wrap: break-word;
+  box-sizing: border-box;
+  @media (max-width: 800px) {
+    width:100%;
+    padding: 0 50px;
+    line-height: 1.4;
+    padding-bottom: 5px;
+    text-align: center;
   }
 }
 
 .attrs {
   display: flex;
   font-size: 18px;
+  @media (max-width: 800px) {
+    font-size: 16px;
+    svg,
+    img {
+      margin-left: 0 !important;
+    }
+  }
   &>span {
     flex: 1;
     display: flex;
@@ -72,6 +101,9 @@
     font-size: 1.125rem;
     color: $plainText !important;
     margin: 0 20px 0 10px;
+    @media (max-width: 800px) {
+      margin-right: 8px;
+    }
   }
   svg {
     font-size: 24px;
@@ -81,10 +113,40 @@
 }
 
 .gasIcon {
-  height: 30px;
+  height: 24px;
   margin-left: 24px;
 }
 
 .listRoot {
   margin-right: 31px !important;
+}
+
+.cardContentRoot {
+  @media(max-width: 800px) {
+    padding: 0 !important;
+    &>div {
+      margin: 0 !important;
+    }
+    .listHeaderRoot {
+      line-height: 2;
+      display: flex;
+      align-items: center;
+      &::before {
+        display: block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: $primary;
+        content: '';
+        margin-right: 5px;
+      }
+    }
+  }
+}
+
+.divider {
+  margin: 0 0 0 24px !important;
+  @media (max-width: 800px) {
+    margin: 0 0 0 15px !important;
+  }
 }

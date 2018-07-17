@@ -52,7 +52,8 @@ footer {
 
 @media (max-width: 800px) {
   header {
-    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12) !important;
+    // box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12) !important;
+    box-shadow: none;
   }
   footer {
     margin-top: 27px;
@@ -82,6 +83,7 @@ footer {
     top: 89px;
     left: 0;
     background: #f15a29 !important;
+    height: 3px !important;
   }
   @media (max-width:800px) {
     .linearProgressRoot {

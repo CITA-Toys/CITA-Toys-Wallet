@@ -2,15 +2,12 @@
 .title {
   display: flex;
   justify-content: flex-start;
+  align-items: center;
   padding: 25px 20px 10px;
   margin: 0;
   font-size: 1.125rem;
   color: $heavyText;
   border-bottom: 1px solid $divider; // span {
-  //   display: flex;
-  //   align-items: center;
-  //   margin-right: 10px;
-  // }
   span {
     display: flex;
     align-items: center;
@@ -20,6 +17,33 @@
   img {
     font-size: 1.5rem;
     margin-right: 10px;
+  }
+  img {
+    height: 24px;
+  }
+  @media (max-width:800px) {
+    position: relative;
+    line-height: 2;
+    margin: 0;
+    padding: 0 16px;
+    background: #f7f8fa;
+    border-bottom: none;
+    &:before,
+    &:after {
+      content: '';
+      position: absolute;
+      display: block;
+      top: 0;
+      bottom: 0;
+      width: 32px;
+      background: #f7f8fa;
+    }
+    &:before {
+      right: 100%;
+    }
+    &:after {
+      left: 100%;
+    }
   }
 }
 
@@ -38,30 +62,4 @@
 .titleRoot {
   display: flex !important;
   justify-content: space-between;
-}
-
-@media (max-width: 800px) {
-  .title {
-    position: relative;
-    line-height: 2;
-    margin: 0;
-    padding: 0;
-    background: #f7f8fa;
-    &:before,
-    &:after {
-      content: '';
-      position: absolute;
-      display: block;
-      top: 0;
-      bottom: 0;
-      width: 32px;
-      background: #f7f8fa;
-    }
-    &:before {
-      right: 100%;
-    }
-    &:after {
-      left: 100%;
-    }
-  }
 }

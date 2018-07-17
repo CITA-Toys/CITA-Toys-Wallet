@@ -39,8 +39,7 @@
 }
 
 .activeNav {
-  position: relative;
-  display: block;
+  position: relative; // display: block;
   color: $primary !important;
   font-weight: 600;
 }
@@ -52,6 +51,13 @@
   padding: 0 !important;
 }
 
+.rightSidebarContent {
+  max-width: 100vw;
+  .toolbarRoot {
+    padding-left: 25px !important;
+  }
+}
+
 .toggleIcon {
   display: none !important;
 }
@@ -61,6 +67,9 @@
   .headerNavIcon {
     display: none;
   }
+  .headerLogo {
+    height: 35px !important;
+  }
   .toggleIcon {
     display: flex !important;
   }
@@ -69,10 +78,29 @@
   }
 }
 
-.rightSidebarContent {
-  max-width: 100vw;
+.headerLogo {
+  height: 49px;
 }
 
-.headerLogo {
-  height: 75px;
+.sidebarNavs {
+  padding: 0 15px; // .navItem,
+  // .activeNav {
+  //   display: flex !important;
+  //   align-items: center;
+  // }
+  .toolbarRoot {
+    &::after {
+      position: abolute;
+      content: '';
+      height: 1px;
+      width: 100%;
+      top: 100%;
+      left: 0;
+      background: #ccc;
+    }
+  }
+  &+ul>li {
+    padding-left: 0px !important;
+    padding-right: 0px !important;
+  }
 }

@@ -32,6 +32,9 @@ const DialogComp = (props: DialogCompProps) => (
     open={props.on}
     maxWidth={props.maxWidth || 'md'}
     TransitionComponent={Transition}
+    classes={{
+      root: styles.dialogRoot,
+    }}
   >
     {props.fullScreen ? (
       <AppBar position="sticky" color="default">

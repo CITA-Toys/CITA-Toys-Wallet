@@ -334,7 +334,7 @@ class ConfigPage extends React.Component<IConfigPageProps, IConfigPageState> {
       panel: ConfigPanel.GRAPH,
       type: ConfigType.DISPLAY,
       key: 'graphProposals',
-      title: 'Proposals/Block',
+      title: 'Proposals/Validator',
     },
     {
       panel: ConfigPanel.GRAPH,
