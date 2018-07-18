@@ -130,7 +130,7 @@ For now, some languages('zh', 'en', 'jp', 'ko', 'de', 'it', 'fr') can be set by 
 
 ## Others
 
-> NOTICE: Block Detail can be visited `localhost/#/block/:blockHash` and `localhost/#/height/:blockNumber
+> NOTICE: Block Detail can be visited `localhost/#/block/:blockHash` and `localhost/#/height/:blockNumber`
 
 > Transaction Detail can be visited `localhost/#/transaction/:transactionHash`
 
