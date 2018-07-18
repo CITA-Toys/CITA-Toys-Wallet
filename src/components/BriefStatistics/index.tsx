@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Timestamp } from '../../typings'
 
-const styles = require('./styles.scss')
+const styles = require('./briefStatistics.scss')
 
 /* eslint-disable no-use-before-define */
 interface BriefStatistics {

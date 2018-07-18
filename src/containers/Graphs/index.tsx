@@ -13,12 +13,13 @@ import {
   ProposalFromServer,
   Hash,
 } from '../../typings/'
+import Banner from '../../components/Banner'
 import { BarOption, PieOption } from '../../config/graph'
 import { fetchTransactions, fetchStatistics } from '../../utils/fetcher'
 import hideLoader from '../../utils/hideLoader'
 
 const layout = require('../../styles/layout.scss')
-const styles = require('./styles.scss')
+const styles = require('./graph.scss')
 
 const initState = {
   blocks: [] as IBlock[],
@@ -264,50 +265,55 @@ class Graphs extends React.Component<GraphsProps, GraphState> {
   }
   render () {
     return (
-      <div className={layout.center}>
-        <div className={styles.graphs}>
-          <Card>
-            <CardContent>
-              <div
-                ref={el => (this.blockGraphDOM = el)}
-                className={styles.graphContainer}
-              />
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent>
-              <div
-                ref={el => (this.txCountGraphDOM = el)}
-                className={styles.graphContainer}
-              />
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent>
-              <div
-                ref={el => (this.gasUsedGraphDOM = el)}
-                className={styles.graphContainer}
-              />
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent>
-              <div
-                ref={el => (this.txGasUsedGraphDOM = el)}
-                className={styles.graphContainer}
-              />
-            </CardContent>
-          </Card>
-          <Card>
-            <CardContent>
-              <div
-                ref={el => (this.proposalsGraphDOM = el)}
-                className={styles.graphContainer}
-              />
-            </CardContent>
-          </Card>
+      <React.Fragment>
+        <Banner bg={`${process.env.PUBLIC}/banner/banner-Statistics.png`}>
+          Statistics
+        </Banner>
+        <div className={layout.center}>
+          <div className={styles.graphs}>
+            <Card>
+              <CardContent>
+                <div
+                  ref={el => (this.blockGraphDOM = el)}
+                  className={styles.graphContainer}
+                />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent>
+                <div
+                  ref={el => (this.txCountGraphDOM = el)}
+                  className={styles.graphContainer}
+                />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent>
+                <div
+                  ref={el => (this.gasUsedGraphDOM = el)}
+                  className={styles.graphContainer}
+                />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent>
+                <div
+                  ref={el => (this.txGasUsedGraphDOM = el)}
+                  className={styles.graphContainer}
+                />
+              </CardContent>
+            </Card>
+            <Card>
+              <CardContent>
+                <div
+                  ref={el => (this.proposalsGraphDOM = el)}
+                  className={styles.graphContainer}
+                />
+              </CardContent>
+            </Card>
+          </div>
         </div>
-      </div>
+      </React.Fragment>
     )
   }
 }

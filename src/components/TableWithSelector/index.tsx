@@ -15,7 +15,7 @@ import paramsFilter from '../../utils//paramsFilter'
 
 const text = require('../../styles/text.scss')
 const layout = require('../../styles/layout.scss')
-const styles = require('./styles.scss')
+const styles = require('./tableWithSelector.scss')
 
 export enum SelectorType {
   SINGLE,
@@ -48,6 +48,9 @@ export interface TableWithSelectorProps {
   selectorsValue?: any
   onSubmit?: any
   handlePageChanged?: (pageNo: number) => void
+  // showInOut?: boolean
+  showInout?: boolean
+  inset?: boolean
 }
 
 class TableWithSelector extends React.Component<
@@ -85,11 +88,23 @@ class TableWithSelector extends React.Component<
   }
   render () {
     const { on, selectorsValue } = this.state
-    const { headers, items, selectors, pageSize, pageNo, count, t } = this.props
+    const {
+      headers,
+      items,
+      selectors,
+      pageSize,
+      pageNo,
+      count,
+      t,
+      inset,
+    } = this.props
     const total = Math.ceil(count / pageSize)
     const activeParams = paramsFilter(this.props.selectorsValue)
     return (
-      <Paper className={`${layout.center} ${styles.container}`}>
+      <Paper
+        className={`${layout.center} ${inset ? styles.insetContainer : styles.container}`}
+        elevation={0}
+      >
         <Dialog
           on={!!on}
           dialogTitle={t('advanced selector')}

@@ -1,3 +1,4 @@
+@import './common.scss';
 @mixin center {
   width: 100%;
   box-sizing: border-box;
@@ -5,13 +6,10 @@
   margin: 0 auto;
 }
 
-@mixin boxShadow {
-  box-shadow: 0 0 6px 0 rgba(170, 170, 170, 0.5) !important;
-}
-
 .cardContainer {
   @include boxShadow;
-  min-height: 830px !important;
+  padding-bottom: 70px !important;
+  padding-top: 14px; // min-height: 830px !important;
 }
 
 .center {
@@ -19,7 +17,7 @@
 }
 
 .main {
-  @include center;
+  @include center; // @include boxShadow;
   margin: 50px auto 0;
 }
 

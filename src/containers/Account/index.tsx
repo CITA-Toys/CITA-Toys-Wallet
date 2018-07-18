@@ -16,6 +16,7 @@ import {
 
 import ERCPanel from '../../components/ERCPanel'
 import TransactionTable from '../../containers/TransactionTable'
+import Banner from '../../components/Banner'
 import Dialog from '../Dialog'
 
 import { withObservables } from '../../contexts/observables'
@@ -214,16 +215,6 @@ class Account extends React.Component<AccountProps, AccountState> {
       this.fetchInfo(addr)
     }
   }
-  // private loadAddrList = () => {
-  //   const normals = JSON.parse(window.localStorage.getItem('normals') || '[]')
-  //   const erc20s = JSON.parse(window.localStorage.getItem('erc20s') || '[]')
-  //   const erc721s = JSON.parse(window.localStorage.getItem('erc721s') || '[]')
-  //   this.setState(state => ({
-  //     normals,
-  //     erc20s,
-  //     erc721s,
-  //   }))
-  // }
   private toggleAddrs = (addrsOn = false) => e => {
     this.setState(state => ({ addrsOn }))
   }
@@ -366,33 +357,25 @@ class Account extends React.Component<AccountProps, AccountState> {
             }}
           />
         ) : null}
+
+        <Banner bg={`${process.env.PUBLIC}/banner/banner-Account.png`}>
+          <div style={{ fontSize: '14px' }}>
+            Account: <span>{addr}</span>
+          </div>
+          <div style={{ fontSize: '14px' }}>
+            Balance: <span>{balance}</span>
+          </div>
+        </Banner>
         <div className={layouts.main}>
-          <Card classes={{ root: layouts.cardContainer }}>
+          <Card classes={{ root: layouts.cardContainer }} elevation={0}>
             <CardHeader
-              avatar={
-                <img
-                  src="https://cdn.dribbble.com/users/1358412/screenshots/3234234/fantastic_planet_004.jpg"
-                  alt="tx"
-                  className={styles.acountIcon}
-                />
-              }
-              title={
-                <div className={styles.accountHeader}>
-                  <div>
-                    Account: <span className={texts.addr}>{addr}</span>
-                  </div>
-                  <div>
-                    Balance: <span>{balance}</span>
-                  </div>
-                </div>
-              }
               action={
                 <Button onClick={this.toggleAddrs(true)}>管理本地账户</Button>
               }
             />
             <CardContent>
               <Tabs value={+panelOn} onChange={this.onTabClick}>
-                <Tab label={`Transactions(${txCount})`} />
+                <Tab label={`Transactions(${txCount || 0})`} />
                 {abi && abi.length ? <Tab label="Contract Panel" /> : null}
               </Tabs>
               <Divider />
@@ -403,7 +386,7 @@ class Account extends React.Component<AccountProps, AccountState> {
                   handleEthCall={this.handleEthCall}
                 />
               ) : (
-                <TransactionTable {...this.props} key={addr} />
+                <TransactionTable {...this.props} key={addr} inset />
               )}
             </CardContent>
           </Card>

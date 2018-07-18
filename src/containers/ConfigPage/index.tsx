@@ -18,14 +18,16 @@ import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons'
 
 import CITAObservables from '@nervos/observables'
 
+import Banner from '../../components/Banner'
+
 import { PanelConfigs } from '../../config/localstorage'
 import { initPanelConfigs } from '../../initValues'
 import { withObservables } from '../../contexts/observables'
 import { withConfig, IConfig } from '../../contexts/config'
 import hideLoader from '../../utils/hideLoader'
 
-// const layouts = require('../../styles/layout')
-const styles = require('./styles.scss')
+const layout = require('../../styles/layout.scss')
+const styles = require('./config.scss')
 
 /* eslint-disable no-use-before-define */
 interface ConfigItem {
@@ -101,13 +103,19 @@ const ConfigItem = translate('microscope')(
               checked: styles.switchChecked,
               colorPrimary: styles.switchColorPrimary,
               colorSecondary: styles.switchColorSecondary,
+              // bar: styles.iOSBar,
+              icon: styles.iOSIcon,
             }}
             onChange={handleSwitch(config.key)}
             checked={!!value}
           />
         ) : (
           <div>
-            <TextField value={`${value}`} onChange={handleInput(config.key)} />
+            <TextField
+              value={`${value}`}
+              onChange={handleInput(config.key)}
+              // style={{ textAlign: 'right' }}
+            />
           </div>
         )}
       </ListItemSecondaryAction>
@@ -131,7 +139,11 @@ const Config = translate('microscope')(
   handleInput: any
   t: any
   }) => (
-    <ExpansionPanel defaultExpanded classes={{ root: styles.panel }}>
+    <ExpansionPanel
+      defaultExpanded
+      classes={{ root: styles.panel }}
+      elevation={0}
+    >
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
         <Typography variant="caption" classes={{ caption: styles.panelTitle }}>
           {t(title)} {t('config')}
@@ -322,7 +334,7 @@ class ConfigPage extends React.Component<IConfigPageProps, IConfigPageState> {
       panel: ConfigPanel.GRAPH,
       type: ConfigType.DISPLAY,
       key: 'graphProposals',
-      title: 'Proposals/Block',
+      title: 'Proposals/Validator',
     },
     {
       panel: ConfigPanel.GRAPH,
@@ -333,18 +345,23 @@ class ConfigPage extends React.Component<IConfigPageProps, IConfigPageState> {
   ] as ConfigItem[]
   render () {
     return (
-      <div className={styles.main}>
-        {this.panels.map(panel => (
-          <Config
-            title={panel}
-            key={panel}
-            configs={this.configs.filter(config => config.panel === panel)}
-            values={this.state.configs}
-            handleSwitch={this.handleSwitch}
-            handleInput={this.handleInput}
-          />
-        ))}
-      </div>
+      <React.Fragment>
+        <Banner bg={`${process.env.PUBLIC}/banner/banner-Setting.png`}>
+          Config
+        </Banner>
+        <div className={`${styles.main} ${layout.center}`}>
+          {this.panels.map(panel => (
+            <Config
+              title={panel}
+              key={panel}
+              configs={this.configs.filter(config => config.panel === panel)}
+              values={this.state.configs}
+              handleSwitch={this.handleSwitch}
+              handleInput={this.handleInput}
+            />
+          ))}
+        </div>
+      </React.Fragment>
     )
   }
 }

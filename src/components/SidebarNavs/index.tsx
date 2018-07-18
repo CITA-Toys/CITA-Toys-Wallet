@@ -11,13 +11,19 @@ import {
   IconButton,
   AppBar,
 } from '@material-ui/core'
-import { Menu as MenuIcon } from '@material-ui/icons'
 
-const styles = require('../../containers/Header/styles.scss')
+const styles = require('../../containers/Header/header.scss')
 
-const SidebarNavs = ({ open, containers, pathname, toggleSideNavs, t }) => (
+const SidebarNavs = ({
+  open,
+  containers,
+  pathname,
+  toggleSideNavs,
+  logo,
+  t,
+}) => (
   <Drawer open={open} onClose={toggleSideNavs()}>
-    <AppBar position="sticky">
+    <AppBar position="sticky" classes={{ root: styles.sidebarNavs }}>
       <Toolbar
         classes={{
           root: styles.toolbarRoot,
@@ -30,7 +36,7 @@ const SidebarNavs = ({ open, containers, pathname, toggleSideNavs, t }) => (
           style={{ color: '#000', marginRight: '31px' }}
         >
           <Typography variant="title" color="inherit">
-            {(process.env.APP_NAME as string).toUpperCase()}
+            <img src={logo} alt="logo" className={styles.headerLogo} />
           </Typography>
         </Link>
         <IconButton
@@ -38,7 +44,10 @@ const SidebarNavs = ({ open, containers, pathname, toggleSideNavs, t }) => (
           onClick={toggleSideNavs()}
           classes={{ root: styles.toggleIcon }}
         >
-          <MenuIcon />
+          <img
+            src={`${process.env.PUBLIC}/microscopeIcons/expand.png`}
+            alt="expand"
+          />
         </IconButton>
       </Toolbar>
     </AppBar>
@@ -55,6 +64,19 @@ const SidebarNavs = ({ open, containers, pathname, toggleSideNavs, t }) => (
                 }`}
                 onClick={toggleSideNavs()}
               >
+                {pathname === container.path ? (
+                  <img
+                    src={container.iconActive}
+                    alt="icon"
+                    style={{ marginRight: '8px' }}
+                  />
+                ) : (
+                  <img
+                    src={container.icon}
+                    alt="icon"
+                    style={{ marginRight: '8px' }}
+                  />
+                )}
                 <span>{t(container.name)}</span>
               </Link>
             }

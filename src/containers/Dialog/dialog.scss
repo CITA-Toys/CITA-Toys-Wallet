@@ -1,0 +1,29 @@
+.title {
+  display: flex;
+  justify-content: space-between;
+  h2 {
+    text-transform: capitalize;
+  }
+}
+
+.dialogTitle {
+  text-transform: capitalize; // padding: 0 0 0 17px;
+  h2 {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    button {
+      position: absolute;
+      top: 10px;
+      right: 0;
+      font-weight: 100;
+    }
+    @media (max-width: 800px) {
+      justify-content: flex-start;
+    }
+  }
+}
+
+.dialogRoot {
+  border-radius: 4px;
+}

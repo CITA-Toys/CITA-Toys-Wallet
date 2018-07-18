@@ -9,10 +9,13 @@ const SWPrecachePlugin = require('sw-precache-webpack-plugin')
 const CopyPlugin = require('copy-webpack-plugin')
 const AutoprefixerPlugin = require('autoprefixer')
 
+require('dotenv').config()
+
 /* eslint-disable import/no-dynamic-require */
 const baseConfig = require(path.resolve(__dirname, './webpack.config.base'))
 const reactManifest = require(path.resolve(__dirname, '../lib/react_manifest'))
 /* eslint-enable import/no-dynamic-require */
+
 
 const manifest = JSON.parse(
   fs.readFileSync(path.resolve(__dirname, '../lib/manifest.json')),
@@ -61,6 +64,7 @@ const prodConfig = {
       'process.env': {
         NODE_ENV: JSON.stringify('production'),
         OBSERVABLE_INTERVAL: 1000,
+        PUBLIC: JSON.stringify(process.env.PUBLIC),
       },
     }),
     new UglifyJSPlugin(),

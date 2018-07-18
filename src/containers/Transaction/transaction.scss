@@ -1,0 +1,152 @@
+@import '../../styles/color.scss';
+@import '../../styles/common.scss';
+.infoValue {
+  word-wrap: break-word;
+  word-break: break-all;
+  margin-bottom: 18px;
+  font-size: 1.125rem !important;
+  color: #000 !important;
+}
+
+.infoTitle {
+  font-size: 1.125rem !important;
+  color: $plainText !important;
+  padding-bottom: 8px;
+}
+
+.hash {
+  height: 29px;
+  margin-top: 17px;
+  margin-bottom: 12px;
+  font-size: 1.5rem; // font-weight: bold;
+  color: $plainText;
+  word-break: break-all;
+}
+
+.lists {
+  display: flex;
+  margin-top: 84px;
+  &>ul {
+    width: 50%;
+    @media (max-width: 800px) {
+      width: 100%;
+    }
+  }
+}
+
+.listHeaderRoot {
+  font-size: 1.25rem !important;
+  color: $tableText !important;
+}
+
+@media (max-width: 800px) {
+  .lists {
+    flex-direction: column;
+    margin-top: 15px;
+  }
+  .attrs {
+    display: flex;
+    flex-direction: column;
+    span:last-child {
+      margin-top: 10px;
+    }
+  }
+}
+
+.hashCardRoot {
+  @include boxShadow;
+  margin-bottom: 20px;
+  padding-top: 8px;
+  @media (max-width: 800px) {
+    padding-top: 0;
+  }
+}
+
+.hashTitle {
+  font-size: 24px;
+  @media (max-width: 800px) {
+    font-size: 16px;
+  }
+}
+
+.hashText {
+  font-size: 16px;
+  word-wrap: break-word;
+  box-sizing: border-box;
+  @media (max-width: 800px) {
+    width:100%;
+    padding: 0 50px;
+    line-height: 1.4;
+    padding-bottom: 5px;
+    text-align: center;
+  }
+}
+
+.attrs {
+  display: flex;
+  font-size: 18px;
+  @media (max-width: 800px) {
+    font-size: 16px;
+    svg,
+    img {
+      margin-left: 0 !important;
+    }
+  }
+  &>span {
+    flex: 1;
+    display: flex;
+    align-items: center;
+  }
+  .attrTitle {
+    font-size: 1.125rem;
+    color: $plainText !important;
+    margin: 0 20px 0 10px;
+    @media (max-width: 800px) {
+      margin-right: 8px;
+    }
+  }
+  svg {
+    font-size: 24px;
+    color: $primary;
+    margin-left: 24px;
+  }
+}
+
+.gasIcon {
+  height: 24px;
+  margin-left: 24px;
+}
+
+.listRoot {
+  margin-right: 31px !important;
+}
+
+.cardContentRoot {
+  @media(max-width: 800px) {
+    padding: 0 !important;
+    &>div {
+      margin: 0 !important;
+    }
+    .listHeaderRoot {
+      line-height: 2;
+      display: flex;
+      align-items: center;
+      &::before {
+        display: block;
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background-color: $primary;
+        content: '';
+        margin-right: 5px;
+      }
+    }
+  }
+}
+
+.divider {
+  margin: 0 0 0 24px !important;
+  @media (max-width: 800px) {
+    margin: 0 0 0 15px !important;
+  }
+}

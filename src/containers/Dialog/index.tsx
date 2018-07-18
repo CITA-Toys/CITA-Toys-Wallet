@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core'
 import { Close as CloseIcon } from '@material-ui/icons'
 
-const styles = require('./styles.scss')
+const styles = require('./dialog.scss')
 
 function Transition (props) {
   return <Slide direction="up" {...props} />
@@ -32,6 +32,9 @@ const DialogComp = (props: DialogCompProps) => (
     open={props.on}
     maxWidth={props.maxWidth || 'md'}
     TransitionComponent={Transition}
+    classes={{
+      root: styles.dialogRoot,
+    }}
   >
     {props.fullScreen ? (
       <AppBar position="sticky" color="default">

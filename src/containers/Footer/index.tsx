@@ -47,7 +47,7 @@ class Footer extends React.Component<{ t: (key: string) => string }, any> {
       items: [
         {
           icon: 'email',
-          title: 'contact@cryptape.com',
+          title: 'appchain.contact@cryptape.com',
           url: 'mailto:appchain.contact@cryptape.com',
         },
         {
@@ -71,7 +71,7 @@ class Footer extends React.Component<{ t: (key: string) => string }, any> {
       <div className={`${styles.footer} ${layout.center}`}>
         <div className={styles.overview}>
           <h1>{t(overview.title)}</h1>
-          <p>{overview.content}</p>
+          <div>{overview.content}</div>
         </div>
         <div className={styles.products}>
           <h1>{t(products.title)}</h1>
@@ -88,19 +88,21 @@ class Footer extends React.Component<{ t: (key: string) => string }, any> {
         </div>
         <div className={styles.contacts}>
           <h1>{t(contacts.title)}</h1>
-          {contacts.items.map(item => (
-            <a
-              key={item.title}
-              href={item.url}
-              rel="noreferrer noopener"
-              target="_blank"
-            >
-              <svg className="icon" aria-hidden="true">
-                <use xlinkHref={`#icon-${item.icon}`} />
-              </svg>
-              <span>{t(item.title)}</span>
-            </a>
-          ))}
+          <div>
+            {contacts.items.map(item => (
+              <a
+                key={item.title}
+                href={item.url}
+                rel="noreferrer noopener"
+                target="_blank"
+              >
+                <svg className="icon" aria-hidden="true">
+                  <use xlinkHref={`#icon-${item.icon}`} />
+                </svg>
+                <span>{t(item.title)}</span>
+              </a>
+            ))}
+          </div>
         </div>
       </div>
     )

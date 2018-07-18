@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { HashRouter as Router, Route } from 'react-router-dom'
 import Bundle from './components/Bundle'
-// import AsyncLoader from './components/AsyncLoader'
 
 export const containers = [
   { path: '/', name: 'Header', component: 'Header', nav: false },
@@ -32,6 +31,9 @@ export const containers = [
     component: 'BlockTable',
     exact: true,
     nav: true,
+    icon: `${process.env.PUBLIC}/microscopeIcons/mobile_navs/block.svg`,
+    iconActive:
+      `${process.env.PUBLIC}/microscopeIcons/mobile_navs/block_active.svg`,
   },
   {
     path: '/transactions',
@@ -39,6 +41,10 @@ export const containers = [
     component: 'TransactionTable',
     exact: true,
     nav: true,
+    icon: `${process.env.PUBLIC}/microscopeIcons/mobile_navs/transaction.svg`,
+    iconActive:
+      `${process.env.PUBLIC
+      }/microscopeIcons/mobile_navs/transaction_active.svg`,
   },
   {
     path: '/transaction/:transaction',
@@ -60,6 +66,9 @@ export const containers = [
     component: 'Graphs',
     exact: true,
     nav: true,
+    icon: `${process.env.PUBLIC}/microscopeIcons/mobile_navs/statistics.svg`,
+    iconActive:
+      `${process.env.PUBLIC}/microscopeIcons/mobile_navs/statistics_active.svg`,
   },
   {
     path: '/config',
@@ -67,6 +76,9 @@ export const containers = [
     component: 'ConfigPage',
     exact: true,
     nav: true,
+    icon: `${process.env.PUBLIC}/microscopeIcons/mobile_navs/config.svg`,
+    iconActive:
+      `${process.env.PUBLIC}/microscopeIcons/mobile_navs/config_active.svg`,
   },
   { path: '/', name: 'Footer', component: 'Footer', exact: false, nav: false },
 ]

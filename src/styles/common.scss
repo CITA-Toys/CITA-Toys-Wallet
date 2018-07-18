@@ -1,7 +1,11 @@
 @import './color.scss';
+@mixin boxShadow {
+  box-shadow: 0 0 20px 0 rgba(170, 170, 170, 0.2) !important;
+}
+
 header {
-  background: #FFF !important;
-  box-shadow: 0 5px 6px 0 rgba(170, 170, 170, 0.07);
+  background: #FFF !important; // box-shadow: 0 5px 6px 0 rgba(170, 170, 170, 0.07);
+  box-shadow: 0 5px 6px 0 rgba(170, 170, 170, 0.07) !important;
 }
 
 body {
@@ -38,7 +42,7 @@ input {
 }
 
 footer {
-  background-color: #141830;
+  background-color: #0d101f;
   color: #FFF;
   font-size: 0.875rem;
   padding-top: 34px;
@@ -48,7 +52,8 @@ footer {
 
 @media (max-width: 800px) {
   header {
-    box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12) !important;
+    // box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12) !important;
+    box-shadow: none;
   }
   footer {
     margin-top: 27px;
@@ -77,6 +82,8 @@ footer {
     width: 100vw;
     top: 89px;
     left: 0;
+    background: #f15a29 !important;
+    height: 3px !important;
   }
   @media (max-width:800px) {
     .linearProgressRoot {

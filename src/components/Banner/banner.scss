@@ -1,0 +1,23 @@
+$overlap: 82px;
+.banner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100vw;
+  height: 200px;
+  margin-bottom: -$overlap;
+  padding-bottom: 38px;
+  box-sizing: border-box;
+  color: #FFF;
+  font-size: 30px; // background-size: cover;
+  background-repeat: no-repeat;
+  background-position-x: center;
+  line-height: 2;
+  font-size: 24px;
+  @media (max-width: 800px) {
+    height: 117px;
+    margin-bottom: 0;
+    padding-bottom: 0;
+  }
+}

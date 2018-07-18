@@ -5,6 +5,7 @@ import TableWithSelector, {
   SelectorType,
 } from '../../components/TableWithSelector'
 import ErrorNotification from '../../components/ErrorNotification'
+import Banner from '../../components/Banner'
 import { fetchBlocks } from '../../utils/fetcher'
 import { BlockFromServer } from '../../typings/block'
 import paramsFilter from '../../utils/paramsFilter'
@@ -197,6 +198,7 @@ class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
       loading,
       error,
     } = this.state
+    const activeParams = paramsFilter(selectorsValue)
     return (
       <React.Fragment>
         {loading ? (
@@ -206,6 +208,12 @@ class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
             }}
           />
         ) : null}
+        <Banner bg={`${process.env.PUBLIC}/banner/banner-Block.png`}>
+          Current Search:{' '}
+          {Object.keys(activeParams)
+            .map(key => `${key}: ${activeParams[key]}`)
+            .join(', ')}
+        </Banner>
         <TableWithSelector
           headers={headers}
           items={items}
