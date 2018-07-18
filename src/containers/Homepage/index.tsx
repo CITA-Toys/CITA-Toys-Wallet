@@ -9,6 +9,7 @@ import BlockList from '../../components/HomepageLists/BlockList'
 import TransactionList from '../../components/HomepageLists/TransactionList'
 import ErrorNotification from '../../components/ErrorNotification'
 import hideLoader from '../../utils/hideLoader'
+import { handleError, dismissError } from '../../utils/handleError'
 
 const layout = require('../../styles/layout.scss')
 const styles = require('./homepage.scss')
@@ -38,7 +39,7 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
         // next
         blockNumber => this.blockHistory({ height: blockNumber, count: 10 }),
         // error
-        error => this.setState(state => ({ error })),
+        this.handleError,
         // complete
         () => {},
       )
@@ -46,6 +47,9 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
   }
   componentDidMount () {
     hideLoader()
+  }
+  componentDidCatch (err) {
+    this.handleError(err)
   }
   private blkInfo = [
     { key: 'height', label: '出块高度' },
@@ -62,29 +66,31 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
       this.setState(state => ({
         blocks,
       }))
-    })
+    }, this.handleError)
   }
   private transactionHistory = () => {
     this.setState(state => ({ loading: state.loading + 1 }))
-    fetch10Transactions().then(
-      ({
-        result,
-      }: {
-      result: {
-      transactions: TransactionFromServer[]
-      count: number
-      }
-      }) => {
-        this.setState(state => ({
-          loading: state.loading - 1,
-          transactions: result.transactions,
-        }))
-      },
-    )
+    fetch10Transactions()
+      .then(
+        ({
+          result,
+        }: {
+        result: {
+        transactions: TransactionFromServer[]
+        count: number
+        }
+        }) => {
+          this.setState(state => ({
+            loading: state.loading - 1,
+            transactions: result.transactions,
+          }))
+        },
+      )
+      .catch(this.handleError)
   }
-  private dismissNotification = e => {
-    this.setState(state => ({ error: { message: '', code: '' } }))
-  }
+  private handleError = handleError(this)
+  private dismissError = dismissError(this)
+
   render () {
     const { t } = this.props
     return (
@@ -118,7 +124,7 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
         </div>
         <ErrorNotification
           error={this.state.error}
-          dismissNotification={this.dismissNotification}
+          dismissError={this.dismissError}
         />
       </React.Fragment>
     )

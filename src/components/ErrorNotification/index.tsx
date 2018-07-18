@@ -6,7 +6,7 @@ const texts = require('../../styles/text.scss')
 
 const SnackbarTransition = props => <Slide direction="left" {...props} />
 
-export default ({ error, dismissNotification }) => (
+export default ({ error, dismissError }) => (
   <Snackbar
     message={<span className={texts.error}>{error.message}</span>}
     open={!!error.message}
@@ -22,7 +22,7 @@ export default ({ error, dismissNotification }) => (
         >
           More
         </a>
-        <IconButton onClick={dismissNotification} color="secondary">
+        <IconButton onClick={dismissError} color="secondary">
           <CloseIcon />
         </IconButton>
       </React.Fragment>

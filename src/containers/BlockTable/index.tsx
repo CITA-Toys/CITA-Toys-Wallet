@@ -12,6 +12,7 @@ import paramsFilter from '../../utils/paramsFilter'
 import { withConfig } from '../../contexts/config'
 import { IContainerProps } from '../../typings'
 import hideLoader from '../../utils/hideLoader'
+import { handleError, dismissError } from '../../utils/handleError'
 
 interface BlockSelectors {
   selectorsValue: {
@@ -87,6 +88,9 @@ class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
       limit: this.state.pageSize,
     })
   }
+  componentDidCatch (err) {
+    this.handleError(err)
+  }
 
   onSearch = params => {
     this.setState(state => Object.assign({}, state, { selectorsValue: params }))
@@ -143,9 +147,11 @@ class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
       offset,
       limit,
       ...this.state.selectorsValue,
-    }).then(() => {
-      this.setState({ pageNo: newPage })
     })
+      .then(() => {
+        this.setState({ pageNo: newPage })
+      })
+      .catch(this.handleError)
   }
   private fetchBlock = (params: { [index: string]: string | number } = {}) => {
     this.setState({ loading: true })
@@ -176,15 +182,8 @@ class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
         this.handleError(err)
       })
   }
-  private handleError = error => {
-    this.setState(state => ({
-      error,
-      loading: false,
-    }))
-  }
-  private dismissNotification = e => {
-    this.setState(state => ({ error: { message: '', code: '' } }))
-  }
+  private handleError = handleError(this)
+  private dismissError = dismissError(this)
 
   render () {
     const {
@@ -225,10 +224,7 @@ class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
           pageNo={pageNo}
           handlePageChanged={this.handlePageChanged}
         />
-        <ErrorNotification
-          error={error}
-          dismissNotification={this.dismissNotification}
-        />
+        <ErrorNotification error={error} dismissError={this.dismissError} />
       </React.Fragment>
     )
   }

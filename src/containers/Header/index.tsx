@@ -19,6 +19,7 @@ import {
 import { containers } from '../../Routes'
 import HeaderNavs from '../../components/HeaderNavs'
 import SidebarNavs from '../../components/SidebarNavs'
+import ErrorNotification from '../../components/ErrorNotification'
 import { IContainerProps, Metadata } from '../../typings'
 import RightSidebar from '../../components/RightSidebar'
 import MetadataPanel from '../../components/MetadataPanel'
@@ -29,6 +30,7 @@ import { withObservables } from '../../contexts/observables'
 import { isIp } from '../../utils/validators'
 import { fetchStatistics } from '../../utils/fetcher'
 import { initBlock, initMetadata } from '../../initValues'
+import { handleError, dismissError } from '../../utils/handleError'
 
 const styles = require('./header.scss')
 
@@ -50,6 +52,10 @@ const initState = {
   anchorEl: undefined,
   lngOpen: false,
   lng: window.localStorage.getItem('i18nextLng'),
+  error: {
+    code: '',
+    message: '',
+  },
 }
 type HeaderState = typeof initState
 interface HeaderProps extends IContainerProps {}
@@ -69,29 +75,27 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         if (key === 'searchIp') {
           this.getChainMetadata(value)
         }
-      })
+      }, this.handleError)
     this.props.CITAObservables.metaData({
       blockNumber: 'latest',
-    }).subscribe(
-      (metadata: Metadata) => {
-        this.setState({
-          metadata: {
-            ...metadata,
-            genesisTimestamp: new Date(
-              metadata.genesisTimestamp,
-            ).toLocaleString(),
-          },
-        })
-      },
-      error => {
-        console.error(error)
-      },
-    )
+    }).subscribe((metadata: Metadata) => {
+      this.setState({
+        metadata: {
+          ...metadata,
+          genesisTimestamp: new Date(
+            metadata.genesisTimestamp,
+          ).toLocaleString(),
+        },
+      })
+    }, this.handleError)
   }
   componentWillReceiveProps (nextProps: HeaderProps) {
     if (this.props.location.pathname !== nextProps.location.pathname) {
       this.togglePanel('')()
     }
+  }
+  componentDidCatch (err) {
+    this.handleError(err)
   }
   private onSearch$: Subject<any>
   private getChainMetadata = ip => {
@@ -117,10 +121,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             throw new Error('Error Response')
           }
         })
-        .catch(err => {
-          // TODO: handle error
-          console.error(err)
-        })
+        .catch(this.handleError)
     }
   }
   private toggleSideNavs = (open: boolean = false) => (
@@ -133,20 +134,24 @@ class Header extends React.Component<HeaderProps, HeaderState> {
    */
   private fetchStatus = () => {
     // fetch brief statistics
-    fetchStatistics({ type: 'brief' }).then(({ result: { tps, tpb, ipb } }) => {
-      this.setState(state => ({ ...state, tps, tpb, ipb }))
-    })
+    fetchStatistics({ type: 'brief' })
+      .then(({ result: { tps, tpb, ipb } }) => {
+        this.setState(state => ({ ...state, tps, tpb, ipb }))
+      })
+      .catch(this.handleError)
     // fetch peer Count
     const { peerCount, newBlockByNumberSubject } = this.props.CITAObservables
-    peerCount(60000).subscribe((count: string) =>
-      this.setState((state: any) => ({ ...state, peerCount: +count })),
+    peerCount(60000).subscribe(
+      (count: string) =>
+        this.setState((state: any) => ({ ...state, peerCount: +count })),
+      this.handleError,
     )
     // fetch Block Number and Block
     newBlockByNumberSubject.subscribe(block => {
       this.setState({
         block,
       })
-    })
+    }, this.handleError)
     newBlockByNumberSubject.connect()
   }
   private togglePanel = (panel: string) => (e?: any) => {
@@ -195,10 +200,13 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     window.localStorage.setItem('chainIp', chainIp)
     window.location.reload()
   }
+
+  private handleError = handleError(this)
+  private dismissError = dismissError(this)
   private searchSubscription: Subscription
   private translations = ['zh', 'en', 'ja-JP', 'ko', 'de', 'it', 'fr']
   render () {
-    const { anchorEl, lngOpen } = this.state
+    const { anchorEl, lngOpen, error } = this.state
     const {
       location: { pathname },
       t,
@@ -318,6 +326,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             )}
           </div>
         </RightSidebar>
+        <ErrorNotification error={error} dismissError={this.dismissError} />
       </React.Fragment>,
       document.getElementById('header') as HTMLElement,
     )

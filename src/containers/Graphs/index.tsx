@@ -14,9 +14,11 @@ import {
   Hash,
 } from '../../typings/'
 import Banner from '../../components/Banner'
+import ErrorNotification from '../../components/ErrorNotification'
 import { BarOption, PieOption } from '../../config/graph'
 import { fetchTransactions, fetchStatistics } from '../../utils/fetcher'
 import hideLoader from '../../utils/hideLoader'
+import { handleError, dismissError } from '../../utils/handleError'
 
 const layout = require('../../styles/layout.scss')
 const styles = require('./graph.scss')
@@ -27,6 +29,10 @@ const initState = {
   proposals: [] as ProposalFromServer[],
   loadBlockHistory: false,
   maxCount: 100,
+  error: {
+    code: '',
+    message: '',
+  },
 }
 
 interface GraphsProps extends IContainerProps {}
@@ -99,6 +105,9 @@ class Graphs extends React.Component<GraphsProps, GraphState> {
     hideLoader()
     this.initGraphs()
   }
+  componentDidCatch (err) {
+    this.handleError(err)
+  }
   // private graphSource: any[] = []
   // private updateAllDiagram = () => {}
   // private updateDiagram = ({ chart, data }) => {}
@@ -155,31 +164,34 @@ class Graphs extends React.Component<GraphsProps, GraphState> {
           throw new Error(block)
         }
       },
-      error => console.error(error),
+      // error => console.error(error),
+      this.handleError,
     )
   }
   private updateProposals = () => {
-    fetchStatistics({ type: 'proposals' }).then(({ result = [] }) => {
-      this.setState(state => ({ ...state, proposals: result }))
-      const source = getProposalSource({ proposals: result })
-      const proposalOption = {
-        ...PieOption,
-        title: {
-          text: 'Proposal Distribution',
-          textStyle: {
-            fontSize: 16,
+    fetchStatistics({ type: 'proposals' })
+      .then(({ result = [] }) => {
+        this.setState(state => ({ ...state, proposals: result }))
+        const source = getProposalSource({ proposals: result })
+        const proposalOption = {
+          ...PieOption,
+          title: {
+            text: 'Proposal Distribution',
+            textStyle: {
+              fontSize: 16,
+            },
           },
-        },
-        color: ['#415dfc', '#ab62f1', '#fca441', '#4db7f8'],
-        radius: ['50%', '70%'],
-        dataset: { source },
-      }
-      this.updateGraph({
-        graph: this.proposalsGraph,
-        option: proposalOption,
+          color: ['#415dfc', '#ab62f1', '#fca441', '#4db7f8'],
+          radius: ['50%', '70%'],
+          dataset: { source },
+        }
+        this.updateGraph({
+          graph: this.proposalsGraph,
+          option: proposalOption,
+        })
+        // this.update
       })
-      // this.update
-    })
+      .catch(this.handleError)
   }
   private updateTransactions = () => {
     fetchTransactions({ limit: this.state.maxCount })
@@ -205,7 +217,7 @@ class Graphs extends React.Component<GraphsProps, GraphState> {
           })
         }
       })
-      .catch(err => console.error(err))
+      .catch(this.handleError)
   }
   private handleNewBlock = block => {
     const { panelConfigs } = this.props.config
@@ -263,6 +275,8 @@ class Graphs extends React.Component<GraphsProps, GraphState> {
     graph.setOption(option)
     graph.hideLoading()
   }
+  private handleError = handleError(this)
+  private dismissError = dismissError(this)
   render () {
     return (
       <React.Fragment>
@@ -313,6 +327,10 @@ class Graphs extends React.Component<GraphsProps, GraphState> {
             </Card>
           </div>
         </div>
+        <ErrorNotification
+          error={this.state.error}
+          dismissError={this.dismissError}
+        />
       </React.Fragment>
     )
   }

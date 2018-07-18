@@ -5,5 +5,5 @@ export const handleError = ctx => error => {
 }
 
 export const dismissError = ctx => e => {
-  this.setState({ error: { message: '', code: '' } })
+  ctx.setState({ error: { message: '', code: '' } })
 }

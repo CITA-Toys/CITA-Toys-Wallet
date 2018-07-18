@@ -24,10 +24,11 @@ import { IContainerProps, Transaction, ABI } from '../../typings'
 import LocalAccounts, { LocalAccount } from '../../components/LocalAccounts'
 import ErrorNotification from '../../components/ErrorNotification'
 import hideLoader from '../../utils/hideLoader'
+import { handleError, dismissError } from '../../utils/handleError'
 
 const layouts = require('../../styles/layout.scss')
-const texts = require('../../styles/text.scss')
-const styles = require('./styles.scss')
+// const texts = require('../../styles/text.scss')
+// const styles = require('./styles.scss')
 
 enum AccountType {
   NORMAL = '普通账户',
@@ -321,23 +322,15 @@ class Account extends React.Component<AccountProps, AccountState> {
         () => {},
       )
   }
-  private handleError = error => {
-    this.setState(state => ({
-      error,
-    }))
-  }
-  private dismissNotification = e => {
-    this.setState(state => ({ error: { message: '', code: '' } }))
-  }
+  private handleError = handleError(this)
+  private dismissError = dismissError(this)
   render () {
     const {
       loading,
       addr,
       balance,
       txCount,
-      type,
       panelOn,
-      transactions,
       addrsOn,
       normals,
       erc20s,
@@ -410,10 +403,7 @@ class Account extends React.Component<AccountProps, AccountState> {
             addAddr={this.addAddr}
           />
         </Dialog>
-        <ErrorNotification
-          error={error}
-          dismissNotification={this.dismissNotification}
-        />
+        <ErrorNotification error={error} dismissError={this.dismissError} />
       </React.Fragment>
     )
   }

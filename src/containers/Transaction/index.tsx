@@ -17,6 +17,7 @@ import { withObservables } from '../../contexts/observables'
 import { IContainerProps, DetailedTransaction } from '../../typings/'
 import ErrorNotification from '../../components/ErrorNotification'
 import hideLoader from '../../utils/hideLoader'
+import { handleError, dismissError } from '../../utils/handleError'
 
 const layouts = require('../../styles/layout.scss')
 const texts = require('../../styles/text.scss')
@@ -104,10 +105,7 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
           this.handleReturnedTx(tx)
         },
         // error
-        error => {
-          this.setState(state => ({ error }))
-        },
-
+        this.handleError,
         // complete
         () => {},
       )
@@ -115,6 +113,9 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
   }
   componentDidMount () {
     hideLoader()
+  }
+  componentDidCatch (err) {
+    this.handleError(err)
   }
   private handleReturnedTx = (tx: DetailedTransaction) => {
     if (!tx) {
@@ -131,8 +132,7 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
       tx.basicInfo.data = (data as any).map(int => int.toString(16)).join('')
       /* eslint-enable */
     }
-    // tx.basicInfo.data = tx.basicInfo.data.map(int => int.toString(16)).join()
-    return this.setState(state => ({ ...tx }))
+    return this.setState({ ...tx })
   }
   private infos = [
     { key: 'blockHash', label: 'Block Hash', type: 'block' },
@@ -146,14 +146,8 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
     { key: 'data', label: 'data' },
   ]
 
-  private dismissNotification = e => {
-    this.setState(state => ({
-      error: {
-        message: '',
-        code: '',
-      },
-    }))
-  }
+  private handleError = handleError(this)
+  private dismissError = dismissError(this)
   render () {
     const { hash, error, timestamp, gasUsed } = this.state
     return (
@@ -213,10 +207,7 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
             </CardContent>
           </Card>
         </div>
-        <ErrorNotification
-          error={error}
-          dismissNotification={this.dismissNotification}
-        />
+        <ErrorNotification error={error} dismissError={this.dismissError} />
       </React.Fragment>
     )
   }
