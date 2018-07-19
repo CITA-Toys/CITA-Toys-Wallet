@@ -32,6 +32,7 @@ type HomepageState = typeof initState
 class Homepage extends React.Component<HomepageProps, HomepageState> {
   state = initState
   componentWillMount () {
+
     this.props.CITAObservables.newBlockNumber(0, false).subscribe(
       // next
       blockNumber => this.blockHistory({ height: blockNumber, count: 10 }),
