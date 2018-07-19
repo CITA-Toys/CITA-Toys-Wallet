@@ -18,6 +18,7 @@ import { IContainerProps, DetailedTransaction } from '../../typings/'
 import ErrorNotification from '../../components/ErrorNotification'
 import hideLoader from '../../utils/hideLoader'
 import { handleError, dismissError } from '../../utils/handleError'
+import bytesToHex from '../../utils/bytesToHex'
 
 const layouts = require('../../styles/layout.scss')
 const texts = require('../../styles/text.scss')
@@ -128,8 +129,9 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
     }
     if (tx.basicInfo && tx.basicInfo.data) {
       /* eslint-disable */
-      const { data } = tx.basicInfo
-      tx.basicInfo.data = (data as any).map(int => int.toString(16)).join('')
+      const { data, value } = tx.basicInfo
+      tx.basicInfo.data = bytesToHex(data as any)
+      tx.basicInfo.value = bytesToHex(value as any)
       /* eslint-enable */
     }
     return this.setState({ ...tx })
