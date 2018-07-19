@@ -103,4 +103,4 @@ class ContractEditor extends React.Component<
   }
 }
 
-export default withConfig(withObservables(ContractEditor))
+// withConfig(withObservables(ContractEditor))

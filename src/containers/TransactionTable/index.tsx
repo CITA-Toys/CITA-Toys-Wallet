@@ -11,6 +11,7 @@ import { withConfig } from '../../contexts/config'
 import { TransactionFromServer, IContainerProps } from '../../typings'
 import paramsFilter from '../../utils/paramsFilter'
 import hideLoader from '../../utils/hideLoader'
+import { handleError, dismissError } from '../../utils/handleError'
 
 interface AdvancedSelectors {
   selectorsValue: {
@@ -50,21 +51,10 @@ message: string
       key: 'to',
       text: 'to',
     },
-    // {
-    //   type: SelectorType.RANGE,
-    //   key: 'value',
-    //   text: 'value',
-    //   items: [
-    //     { key: 'valueFrom', text: 'min value' },
-    //     { key: 'valueTo', text: 'max value' },
-    //   ],
-    // },
   ],
   selectorsValue: {
     from: '',
     to: '',
-    // valueFrom: '',
-    // valueTo: '',
     account: '',
   },
   loading: false,
@@ -96,6 +86,9 @@ class TransactionTable extends React.Component<
       offset: this.state.pageNo * this.state.pageSize,
       limit: this.state.pageSize,
     })
+  }
+  componentDidCatch (err) {
+    this.handleError(err)
   }
   onSearch = params => {
     this.setState(state => Object.assign({}, state, { selectorsValue: params }))
@@ -181,16 +174,9 @@ class TransactionTable extends React.Component<
         this.handleError(err)
       })
   }
-  private handleError = error => {
-    this.setState({
-      error,
-      loading: false,
-    })
-  }
 
-  private dismissNotification = e => {
-    this.setState(state => ({ error: { message: '', code: '' } }))
-  }
+  private handleError = handleError(this)
+  private dismissError = dismissError(this)
   private handlePageChanged = newPage => {
     const offset = newPage * this.state.pageSize
     const limit = this.state.pageSize
@@ -198,9 +184,11 @@ class TransactionTable extends React.Component<
       offset,
       limit,
       ...this.state.selectorsValue,
-    }).then(() => {
-      this.setState({ pageNo: newPage })
     })
+      .then(() => {
+        this.setState({ pageNo: newPage })
+      })
+      .catch(this.handleError)
   }
 
   render () {
@@ -247,10 +235,7 @@ class TransactionTable extends React.Component<
           showInout={showInOut}
           inset={inset}
         />
-        <ErrorNotification
-          error={error}
-          dismissNotification={this.dismissNotification}
-        />
+        <ErrorNotification error={error} dismissError={this.dismissError} />
       </React.Fragment>
     )
   }

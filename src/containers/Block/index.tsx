@@ -17,6 +17,7 @@ import Dialog from '../Dialog/'
 import TransactionList from '../../components/TransactionList/'
 import ErrorNotification from '../../components/ErrorNotification'
 import hideLoader from '../../utils/hideLoader'
+import { handleError, dismissError } from '../../utils/handleError'
 
 const layouts = require('../../styles/layout')
 const texts = require('../../styles/text.scss')
@@ -81,6 +82,10 @@ class Block extends React.Component<IBlockProps, IBlockState> {
       this.onMount(nextProps.match.params)
     }
   }
+
+  componentDidCatch (err) {
+    this.handleError(err)
+  }
   onMount = params => {
     const { blockHash, height } = params
     if (blockHash) {
@@ -91,7 +96,7 @@ class Block extends React.Component<IBlockProps, IBlockState> {
           // next
           (block: IBlock) => this.handleReturnedBlock(block),
           // error
-          error => this.setState(state => ({ error })),
+          this.handleError,
           // complete
           () => {},
         )
@@ -107,7 +112,7 @@ class Block extends React.Component<IBlockProps, IBlockState> {
           },
 
           // error
-          error => this.setState(state => ({ error })),
+          this.handleError,
           // complete
           () => {},
         )
@@ -137,15 +142,8 @@ class Block extends React.Component<IBlockProps, IBlockState> {
     }))
   }
 
-  private dismissNotification = e => {
-    console.log('clicked')
-    this.setState(state => ({
-      error: {
-        message: '',
-        code: '',
-      },
-    }))
-  }
+  private handleError = handleError(this)
+  private dismissError = dismissError(this)
   private headerInfo = [
     { key: 'gasUsed', label: 'Gas Used' },
     { key: 'receiptsRoot', label: 'Receipts Root' },
@@ -255,10 +253,7 @@ class Block extends React.Component<IBlockProps, IBlockState> {
         >
           <TransactionList transactions={transactions} />
         </Dialog>
-        <ErrorNotification
-          error={error}
-          dismissNotification={this.dismissNotification}
-        />
+        <ErrorNotification error={error} dismissError={this.dismissError} />
       </React.Fragment>
     )
   }

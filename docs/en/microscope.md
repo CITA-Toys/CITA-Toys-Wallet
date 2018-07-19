@@ -28,7 +28,7 @@ set env variables in `./env`
 
 ```
 PUBLIC=  # public content server address
-CHAIN_SERVERS= # default appchain addresses
+CITA_SERVER= # default appchain address
 APP_NAME= # explorer name
 ```
 
