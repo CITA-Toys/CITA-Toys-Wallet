@@ -16,7 +16,7 @@ import {
   Translate as TranslateIcon,
   Close as CloseIcon,
 } from '@material-ui/icons'
-import { containers } from '../../Routes'
+import containers from '../../Routes/containers'
 import HeaderNavs from '../../components/HeaderNavs'
 import SidebarNavs from '../../components/SidebarNavs'
 import ErrorNotification from '../../components/ErrorNotification'

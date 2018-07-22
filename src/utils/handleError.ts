@@ -1,3 +1,12 @@
+/*
+ * @Author: Keith-CY
+ * @Date: 2018-07-22 21:33:48
+ * @Last Modified by: Keith-CY
+ * @Last Modified time: 2018-07-22 21:34:52
+ */
+
+import { initError } from './../initValues'
+
 export const handleError = ctx => error => {
   if (window.localStorage.getItem('chainId')) {
     // only active when chain ip exsits
@@ -8,6 +17,6 @@ export const handleError = ctx => error => {
   }
 }
 
-export const dismissError = ctx => e => {
-  ctx.setState({ error: { message: '', code: '' } })
+export const dismissError = ctx => () => {
+  ctx.setState({ error: initError })
 }

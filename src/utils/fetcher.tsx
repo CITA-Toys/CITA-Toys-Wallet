@@ -1,31 +1,43 @@
+/*
+ * @Author: Keith-CY
+ * @Date: 2018-07-22 21:11:41
+ * @Last Modified by: Keith-CY
+ * @Last Modified time: 2018-07-22 21:33:29
+ */
+
 import axios, { AxiosResponse } from 'axios'
+import { initServerList } from '../initValues'
 
-const url = path => {
-  const ip = window.localStorage.getItem('chainIp') || process.env.CITA_SERVER
-  return `${ip}/${path}`
+const baseURL = window.localStorage.getItem('chainIp') || initServerList[0]
+
+const axiosIns = axios.create({
+  baseURL,
+})
+
+interface Params {
+  [index: string]: string | number
 }
+
 export const fetch10Transactions = () =>
-  axios
-    .get(url('api/transactions'))
+  axiosIns
+    .get('api/transactions')
     .then((res: AxiosResponse) => res.data)
     .catch(err => console.error(err))
 
-export const fetchBlocks = (params: { [index: string]: string | number }) =>
-  axios
-    .get(url('api/blocks'), { params })
+export const fetchBlocks = (params: Params) =>
+  axiosIns
+    .get('api/blocks', { params })
     .then((res: AxiosResponse) => res.data)
     .catch(err => console.error(err))
 
-export const fetchTransactions = (params: {
-[index: string]: string | number
-}) =>
-  axios
-    .get(url('api/transactions'), { params })
+export const fetchTransactions = (params: Params) =>
+  axiosIns
+    .get('api/transactions', { params })
     .then((res: AxiosResponse) => res.data)
     .catch(err => console.error(err))
 
 export const fetchStatistics = params =>
-  axios
-    .get(url('/api/statistics'), { params })
+  axiosIns
+    .get('/api/statistics', { params })
     .then((res: AxiosResponse) => res.data)
     .catch(err => console.error(err))
