@@ -1,12 +1,7 @@
 import * as React from 'react'
 import { Link } from 'react-router-dom'
-import {
-  LinearProgress,
-  Card,
-  CardContent,
-  List,
-  ListItem,
-} from '@material-ui/core'
+import { LinearProgress, Card, CardContent, List, ListItem } from '@material-ui/core'
+import { unsigner } from '@nervos/signer'
 
 import Banner from '../../components/Banner'
 
@@ -18,6 +13,7 @@ import TransactionList from '../../components/TransactionList/'
 import ErrorNotification from '../../components/ErrorNotification'
 import hideLoader from '../../utils/hideLoader'
 import { handleError, dismissError } from '../../utils/handleError'
+import bytesToHex from '../../utils/bytesToHex'
 
 const layouts = require('../../styles/layout')
 const texts = require('../../styles/text.scss')
@@ -45,19 +41,19 @@ const initState: IBlockState = {
     gasUsed: '',
     proof: {
       Tendermint: {
-        proposal: '',
-      },
-    },
+        proposal: ''
+      }
+    }
   },
   body: {
-    transactions: [],
+    transactions: []
   },
   version: 0,
   transactionsOn: false,
   error: {
     message: '',
-    code: '',
-  },
+    code: ''
+  }
 }
 
 interface IBlockProps extends IContainerProps {}
@@ -71,14 +67,8 @@ class Block extends React.Component<IBlockProps, IBlockState> {
   }
   componentWillReceiveProps (nextProps: IBlockProps) {
     const { blockHash, height } = nextProps.match.params
-    const {
-      blockHash: oldBlockHash,
-      height: oldHeight,
-    } = this.props.match.params
-    if (
-      (blockHash && blockHash !== oldBlockHash) ||
-      (height && height !== oldHeight)
-    ) {
+    const { blockHash: oldBlockHash, height: oldHeight } = this.props.match.params
+    if ((blockHash && blockHash !== oldBlockHash) || (height && height !== oldHeight)) {
       this.onMount(nextProps.match.params)
     }
   }
@@ -90,55 +80,52 @@ class Block extends React.Component<IBlockProps, IBlockState> {
     const { blockHash, height } = params
     if (blockHash) {
       this.setState(state => ({ loading: state.loading + 1 }))
-      this.props.CITAObservables.blockByHash(blockHash)
-        .finally(() => this.setState(state => ({ loading: state.loading - 1 })))
-        .subscribe(
-          // next
-          (block: IBlock) => this.handleReturnedBlock(block),
-          // error
-          this.handleError,
-          // complete
-          () => {},
-        )
+      // NOTICE: async
+      this.props.CITAObservables.blockByHash(blockHash).subscribe(
+        (block: IBlock) => this.handleReturnedBlock(block),
+        this.handleError
+      )
     }
     if (height) {
+      // NOTICE: async
       this.setState(state => ({ loading: state.loading + 1 }))
-      this.props.CITAObservables.blockByNumber(height)
-        .finally(() => this.setState(state => ({ loading: state.loading - 1 })))
-        .subscribe(
-          // next
-          (block: IBlock) => {
-            this.handleReturnedBlock(block)
-          },
-
-          // error
-          this.handleError,
-          // complete
-          () => {},
-        )
+      this.props.CITAObservables.blockByNumber(height).subscribe(
+        (block: IBlock) => {
+          this.handleReturnedBlock(block)
+        },
+        this.handleError,
+      )
     }
   }
   private handleReturnedBlock = (block: IBlock) => {
     if (!block) {
-      this.setState(state => ({
+      this.handleError({
         error: {
           message: 'Block Not Found',
-          code: '-1',
-        },
-      }))
+          code: '-1'
+        }
+      })
     }
     /* eslint-disable */
-    block.body.transactions = block.body.transactions.map(tx => ({
-      ...tx,
-      timestamp: `${block.header.timestamp}`,
-    }))
+    block.body.transactions = block.body.transactions.map(tx => {
+      const details = unsigner(tx.content)
+      if (tx.basicInfo) {
+        tx.basicInfo.value = '' + +bytesToHex(tx.basicInfo.value as any)
+        tx.basicInfo.from = '0x' + details.sender.address
+      }
+      return {
+        ...tx,
+        timestamp: `${block.header.timestamp}`
+      }
+    })
+    console.log(block.body.transactions)
     /* eslint-enable */
-    return this.setState(state => ({ ...block }))
+    return this.setState(state => ({ ...block, loading: state.loading - 1 }))
   }
   private toggleTransaction = (on: boolean = false) => e => {
     this.setState(state => ({
       ...state,
-      transactionsOn: on,
+      transactionsOn: on
     }))
   }
 
@@ -148,7 +135,7 @@ class Block extends React.Component<IBlockProps, IBlockState> {
     { key: 'gasUsed', label: 'Gas Used' },
     { key: 'receiptsRoot', label: 'Receipts Root' },
     { key: 'stateRoot', label: 'State Root' },
-    { key: 'transactionsRoot', label: 'Transactions Root' },
+    { key: 'transactionsRoot', label: 'Transactions Root' }
   ]
 
   render () {
@@ -158,14 +145,14 @@ class Block extends React.Component<IBlockProps, IBlockState> {
       hash,
       header,
       transactionsOn,
-      error,
+      error
     } = this.state
     return (
       <React.Fragment>
         {loading ? (
           <LinearProgress
             classes={{
-              root: 'linearProgressRoot',
+              root: 'linearProgressRoot'
             }}
           />
         ) : null}
@@ -185,11 +172,7 @@ class Block extends React.Component<IBlockProps, IBlockState> {
               to={`/height/0x${(+header.number + 1).toString(16)}`}
               href={`/height/0x${(+header.number + 1).toString(16)}`}
             >
-              <svg
-                className="icon"
-                aria-hidden="true"
-                style={{ transform: 'rotate(180deg)' }}
-              >
+              <svg className="icon" aria-hidden="true" style={{ transform: 'rotate(180deg)' }}>
                 <use xlinkHref="#icon-left" />
               </svg>
             </Link>
@@ -198,7 +181,7 @@ class Block extends React.Component<IBlockProps, IBlockState> {
         <div className={layouts.main}>
           <Card
             classes={{
-              root: styles.hashCardRoot,
+              root: styles.hashCardRoot
             }}
           >
             <CardContent>
@@ -209,29 +192,20 @@ class Block extends React.Component<IBlockProps, IBlockState> {
           <Card classes={{ root: layouts.cardContainer }}>
             <CardContent>
               <List className={styles.items}>
-                <ListItem
-                  onClick={this.toggleTransaction(true)}
-                  style={{ cursor: 'pointer' }}
-                >
+                <ListItem onClick={this.toggleTransaction(true)} style={{ cursor: 'pointer' }}>
                   <span className={styles.itemTitle}>Transactions</span>
                   <span>{transactions.length}</span>
                 </ListItem>
                 <ListItem>
                   <span className={styles.itemTitle}>Proposer</span>
                   <span className={texts.hash}>
-                    {header.proof &&
-                      header.proof.Tendermint &&
-                      header.proof.Tendermint.proposal}
+                    {header.proof && header.proof.Tendermint && header.proof.Tendermint.proposal}
                   </span>
                 </ListItem>
                 <ListItem>
                   <span className={styles.itemTitle}>Parent Hash</span>
                   <span>
-                    <Link
-                      to={`/block/${header.prevHash}`}
-                      href={`/block/${header.prevHash}`}
-                      className={texts.addr}
-                    >
+                    <Link to={`/block/${header.prevHash}`} href={`/block/${header.prevHash}`} className={texts.addr}>
                       {header.prevHash}
                     </Link>
                   </span>
@@ -246,11 +220,7 @@ class Block extends React.Component<IBlockProps, IBlockState> {
             </CardContent>
           </Card>
         </div>
-        <Dialog
-          on={transactionsOn}
-          onClose={this.toggleTransaction()}
-          dialogTitle="交易列表"
-        >
+        <Dialog on={transactionsOn} onClose={this.toggleTransaction()} dialogTitle="交易列表">
           <TransactionList transactions={transactions} />
         </Dialog>
         <ErrorNotification error={error} dismissError={this.dismissError} />
