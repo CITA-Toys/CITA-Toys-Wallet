@@ -3,7 +3,7 @@ export const handleError = ctx => error => {
     // only active when chain ip exsits
     ctx.setState(state => ({
       loading: state.loading - 1,
-      error,
+      error
     }))
   }
 }
