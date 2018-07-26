@@ -92,7 +92,7 @@ export interface ProposalFromServer {
   count: number
 }
 export interface Metadata {
-  chainId: string
+  chainId: number
   chainName: string
   operator: string
   website: string

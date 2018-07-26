@@ -83,7 +83,7 @@ class Account extends React.Component<AccountProps, AccountState> {
         this.handleError,
       )
     this.props.CITAObservables.getTransactionCount({
-      accountAddr: addr,
+      addr,
       blockNumber: 'latest'
     })
       .subscribe(
@@ -193,8 +193,14 @@ class Account extends React.Component<AccountProps, AccountState> {
      * @method eth_call
      */
     this.props.CITAObservables.ethCall({
-      to: this.state.addr,
-      data,
+      // callObject({
+      //   to: this.state.addr,
+      //   data,
+      // }),
+      callObject: {
+        to: this.state.addr,
+        data,
+      },
       blockNumber: 'latest'
     })
       .subscribe(result => {

@@ -14,7 +14,7 @@ const list = [
   { name: 'Genesis Time', value: 'genesisTimestamp' },
   { name: 'Block Interval', value: 'blockInterval' },
   { name: 'Token Name', value: 'tokenName' },
-  { name: 'Token Symbol', value: 'tokenSymbol' },
+  { name: 'Token Symbol', value: 'tokenSymbol' }
 ]
 
 const MetadataRender = translate('microscope')(
@@ -22,8 +22,7 @@ const MetadataRender = translate('microscope')(
     <div className={styles.display}>
       {list.map(item => (
         <div key={item.name} className={`${styles.item} ${text.ellipsis}`}>
-          {t(item.name)}:{' '}
-          <span className={styles.itemValue}>{metadata[item.value]}</span>
+          {t(item.name)}: <span className={styles.itemValue}>{metadata[item.value]}</span>
         </div>
       ))}
       <div className={styles.validators}>
@@ -39,7 +38,7 @@ const MetadataRender = translate('microscope')(
         ) : null}
       </div>
     </div>
-  ),
+  )
 )
 
 interface MetadataPanelProps {
@@ -61,7 +60,7 @@ const MetadataPanel: React.SFC<MetadataPanelProps> = ({
   handleKeyUp,
   switchChain,
   t,
-  serverList,
+  serverList
 }) => (
   <div>
     <div className={styles.title}>
@@ -81,16 +80,12 @@ const MetadataPanel: React.SFC<MetadataPanelProps> = ({
       />
       <button onClick={switchChain}>{t('switch')}</button>
     </div>
-    {searchResult.chainId !== '' ? (
+    {searchResult.chainId !== -1 ? (
       <MetadataRender metadata={searchResult} />
     ) : (
       <List>
         {serverList.map(server => (
-          <ListItem
-            key={server}
-            onClick={() => switchChain(server)}
-            classes={{ root: styles.listItem }}
-          >
+          <ListItem key={server} onClick={() => switchChain(server)} classes={{ root: styles.listItem }}>
             <ListItemText primary={server} />
           </ListItem>
         ))}

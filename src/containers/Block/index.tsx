@@ -2,6 +2,7 @@ import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { LinearProgress, Card, CardContent, List, ListItem } from '@material-ui/core'
 import { unsigner } from '@nervos/signer'
+import { RpcResult, Chain } from '@nervos/web3-plugin/lib/typings/index.d'
 
 import Banner from '../../components/Banner'
 
@@ -14,6 +15,7 @@ import ErrorNotification from '../../components/ErrorNotification'
 import hideLoader from '../../utils/hideLoader'
 import { handleError, dismissError } from '../../utils/handleError'
 import bytesToHex from '../../utils/bytesToHex'
+import { initError } from '../../initValues'
 
 const layouts = require('../../styles/layout')
 const texts = require('../../styles/text.scss')
@@ -50,10 +52,7 @@ const initState: IBlockState = {
   },
   version: 0,
   transactionsOn: false,
-  error: {
-    message: '',
-    code: ''
-  }
+  error: initError
 }
 
 interface IBlockProps extends IContainerProps {}
@@ -82,22 +81,20 @@ class Block extends React.Component<IBlockProps, IBlockState> {
       this.setState(state => ({ loading: state.loading + 1 }))
       // NOTICE: async
       this.props.CITAObservables.blockByHash(blockHash).subscribe(
-        (block: IBlock) => this.handleReturnedBlock(block),
+        (block: RpcResult.BlockByHash) => this.handleReturnedBlock(block),
         this.handleError
       )
     }
     if (height) {
       // NOTICE: async
       this.setState(state => ({ loading: state.loading + 1 }))
-      this.props.CITAObservables.blockByNumber(height).subscribe(
-        (block: IBlock) => {
-          this.handleReturnedBlock(block)
-        },
-        this.handleError,
-      )
+      this.props.CITAObservables.blockByNumber(height).subscribe((block: RpcResult.BlockByNumber) => {
+        this.handleReturnedBlock(block)
+      }, this.handleError)
     }
   }
-  private handleReturnedBlock = (block: IBlock) => {
+  private handleReturnedBlock = (block: Chain.Block<Chain.TransactionInBlock>) => {
+    console.log(block)
     if (!block) {
       this.handleError({
         error: {
@@ -109,7 +106,7 @@ class Block extends React.Component<IBlockProps, IBlockState> {
     /* eslint-disable */
     block.body.transactions = block.body.transactions.map(tx => {
       const details = unsigner(tx.content)
-      if (tx.basicInfo) {
+      if (typeof tx.basicInfo !== 'string' && tx.basicInfo) {
         tx.basicInfo.value = '' + +bytesToHex(tx.basicInfo.value as any)
         tx.basicInfo.from = '0x' + details.sender.address
       }
@@ -118,9 +115,14 @@ class Block extends React.Component<IBlockProps, IBlockState> {
         timestamp: `${block.header.timestamp}`
       }
     })
-    console.log(block.body.transactions)
+    // console.log(block.body.transactions)
     /* eslint-enable */
-    return this.setState(state => ({ ...block, loading: state.loading - 1 }))
+    // return this.setState(state => ({
+    //   ...block,
+    //   loading: state.loading - 1,
+    //   error: initError
+    // }))
+    return this.setState(state => Object.assign({}, state, {...block, loading: state.loading - 1}))
   }
   private toggleTransaction = (on: boolean = false) => e => {
     this.setState(state => ({

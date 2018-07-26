@@ -22,17 +22,17 @@ export const initHeader: IBlockHeader = {
   gasUsed: '',
   proof: {
     Tendermint: {
-      proposal: '',
-    },
-  },
+      proposal: ''
+    }
+  }
 }
 export const initBlock: IBlock = {
   body: {
-    transactions: [],
+    transactions: []
   },
   hash: '',
   header: initHeader,
-  version: 0,
+  version: 0
 }
 
 export const initTransaction: Transaction = {
@@ -43,17 +43,17 @@ export const initTransaction: Transaction = {
     from: '',
     to: '',
     value: '',
-    data: '',
-  },
+    data: ''
+  }
 }
 export const initMetadata: Metadata = {
-  chainId: '',
+  chainId: -1,
   chainName: '',
   operator: '',
   website: '',
   genesisTimestamp: '',
   validators: [],
-  blockInterval: 0,
+  blockInterval: 0
 }
 
 // init config values
@@ -79,7 +79,7 @@ export const initPanelConfigs: PanelConfigs = {
   graphGasUsedBlock: true,
   graphGasUsedTx: true,
   graphProposals: true,
-  graphMaxCount: 100,
+  graphMaxCount: 100
 }
 
 export const initServerList = (process.env.CHAIN_SERVERS || '').split(',')
@@ -96,7 +96,7 @@ export const initAccountState = {
   creator: '',
   transactions: [] as Transaction[],
   customToken: {
-    name: '',
+    name: ''
   },
 
   normals: [] as LocalAccount[],
@@ -106,18 +106,18 @@ export const initAccountState = {
   addrsOn: false,
   normalsAdd: {
     name: '',
-    addr: '',
+    addr: ''
   },
   erc20sAdd: {
     name: '',
-    addr: '',
+    addr: ''
   },
   erc721sAdd: {
     name: '',
-    addr: '',
+    addr: ''
   },
   error: {
     code: '',
-    message: '',
-  },
+    message: ''
+  }
 }

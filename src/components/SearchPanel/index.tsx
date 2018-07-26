@@ -221,7 +221,7 @@ class SearchPanel extends React.Component<SearchPanelProps, SearchPanelState> {
           //   this.setState(state => Object.assign({}, state, {balance}))
           // })
           CITAObservables.getTransactionCount({
-            accountAddr: keyword,
+            addr: keyword,
             blockNumber: 'latest',
           }).subscribe(txCount => {
             this.setState(state => Object.assign({}, state, { txCount }))
