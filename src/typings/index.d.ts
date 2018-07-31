@@ -1,7 +1,7 @@
 import CITAObservables from '@cita/observables'
 import { IConfig } from '../contexts/config'
 import i18n from '../config/i18n'
-import './block.d'
+import './block'
 
 export * from './block'
 /* eslint-disable no-restricted-globals */

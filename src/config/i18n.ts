@@ -1,9 +1,14 @@
+/*
+ * @Author: Keith-CY
+ * @Date: 2018-07-22 21:38:14
+ * @Last Modified by:   Keith-CY
+ * @Last Modified time: 2018-07-22 21:38:14
+ */
+
 import * as i18n from 'i18next'
 import * as XHR from 'i18next-xhr-backend'
 import * as LanguageDetector from 'i18next-browser-languagedetector'
 import { reactI18nextModule } from 'react-i18next'
-// import zh from './locale/translation.zh.json'
-// import en from './locale/en'
 
 i18n
   .use(XHR)
@@ -11,7 +16,6 @@ i18n
   .use(reactI18nextModule)
   .init({
     fallbackLng: 'en',
-    // defaultNS: 'translations',
     keySeparator: false,
     react: {
       wait: false,

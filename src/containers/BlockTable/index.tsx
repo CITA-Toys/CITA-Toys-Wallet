@@ -21,7 +21,7 @@ interface BlockSelectors {
 }
 type BlockTableState = TableWithSelectorProps &
   BlockSelectors & {
-    loading: boolean
+    loading: number
     error: { code: string; message: string }
   }
 interface BlockTableProps extends IContainerProps {}
@@ -64,7 +64,7 @@ const initialState: BlockTableState = {
     transactionFrom: '',
     transactionTo: '',
   },
-  loading: false,
+  loading: 0,
   error: {
     code: '',
     message: '',
@@ -73,7 +73,6 @@ const initialState: BlockTableState = {
 
 class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
   state = initialState
-
   componentWillMount () {
     this.setParamsFromUrl()
     this.setVisibleHeaders()
@@ -154,7 +153,7 @@ class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
       .catch(this.handleError)
   }
   private fetchBlock = (params: { [index: string]: string | number } = {}) => {
-    this.setState({ loading: true })
+    this.setState(state => ({ loading: state.loading + 1 }))
     return fetchBlocks(paramsFilter(params))
       .then(
         ({
@@ -162,8 +161,8 @@ class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
         }: {
         result: { blocks: BlockFromServer[]; count: number }
         }) => {
-          this.setState({
-            loading: false,
+          this.setState(state => ({
+            loading: state.loading - 1,
             count: result.count,
             items: result.blocks.map(block => ({
               key: block.hash,
@@ -175,7 +174,7 @@ class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
               transactions: `${block.transactionsCount}`,
               gasUsed: block.header.gasUsed,
             })),
-          })
+          }))
         },
       )
       .catch(err => {
