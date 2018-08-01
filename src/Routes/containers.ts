@@ -1,8 +1,4 @@
-import * as React from 'react'
-import { HashRouter as Router, Route } from 'react-router-dom'
-import Bundle from './components/Bundle'
-
-export const containers = [
+export default [
   { path: '/', name: 'Header', component: 'Header', nav: false },
   {
     path: '/',
@@ -32,8 +28,9 @@ export const containers = [
     exact: true,
     nav: true,
     icon: `${process.env.PUBLIC}/microscopeIcons/mobile_navs/block.svg`,
-    iconActive:
-      `${process.env.PUBLIC}/microscopeIcons/mobile_navs/block_active.svg`,
+    iconActive: `${
+      process.env.PUBLIC
+    }/microscopeIcons/mobile_navs/block_active.svg`,
   },
   {
     path: '/transactions',
@@ -42,9 +39,9 @@ export const containers = [
     exact: true,
     nav: true,
     icon: `${process.env.PUBLIC}/microscopeIcons/mobile_navs/transaction.svg`,
-    iconActive:
-      `${process.env.PUBLIC
-      }/microscopeIcons/mobile_navs/transaction_active.svg`,
+    iconActive: `${
+      process.env.PUBLIC
+    }/microscopeIcons/mobile_navs/transaction_active.svg`,
   },
   {
     path: '/transaction/:transaction',
@@ -67,8 +64,9 @@ export const containers = [
     exact: true,
     nav: true,
     icon: `${process.env.PUBLIC}/microscopeIcons/mobile_navs/statistics.svg`,
-    iconActive:
-      `${process.env.PUBLIC}/microscopeIcons/mobile_navs/statistics_active.svg`,
+    iconActive: `${
+      process.env.PUBLIC
+    }/microscopeIcons/mobile_navs/statistics_active.svg`,
   },
   {
     path: '/config',
@@ -77,46 +75,9 @@ export const containers = [
     exact: true,
     nav: true,
     icon: `${process.env.PUBLIC}/microscopeIcons/mobile_navs/config.svg`,
-    iconActive:
-      `${process.env.PUBLIC}/microscopeIcons/mobile_navs/config_active.svg`,
+    iconActive: `${
+      process.env.PUBLIC
+    }/microscopeIcons/mobile_navs/config_active.svg`,
   },
   { path: '/', name: 'Footer', component: 'Footer', exact: false, nav: false },
 ]
-
-const asyncRender = mod => routerProps => {
-  if (!mod) return null
-  /* eslint-disable */
-  const Component = require(`bundle-loader?lazy!./containers/${mod}`)
-  /* eslint-enable */
-  return (
-    <Bundle load={Component}>
-      {Comp => (Comp ? <Comp {...routerProps} /> : <div>Loading</div>)}
-    </Bundle>
-  )
-}
-/* eslint-enable import/no-dynamic-require */
-/* eslint-enable global-require */
-
-export const renderRouteArray = containerArr =>
-  containerArr.map(container => (
-    <Route
-      key={container.name}
-      {...container}
-      render={asyncRender(container.component)}
-    />
-  ))
-
-const Routes = () => (
-  <React.Fragment>
-    {containers.map(container => (
-      <Route
-        key={container.name}
-        path={container.path}
-        exact={container.exact}
-        render={asyncRender(container.component)}
-      />
-    ))}
-  </React.Fragment>
-)
-
-export default Routes

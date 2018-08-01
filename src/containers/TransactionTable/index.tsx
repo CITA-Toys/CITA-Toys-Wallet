@@ -1,9 +1,6 @@
 import * as React from 'react'
 import { LinearProgress } from '@material-ui/core'
-import TableWithSelector, {
-  TableWithSelectorProps,
-  SelectorType,
-} from '../../components/TableWithSelector'
+import TableWithSelector, { TableWithSelectorProps, SelectorType } from '../../components/TableWithSelector'
 import ErrorNotification from '../../components/ErrorNotification'
 import Banner from '../../components/Banner'
 import { fetchTransactions } from '../../utils/fetcher'
@@ -21,7 +18,7 @@ interface AdvancedSelectors {
 
 const initialState: TableWithSelectorProps &
 AdvancedSelectors & {
-loading: boolean
+loading: number
 error: {
 code: string
 message: string
@@ -34,7 +31,7 @@ message: string
     { key: 'value', text: 'value' },
     { key: 'blockNumber', text: 'height', href: '/height/' },
     { key: 'gasUsed', text: 'gas used' },
-    { key: 'age', text: 'age' },
+    { key: 'age', text: 'age' }
   ],
   items: [] as any[],
   count: 0,
@@ -44,24 +41,24 @@ message: string
     {
       type: SelectorType.SINGLE,
       key: 'from',
-      text: 'from',
+      text: 'from'
     },
     {
       type: SelectorType.SINGLE,
       key: 'to',
-      text: 'to',
-    },
+      text: 'to'
+    }
   ],
   selectorsValue: {
     from: '',
     to: '',
-    account: '',
+    account: ''
   },
-  loading: false,
+  loading: 0,
   error: {
     code: '',
-    message: '',
-  },
+    message: ''
+  }
 }
 
 interface TransactionTableProps extends IContainerProps {
@@ -69,10 +66,7 @@ interface TransactionTableProps extends IContainerProps {
   showInOut?: boolean
 }
 type TransactionTableState = typeof initialState
-class TransactionTable extends React.Component<
-  TransactionTableProps,
-  TransactionTableState
-  > {
+class TransactionTable extends React.Component<TransactionTableProps, TransactionTableState> {
   state = initialState
   componentWillMount () {
     this.setParamsFromUrl()
@@ -84,7 +78,7 @@ class TransactionTable extends React.Component<
     this.fetchTransactions({
       ...this.state.selectorsValue,
       offset: this.state.pageNo * this.state.pageSize,
-      limit: this.state.pageSize,
+      limit: this.state.pageSize
     })
   }
   componentDidCatch (err) {
@@ -104,9 +98,7 @@ class TransactionTable extends React.Component<
       const { headers } = state
       const visibleHeaders = headers.filter(
         header =>
-          this.props.config.panelConfigs[
-            `transaction${header.key[0].toUpperCase()}${header.key.slice(1)}`
-          ] !== false,
+          this.props.config.panelConfigs[`transaction${header.key[0].toUpperCase()}${header.key.slice(1)}`] !== false
       )
       return { headers: visibleHeaders }
     })
@@ -119,7 +111,7 @@ class TransactionTable extends React.Component<
       // valueFrom: '',
       // valueTo: '',
       pageNo: '',
-      account: '',
+      account: ''
     }
     Object.keys(params).forEach(key => {
       const value = actParams.get(key)
@@ -138,37 +130,31 @@ class TransactionTable extends React.Component<
 
     this.setState({
       selectorsValue,
-      pageNo,
+      pageNo
     })
   }
 
-  private fetchTransactions = (
-    params: { [index: string]: string | number } = {},
-  ) => {
-    this.setState({ loading: true })
+  private fetchTransactions = (params: { [index: string]: string | number } = {}) => {
+    // NOTICE: async
+    this.setState(state => ({ loading: state.loading + 1 })) // for get transactions
     return fetchTransactions(paramsFilter(params))
-      .then(
-        ({
-          result,
-        }: {
-        result: { transactions: TransactionFromServer[]; count: number }
-        }) =>
-          this.setState(state =>
-            Object.assign({}, state, {
-              loading: false,
-              count: result.count,
-              items: result.transactions.map(tx => ({
-                key: tx.hash,
-                blockNumber: tx.blockNumber,
-                hash: tx.hash,
-                from: tx.from,
-                to: tx.to,
-                value: tx.value,
-                age: `${Math.round((Date.now() - tx.timestamp) / 1000)}s ago`,
-                gasUsed: tx.gasUsed,
-              })),
-            }),
-          ),
+      .then(({ result }: { result: { transactions: TransactionFromServer[]; count: number } }) =>
+        this.setState(state =>
+          Object.assign({}, state, {
+            loading: state.loading - 1,
+            count: result.count,
+            items: result.transactions.map(tx => ({
+              key: tx.hash,
+              blockNumber: tx.blockNumber,
+              hash: tx.hash,
+              from: tx.from,
+              to: tx.to,
+              value: tx.value,
+              age: `${Math.round((Date.now() - tx.timestamp) / 1000)}s ago`,
+              gasUsed: tx.gasUsed
+            }))
+          })
+        )
       )
       .catch(err => {
         this.handleError(err)
@@ -183,7 +169,7 @@ class TransactionTable extends React.Component<
     this.fetchTransactions({
       offset,
       limit,
-      ...this.state.selectorsValue,
+      ...this.state.selectorsValue
     })
       .then(() => {
         this.setState({ pageNo: newPage })
@@ -192,17 +178,7 @@ class TransactionTable extends React.Component<
   }
 
   render () {
-    const {
-      headers,
-      items,
-      selectors,
-      selectorsValue,
-      count,
-      pageSize,
-      pageNo,
-      loading,
-      error,
-    } = this.state
+    const { headers, items, selectors, selectorsValue, count, pageSize, pageNo, loading, error } = this.state
     const { inset = false, showInOut = false } = this.props
     const activeParams = paramsFilter(selectorsValue)
     return (
@@ -210,7 +186,7 @@ class TransactionTable extends React.Component<
         {loading ? (
           <LinearProgress
             classes={{
-              root: 'linearProgressRoot',
+              root: 'linearProgressRoot'
             }}
           />
         ) : null}

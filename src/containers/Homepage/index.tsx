@@ -21,23 +21,25 @@ const initState = {
   blocks: [] as IBlock[],
   transactions: [] as TransactionFromServer[],
   healthy: {
-    count: '',
+    count: ''
   },
   error: {
     code: '',
-    message: '',
-  },
+    message: ''
+  }
 }
 type HomepageState = typeof initState
 class Homepage extends React.Component<HomepageProps, HomepageState> {
   state = initState
   componentWillMount () {
+    // NOTICE: async
+    this.setState(state => ({ loading: state.loading + 1 })) // for get block number
     this.props.CITAObservables.newBlockNumber(0, false).subscribe(
-      // next
-      blockNumber => this.blockHistory({ height: blockNumber, count: 10 }),
-      // error
-      this.handleError,
-      // complete
+      blockNumber => {
+        this.setState(state => ({ loading: state.loading - 1 }))
+        this.blockHistory({ height: blockNumber, count: 10 })
+      },
+      this.handleError // for get block number
     )
     this.transactionHistory()
   }
@@ -51,40 +53,33 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
     { key: 'height', label: '出块高度' },
     { key: 'owner', label: '出块人' },
     { key: 'time', label: '出块时间' },
-    { key: 'txCount', label: '交易量' },
+    { key: 'txCount', label: '交易量' }
   ]
 
   private blockHistory = ({ height, count }) => {
-    this.setState(state => ({ loading: state.loading + 1 }))
+    // NOTICE: async
+    this.setState(state => ({ loading: state.loading + 1 })) // for block history
     this.props.CITAObservables.blockHistory({
       by: height,
-      count,
+      count
     }).subscribe((blocks: IBlock[]) => {
       this.setState(state => ({
         loading: state.loading - 1,
-        blocks,
+        blocks
       }))
-    }, this.handleError)
+    }, this.handleError) // for block history
   }
   private transactionHistory = () => {
-    this.setState(state => ({ loading: state.loading + 1 }))
+    // NOTICE: async
+    this.setState(state => ({ loading: state.loading + 1 })) // for transaction history
     fetch10Transactions()
-      .then(
-        ({
-          result,
-        }: {
-        result: {
-        transactions: TransactionFromServer[]
-        count: number
-        }
-        }) => {
-          this.setState(state => ({
-            loading: state.loading - 1,
-            transactions: result.transactions,
-          }))
-        },
-      )
-      .catch(this.handleError)
+      .then(({ result }: { result: { transactions: TransactionFromServer[]; count: number } }) => {
+        this.setState(state => ({
+          loading: state.loading - 1,
+          transactions: result.transactions
+        }))
+      })
+      .catch(err => this.handleError(err)) // for transaction history
   }
   private handleError = handleError(this)
   private dismissError = dismissError(this)
@@ -93,9 +88,7 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
     const { t } = this.props
     return (
       <React.Fragment>
-        {this.state.loading ? (
-          <LinearProgress classes={{ root: 'linearProgressRoot' }} />
-        ) : null}
+        {this.state.loading ? <LinearProgress classes={{ root: 'linearProgressRoot' }} /> : null}
         <div className={layout.main}>
           <Grid container spacing={window.innerWidth > 800 ? 24 : 0}>
             <Grid item md={6} sm={12} xs={12}>
@@ -120,10 +113,7 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
             </Grid>
           </Grid>
         </div>
-        <ErrorNotification
-          error={this.state.error}
-          dismissError={this.dismissError}
-        />
+        <ErrorNotification error={this.state.error} dismissError={this.dismissError} />
       </React.Fragment>
     )
   }
