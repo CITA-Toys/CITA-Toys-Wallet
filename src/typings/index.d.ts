@@ -1,4 +1,4 @@
-import CITAObservables from '@cita/observables'
+import CITAObservables from '@nervos/observables'
 import { IConfig } from '../contexts/config'
 import i18n from '../config/i18n'
 import './block'

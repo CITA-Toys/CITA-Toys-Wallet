@@ -2,33 +2,22 @@ import * as React from 'react'
 import { createPortal } from 'react-dom'
 import { translate } from 'react-i18next'
 import { Subject, Subscription } from '@reactivex/rxjs'
-import axios, { AxiosResponse, AxiosPromise } from 'axios'
-import {
-  AppBar,
-  Toolbar,
-  Menu,
-  MenuItem,
-  Typography,
-  Button,
-  IconButton,
-} from '@material-ui/core'
-import {
-  Translate as TranslateIcon,
-  Close as CloseIcon,
-} from '@material-ui/icons'
+import { AppBar, Toolbar, Menu, MenuItem, Typography, Button, IconButton } from '@material-ui/core'
+import { Translate as TranslateIcon, Close as CloseIcon } from '@material-ui/icons'
+import { Chain } from '@nervos/web3-plugin'
 import containers from '../../Routes/containers'
 import HeaderNavs from '../../components/HeaderNavs'
 import SidebarNavs from '../../components/SidebarNavs'
 import ErrorNotification from '../../components/ErrorNotification'
-import { IContainerProps, Metadata } from '../../typings'
+import { IContainerProps } from '../../typings'
 import RightSidebar from '../../components/RightSidebar'
-import MetadataPanel from '../../components/MetadataPanel'
+import MetadataPanel, { ServerList } from '../../components/MetadataPanel'
 import BriefStatisticsPanel from '../../components/BriefStatistics'
 import SearchPanel from '../../components/SearchPanel'
 import { withConfig } from '../../contexts/config'
 import { withObservables } from '../../contexts/observables'
 import { isIp } from '../../utils/validators'
-import { fetchStatistics } from '../../utils/fetcher'
+import { fetchStatistics, fetchServerList, fetchMetadata } from '../../utils/fetcher'
 import { initBlock, initMetadata } from '../../initValues'
 import { handleError, dismissError } from '../../utils/handleError'
 
@@ -54,8 +43,9 @@ const initState = {
   lng: window.localStorage.getItem('i18nextLng'),
   error: {
     code: '',
-    message: '',
+    message: ''
   },
+  serverList: [] as ServerList
 }
 type HeaderState = typeof initState
 interface HeaderProps extends IContainerProps {}
@@ -69,23 +59,19 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   componentDidMount () {
     // console.log(this.props)
 
-    this.searchSubscription = this.onSearch$
-      .debounceTime(1000)
-      .subscribe(({ key, value }) => {
-        if (key === 'searchIp') {
-          this.getChainMetadata(value)
-        }
-      }, this.handleError)
+    this.searchSubscription = this.onSearch$.debounceTime(1000).subscribe(({ key, value }) => {
+      if (key === 'searchIp') {
+        this.getChainMetadata(value)
+      }
+    }, this.handleError)
     this.props.CITAObservables.metaData({
-      blockNumber: 'latest',
-    }).subscribe((metadata: Metadata) => {
+      blockNumber: 'latest'
+    }).subscribe((metadata: Chain.MetaData) => {
       this.setState({
         metadata: {
           ...metadata,
-          genesisTimestamp: new Date(
-            metadata.genesisTimestamp,
-          ).toLocaleString(),
-        },
+          genesisTimestamp: new Date(metadata.genesisTimestamp).toLocaleString()
+        }
       })
     }, this.handleError)
   }
@@ -100,33 +86,19 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   private onSearch$: Subject<any>
   private getChainMetadata = ip => {
     if (isIp(ip)) {
-      axios
-        .post(`http://${ip}`, {
-          jsonrpc: '2.0',
-          method: 'getMetaData',
-          params: ['latest'],
-          id: 1,
-        })
-        .then((res: AxiosResponse) => {
-          if (res.data && res.data.result) {
-            this.setState({
-              otherMetadata: {
-                ...res.data.result,
-                genesisTimestamp: new Date(
-                  res.data.result.genesisTimestamp,
-                ).toLocaleString(),
-              },
-            })
-          } else {
-            throw new Error('Error Response')
-          }
+      fetchMetadata(ip)
+        .then(({ result }) => {
+          this.setState({
+            otherMetadata: {
+              ...result,
+              genesisTimestamp: new Date(result.genesisTimestamp).toLocaleString()
+            }
+          })
         })
         .catch(this.handleError)
     }
   }
-  private toggleSideNavs = (open: boolean = false) => (
-    e: React.SyntheticEvent<HTMLElement>,
-  ) => {
+  private toggleSideNavs = (open: boolean = false) => (e: React.SyntheticEvent<HTMLElement>) => {
     this.setState({ sidebarNavs: open })
   }
   /**
@@ -142,22 +114,35 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     // fetch peer Count
     const { peerCount, newBlockByNumberSubject } = this.props.CITAObservables
     peerCount(60000).subscribe(
-      (count: string) =>
-        this.setState((state: any) => ({ ...state, peerCount: +count })),
-      this.handleError,
+      (count: string) => this.setState((state: any) => ({ ...state, peerCount: +count })),
+      this.handleError
     )
     // fetch Block Number and Block
     newBlockByNumberSubject.subscribe(block => {
       this.setState({
-        block,
+        block
       })
     }, this.handleError)
     newBlockByNumberSubject.connect()
+    // fetch server list
+    fetchServerList()
+      .then(servers => {
+        if (!servers) return
+        const serverList = [] as ServerList
+        Object.keys(servers).forEach(serverName => {
+          serverList.push({
+            serverName,
+            serverIp: servers[serverName]
+          })
+        })
+        this.setState({ serverList })
+      })
+      .catch(this.handleError)
   }
   private togglePanel = (panel: string) => (e?: any) => {
-    this.setState(state => ({
-      activePanel: panel,
-    }))
+    this.setState({
+      activePanel: panel
+    })
   }
 
   private handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -166,9 +151,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     }
   }
 
-  protected handleInput = key => (
-    e: React.SyntheticEvent<HTMLInputElement>,
-  ) => {
+  protected handleInput = key => (e: React.SyntheticEvent<HTMLInputElement>) => {
     const { value } = e.currentTarget
     if (key === 'searchIp') {
       this.onSearch$.next({ key: 'searchIp', value })
@@ -176,7 +159,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
     this.setState(state => ({
       ...state,
       [key]: value,
-      otherMetadata: initMetadata,
+      otherMetadata: initMetadata
     }))
   }
   private toggleLngMenu = (lngOpen = false) => e => {
@@ -191,9 +174,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   }
   private switchChain = (chain?: string) => {
     const ip = chain || this.state.searchIp
-    this.props.CITAObservables.setServer(
-      ip.startsWith('http') ? ip : `http://${ip}`,
-    )
+    this.props.CITAObservables.setServer(ip.startsWith('http') ? ip : `http://${ip}`)
     const chainIp = ip.startsWith('http') ? ip : `http://${ip}`
     window.localStorage.setItem('chainIp', chainIp)
     window.location.reload()
@@ -202,12 +183,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   private handleError = handleError(this)
   private dismissError = dismissError(this)
   private searchSubscription: Subscription
-  private translations = ['zh', 'en', 'ja-JP', 'ko', 'de', 'it', 'fr']
+  private translations = process.env.LNGS ? process.env.LNGS.split(',') : ['zh', 'en', 'ja-JP', 'ko', 'de', 'it', 'fr']
   render () {
-    const { anchorEl, lngOpen, error } = this.state
+    const { anchorEl, lngOpen, error, serverList } = this.state
     const {
       location: { pathname },
-      t,
+      t
     } = this.props
     return createPortal(
       <React.Fragment>
@@ -215,7 +196,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
           <Toolbar
             className={layout.center}
             classes={{
-              root: styles.toolbarRoot,
+              root: styles.toolbarRoot
             }}
           >
             <IconButton
@@ -223,16 +204,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               onClick={this.toggleSideNavs(true)}
               classes={{ root: styles.toggleIcon }}
             >
-              <img
-                src={`${process.env.PUBLIC}/microscopeIcons/expand.png`}
-                alt="expand"
-              />
+              <img src={`${process.env.PUBLIC}/microscopeIcons/expand.png`} alt="expand" />
             </IconButton>
-            <HeaderNavs
-              containers={containers}
-              pathname={pathname}
-              logo={LOGO}
-            />
+            <HeaderNavs containers={containers} pathname={pathname} logo={LOGO} />
             <SidebarNavs
               open={this.state.sidebarNavs}
               containers={containers}
@@ -241,24 +215,15 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               logo={LOGO}
             />
             <div className={styles.rightNavs}>
-              <Button
-                className={styles.navItem}
-                onClick={this.togglePanel('metadata')}
-              >
+              <Button className={styles.navItem} onClick={this.togglePanel('metadata')}>
                 {this.state.metadata.chainName || 'InvalidChain'}
               </Button>
               {this.props.config.panelConfigs.TPS ? (
-                <Button
-                  className={styles.navItem}
-                  onClick={this.togglePanel('statistics')}
-                >
+                <Button className={styles.navItem} onClick={this.togglePanel('statistics')}>
                   {t('TPS')}: {this.state.tps.toFixed(2)}
                 </Button>
               ) : null}
-              <IconButton
-                className={styles.navItem}
-                onClick={this.togglePanel('search')}
-              >
+              <IconButton className={styles.navItem} onClick={this.togglePanel('search')}>
                 <svg className="icon" aria-hidden="true">
                   <use xlinkHref="#icon-magnifier" />
                 </svg>
@@ -266,11 +231,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
               <IconButton onClick={this.toggleLngMenu(true)}>
                 <TranslateIcon />
               </IconButton>
-              <Menu
-                open={lngOpen}
-                anchorEl={anchorEl}
-                onClose={this.toggleLngMenu()}
-              >
+              <Menu open={lngOpen} anchorEl={anchorEl} onClose={this.toggleLngMenu()}>
                 {this.translations.map(lng => (
                   <MenuItem onClick={this.changeLng(lng)} key={lng}>
                     {t(lng).toUpperCase()}
@@ -280,16 +241,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
             </div>
           </Toolbar>
         </AppBar>
-        <RightSidebar
-          on={this.state.activePanel !== ''}
-          onClose={this.togglePanel('')}
-          onOpen={() => {}}
-        >
+        <RightSidebar on={this.state.activePanel !== ''} onClose={this.togglePanel('')} onOpen={() => {}}>
           <div className={styles.rightSidebarContent}>
             <AppBar color="default" position="sticky" elevation={0}>
               <Toolbar
                 classes={{
-                  root: styles.toolbarRoot,
+                  root: styles.toolbarRoot
                 }}
               >
                 <Typography variant="title" color="inherit">
@@ -308,7 +265,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 searchResult={this.state.otherMetadata}
                 switchChain={this.switchChain}
                 handleKeyUp={this.handleKeyUp}
-                serverList={this.props.config.serverList}
+                serverList={serverList}
               />
             ) : this.state.activePanel === 'statistics' ? (
               <BriefStatisticsPanel
@@ -327,7 +284,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
         </RightSidebar>
         <ErrorNotification error={error} dismissError={this.dismissError} />
       </React.Fragment>,
-      document.getElementById('header') as HTMLElement,
+      document.getElementById('header') as HTMLElement
     )
   }
 }

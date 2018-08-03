@@ -13,6 +13,9 @@
 .secondary {
   color: $text;
   word-break: break-all;
+  &>span {
+    display: block;
+  }
 }
 
 .cardContentRoot {

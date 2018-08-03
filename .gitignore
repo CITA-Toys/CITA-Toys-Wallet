@@ -28,3 +28,6 @@ cita-toys-wallet
 
 # secret
 .env
+
+# default server list
+defaultServerList.json

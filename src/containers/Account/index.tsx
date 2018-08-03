@@ -80,37 +80,37 @@ class Account extends React.Component<AccountProps, AccountState> {
       // .finally(() => this.setState(state => ({ loading: state.loading - 1 })))
       .subscribe(
         (balance: string) => this.setState(state => ({ loading: state.loading - 1, balance: `${+balance}` })),
-        this.handleError,
-      )
-    this.props.CITAObservables.getTransactionCount({
-      accountAddr: addr,
-      blockNumber: 'latest'
-    })
-      .subscribe(
-        (count: string) => this.setState(state => ({ txCount: count.slice(2), loading: state.loading - 1 })),
         this.handleError
       )
+    this.props.CITAObservables.getTransactionCount({
+      addr,
+      blockNumber: 'latest'
+    }).subscribe(
+      (count: string) => this.setState(state => ({ txCount: count.slice(2), loading: state.loading - 1 })),
+      this.handleError
+    )
 
     this.props.CITAObservables.getAbi({
       contractAddr: addr,
       blockNumber: 'latest'
-    })
-      .subscribe(encoded => {
-        if (encoded === '0x') { this.setState(state => ({ loading: state.loading - 1 })) } else {
-          try {
-            const abiStr = web3Utils.hexToUtf8(encoded as string)
-            const abi = JSON.parse(abiStr).filter((a: any) => a.type === 'function')
-            const contract = new Web3Contract(abi, this.state.addr)
-            this.setState(state => ({
-              abi,
-              contract,
-              loading: state.loading - 1
-            }))
-          } catch (err) {
-            this.handleError(err)
-          }
+    }).subscribe(encoded => {
+      if (encoded === '0x') {
+        this.setState(state => ({ loading: state.loading - 1 }))
+      } else {
+        try {
+          const abiStr = web3Utils.hexToUtf8(encoded as string)
+          const abi = JSON.parse(abiStr).filter((a: any) => a.type === 'function')
+          const contract = new Web3Contract(abi, this.state.addr)
+          this.setState(state => ({
+            abi,
+            contract,
+            loading: state.loading - 1
+          }))
+        } catch (err) {
+          this.handleError(err)
         }
-      }, this.handleError)
+      }
+    }, this.handleError)
   }
   private updateBasicInfo = account => {
     if (account) {
@@ -193,26 +193,31 @@ class Account extends React.Component<AccountProps, AccountState> {
      * @method eth_call
      */
     this.props.CITAObservables.ethCall({
-      to: this.state.addr,
-      data,
+      // callObject({
+      //   to: this.state.addr,
+      //   data,
+      // }),
+      callObject: {
+        to: this.state.addr,
+        data
+      },
       blockNumber: 'latest'
-    })
-      .subscribe(result => {
-        try {
-          const outputTypes = this.state.abi[index].outputs.map(o => o.type)
-          const outputs = web3Abi.decodeParameters(outputTypes, result) as {[index:string]: any, __length__:number}
-          this.setState(state => {
-            const abi = JSON.parse(JSON.stringify(state.abi))
-            for (let i = 0; i < outputs.__length__; i++) {
-              abi[index].outputs[i].value = outputs[i]
-            }
-            return { ...state, abi, loading: state.loading - 1 }
-          })
-        } catch (err) {
-          console.log(err)
-          this.handleError(err)
-        }
-      }, this.handleError)
+    }).subscribe(result => {
+      try {
+        const outputTypes = this.state.abi[index].outputs.map(o => o.type)
+        const outputs = web3Abi.decodeParameters(outputTypes, result) as { [index: string]: any; __length__: number }
+        this.setState(state => {
+          const abi = JSON.parse(JSON.stringify(state.abi))
+          for (let i = 0; i < outputs.__length__; i++) {
+            abi[index].outputs[i].value = outputs[i]
+          }
+          return { ...state, abi, loading: state.loading - 1 }
+        })
+      } catch (err) {
+        console.log(err)
+        this.handleError(err)
+      }
+    }, this.handleError)
   }
   private handleError = handleError(this)
   private dismissError = dismissError(this)
