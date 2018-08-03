@@ -44,6 +44,7 @@ module.exports = {
       'process.env': {
         CHAIN_SERVERS: JSON.stringify(process.env.CHAIN_SERVERS),
         APP_NAME: JSON.stringify(process.env.APP_NAME),
+        LNGS: JSON.stringify(process.env.LNGS)
       },
     }),
   ],

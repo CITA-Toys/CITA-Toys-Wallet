@@ -1,7 +1,9 @@
 import * as React from 'react'
 import { LinearProgress, Grid } from '@material-ui/core'
 import { translate } from 'react-i18next'
-import { IContainerProps, IBlock, TransactionFromServer } from '../../typings'
+
+import { Chain } from '@nervos/web3-plugin'
+import { IContainerProps, TransactionFromServer } from '../../typings'
 import { withObservables } from '../../contexts/observables'
 import { fetch10Transactions } from '../../utils/fetcher'
 import StaticCard from '../../components/StaticCard'
@@ -18,7 +20,7 @@ interface HomepageProps extends IContainerProps {}
 
 const initState = {
   loading: 0,
-  blocks: [] as IBlock[],
+  blocks: [] as Chain.Block<Chain.TransactionInBlock>[],
   transactions: [] as TransactionFromServer[],
   healthy: {
     count: ''
@@ -49,12 +51,6 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
   componentDidCatch (err) {
     this.handleError(err)
   }
-  private blkInfo = [
-    { key: 'height', label: '出块高度' },
-    { key: 'owner', label: '出块人' },
-    { key: 'time', label: '出块时间' },
-    { key: 'txCount', label: '交易量' }
-  ]
 
   private blockHistory = ({ height, count }) => {
     // NOTICE: async
@@ -62,7 +58,7 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
     this.props.CITAObservables.blockHistory({
       by: height,
       count
-    }).subscribe((blocks: IBlock[]) => {
+    }).subscribe((blocks: Chain.Block<Chain.TransactionInBlock>[]) => {
       this.setState(state => ({
         loading: state.loading - 1,
         blocks
@@ -73,13 +69,13 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
     // NOTICE: async
     this.setState(state => ({ loading: state.loading + 1 })) // for transaction history
     fetch10Transactions()
-      .then(({ result }: { result: { transactions: TransactionFromServer[]; count: number } }) => {
+      .then(({ result: { transactions } }: { result: { transactions: TransactionFromServer[] } }) => {
         this.setState(state => ({
           loading: state.loading - 1,
-          transactions: result.transactions
+          transactions
         }))
       })
-      .catch(err => this.handleError(err)) // for transaction history
+      .catch(this.handleError)
   }
   private handleError = handleError(this)
   private dismissError = dismissError(this)

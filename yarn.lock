@@ -9,21 +9,6 @@
     core-js "^2.5.7"
     regenerator-runtime "^0.11.1"
 
-"@cita/observables@^1.0.22":
-  version "1.0.24"
-  resolved "https://registry.npmjs.org/@cita/observables/-/observables-1.0.24.tgz#d78a068abb5dfa698250c279b764df0ed49fa3f1"
-  dependencies:
-    "@cita/web3-plugin" "^1.0.27"
-    "@reactivex/rxjs" "^5.5.8"
-
-"@cita/web3-plugin@^1.0.27":
-  version "1.0.27"
-  resolved "https://registry.npmjs.org/@cita/web3-plugin/-/web3-plugin-1.0.27.tgz#c4fcb85678cb139982cfb8380cdeba4b7b19ecfa"
-  dependencies:
-    "@types/google-protobuf" "^3.2.7"
-    axios "^0.18.0"
-    google-protobuf "^3.5.0"
-
 "@material-ui/core@^1.2.0":
   version "1.2.1"
   resolved "https://registry.npmjs.org/@material-ui/core/-/core-1.2.1.tgz#f8c73da10b875762b37be7167ec2ac79b027499f"
@@ -72,27 +57,25 @@
   version "1.7.1"
   resolved "https://registry.npmjs.org/@most/prelude/-/prelude-1.7.1.tgz#7c70ab6a68bb20481db51ebfbba23fceb502d239"
 
-"@nervos/observables@^0.17.1":
-  version "0.17.1"
-  resolved "https://registry.npmjs.org/@nervos/observables/-/observables-0.17.1.tgz#69195af00a93557cb8ea58ae92845ce186707b3a"
+"@nervos/observables@^0.17.7":
+  version "0.17.7"
+  resolved "https://registry.npmjs.org/@nervos/observables/-/observables-0.17.7.tgz#a53dc1c2d2d1c93c2dff098ce414f1914ae9f2ac"
   dependencies:
-    "@nervos/web3-plugin" "^0.17.5"
+    "@nervos/web3-plugin" "^0.17.10"
     "@reactivex/rxjs" "^5.5.8"
 
-"@nervos/signer@^1.0.23":
-  version "1.0.23"
-  resolved "https://registry.npmjs.org/@nervos/signer/-/signer-1.0.23.tgz#72f62f36b7cb743af6347fb3baad8bb0f1788f73"
+"@nervos/signer@^1.0.28":
+  version "1.0.28"
+  resolved "https://registry.npmjs.org/@nervos/signer/-/signer-1.0.28.tgz#685d2613db998a60e3cca03d79077f2dff30f7ab"
   dependencies:
-    "@nervos/web3-plugin" "^0.17.5"
-    crypto-js "^3.1.9-1"
     ec "^0.0.1"
-    eccrypto "^1.0.3"
     elliptic "^6.4.0"
+    google-protobuf "^3.5.0"
     web3 "^1.0.0-beta.34"
 
-"@nervos/web3-plugin@^0.17.5":
-  version "0.17.5"
-  resolved "https://registry.npmjs.org/@nervos/web3-plugin/-/web3-plugin-0.17.5.tgz#1ba3172dac0824a9fb4494dd6dc68c4fe802847a"
+"@nervos/web3-plugin@^0.17.10":
+  version "0.17.10"
+  resolved "https://registry.npmjs.org/@nervos/web3-plugin/-/web3-plugin-0.17.10.tgz#f3b189af08f1c8798c1c1e748f7cca95af1d2b6f"
   dependencies:
     "@types/google-protobuf" "^3.2.7"
     axios "^0.18.0"
@@ -3512,8 +3495,8 @@ globule@^1.0.0:
     minimatch "~3.0.2"
 
 google-protobuf@^3.5.0:
-  version "3.5.0"
-  resolved "https://registry.npmjs.org/google-protobuf/-/google-protobuf-3.5.0.tgz#b8cc63c74d83457bd8a9a904503c8efb26bca339"
+  version "3.6.0"
+  resolved "https://registry.npmjs.org/google-protobuf/-/google-protobuf-3.6.0.tgz#e2bafb00c20a8734174d8f89e0a842709e2ceed0"
 
 got@7.1.0, got@^7.1.0:
   version "7.1.0"
