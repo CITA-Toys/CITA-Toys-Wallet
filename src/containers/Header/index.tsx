@@ -12,13 +12,13 @@ import SidebarNavs from '../../components/SidebarNavs'
 import ErrorNotification from '../../components/ErrorNotification'
 import { IContainerProps, Metadata } from '../../typings'
 import RightSidebar from '../../components/RightSidebar'
-import MetadataPanel from '../../components/MetadataPanel'
+import MetadataPanel, { ServerList } from '../../components/MetadataPanel'
 import BriefStatisticsPanel from '../../components/BriefStatistics'
 import SearchPanel from '../../components/SearchPanel'
 import { withConfig } from '../../contexts/config'
 import { withObservables } from '../../contexts/observables'
 import { isIp } from '../../utils/validators'
-import { fetchStatistics } from '../../utils/fetcher'
+import { fetchStatistics, fetchServerList, fetchMetadata } from '../../utils/fetcher'
 import { initBlock, initMetadata } from '../../initValues'
 import { handleError, dismissError } from '../../utils/handleError'
 
@@ -45,7 +45,8 @@ const initState = {
   error: {
     code: '',
     message: ''
-  }
+  },
+  serverList: [] as ServerList
 }
 type HeaderState = typeof initState
 interface HeaderProps extends IContainerProps {}
@@ -86,24 +87,14 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   private onSearch$: Subject<any>
   private getChainMetadata = ip => {
     if (isIp(ip)) {
-      axios
-        .post(`http://${ip}`, {
-          jsonrpc: '2.0',
-          method: 'getMetaData',
-          params: ['latest'],
-          id: 1
-        })
-        .then((res: AxiosResponse) => {
-          if (res.data && res.data.result) {
-            this.setState({
-              otherMetadata: {
-                ...res.data.result,
-                genesisTimestamp: new Date(res.data.result.genesisTimestamp).toLocaleString()
-              }
-            })
-          } else {
-            throw new Error('Error Response')
-          }
+      fetchMetadata(ip)
+        .then(({ result }) => {
+          this.setState({
+            otherMetadata: {
+              ...result,
+              genesisTimestamp: new Date(result.genesisTimestamp).toLocaleString()
+            }
+          })
         })
         .catch(this.handleError)
     }
@@ -134,11 +125,25 @@ class Header extends React.Component<HeaderProps, HeaderState> {
       })
     }, this.handleError)
     newBlockByNumberSubject.connect()
+    // fetch server list
+    fetchServerList()
+      .then(servers => {
+        if (!servers) return
+        const serverList = [] as ServerList
+        Object.keys(servers).forEach(serverName => {
+          serverList.push({
+            serverName,
+            serverIp: servers[serverName]
+          })
+        })
+        this.setState({ serverList })
+      })
+      .catch(this.handleError)
   }
   private togglePanel = (panel: string) => (e?: any) => {
-    this.setState(state => ({
+    this.setState({
       activePanel: panel
-    }))
+    })
   }
 
   private handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -179,9 +184,9 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   private handleError = handleError(this)
   private dismissError = dismissError(this)
   private searchSubscription: Subscription
-  private translations = ['zh', 'en', 'ja-JP', 'ko', 'de', 'it', 'fr']
+  private translations = process.env.LNGS ? process.env.LNGS.split(',') : ['zh', 'en', 'ja-JP', 'ko', 'de', 'it', 'fr']
   render () {
-    const { anchorEl, lngOpen, error } = this.state
+    const { anchorEl, lngOpen, error, serverList } = this.state
     const {
       location: { pathname },
       t
@@ -261,7 +266,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
                 searchResult={this.state.otherMetadata}
                 switchChain={this.switchChain}
                 handleKeyUp={this.handleKeyUp}
-                serverList={this.props.config.serverList}
+                serverList={serverList}
               />
             ) : this.state.activePanel === 'statistics' ? (
               <BriefStatisticsPanel

@@ -25,9 +25,7 @@ export default translate('microscope')(
         >
           <div
             className={styles.blockIcon}
-            style={{
-              backgroundImage: `url(${`${process.env.PUBLIC}/images/BlockBg.png`})`
-            }}
+            style={{ backgroundImage: `url(${`${process.env.PUBLIC}/images/BlockBg.png`})` }}
           >
             <span>{t('block')}</span>
             <Link to={`/height/${block.header.number}`} href={`/height/${block.header.number}`}>
@@ -57,12 +55,12 @@ export default translate('microscope')(
             }
             secondary={
               <React.Fragment>
-                <div className={texts.ellipsis}>
+                <span className={texts.ellipsis}>
                   {t('including')} <b>{block.body.transactions.length}</b> {t('Transactions')}.{' '}
-                </div>
-                <div className={texts.ellipsis}>
+                </span>
+                <span className={texts.ellipsis}>
                   {t('proposed by')} <span className={texts.highlight}>{block.header.proof.Tendermint.proposal}</span>
-                </div>
+                </span>
               </React.Fragment>
             }
           />

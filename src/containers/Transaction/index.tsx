@@ -126,12 +126,13 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
       })
     }
     const details = unsigner(tx.content)
-    if (tx.basicInfo && typeof tx.basicInfo !== 'string' && tx.basicInfo.data) {
+    if (tx.basicInfo && typeof tx.basicInfo !== 'string') {
       /* eslint-disable */
-      const { data, value } = tx.basicInfo
+      const { data, value } = details.transaction
+      const { address } = details.sender
       tx.basicInfo.data = bytesToHex(data as any)
       tx.basicInfo.value = '' + +bytesToHex(value as any)
-      tx.basicInfo.from = '0x' + details.sender.address
+      tx.basicInfo.from = '0x' + address
       /* eslint-enable */
     }
     // return this.setState(state => ({ ...tx, loading: state.loading - 1 }))

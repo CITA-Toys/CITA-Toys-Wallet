@@ -8,16 +8,10 @@ const texts = require('../../styles/text.scss')
 const styles = require('./homepageList.scss')
 
 export default translate('microscope')(
-  ({
-    transactions,
-    t,
-  }: {
-  transactions: TransactionFromServer[]
-  t: (key: string) => string
-  }) => (
+  ({ transactions, t }: { transactions: TransactionFromServer[]; t: (key: string) => string }) => (
     <List
       classes={{
-        padding: styles.listPadding,
+        padding: styles.listPadding
       }}
     >
       {transactions.map(tx => (
@@ -33,53 +27,40 @@ export default translate('microscope')(
               <React.Fragment>
                 <span className={texts.ellipsis}>
                   {t('transaction')}:{' '}
-                  <Link
-                    to={`/transaction/${tx.hash}`}
-                    href={`/transaction/${tx.hash}`}
-                    className={texts.addr}
-                  >
+                  <Link to={`/transaction/${tx.hash}`} href={`/transaction/${tx.hash}`} className={texts.addr}>
                     {tx.hash}
                   </Link>
                 </span>
                 <span className={styles.time}>
-                  {tx.timestamp &&
-                    Math.round((Date.now() - +tx.timestamp) / 1000)}s ago
+                  {tx.timestamp && Math.round((Date.now() - +tx.timestamp) / 1000)}s ago
                 </span>
               </React.Fragment>
             }
             secondary={
-              <div className={styles.txInfo}>
-                <div className={texts.ellipsis}>
+              <span className={styles.txInfo}>
+                <span className={texts.ellipsis}>
                   {t('from')}:{' '}
-                  <Link
-                    to={`/account/${tx.from}`}
-                    href={`/account/${tx.from}`}
-                    className={texts.addr}
-                  >
+                  <Link to={`/account/${tx.from}`} href={`/account/${tx.from}`} className={texts.addr}>
                     {tx.from || '_'}
                   </Link>
-                </div>
-                <div className={texts.ellipsis}>
+                </span>
+                <span className={texts.ellipsis}>
                   {t('to')}:{' '}
-                  <Link
-                    to={`/account/${tx.to}`}
-                    href={`/account/${tx.to}`}
-                    className={texts.addr}
-                  >
+                  <Link to={`/account/${tx.to}`} href={`/account/${tx.to}`} className={texts.addr}>
                     {tx.to || '_'}
                   </Link>
-                </div>
-                <div className={texts.ellipsis}>
+                </span>
+                <span className={texts.ellipsis}>
                   {t('value')}:{' '}
                   <span className={styles.value} title={`${tx.value}`}>
                     {tx.value || 0}
                   </span>
-                </div>
-              </div>
+                </span>
+              </span>
             }
           />
         </ListItem>
       ))}
     </List>
-  ),
+  )
 )

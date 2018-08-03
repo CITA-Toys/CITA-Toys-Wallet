@@ -2,7 +2,7 @@
  * @Author: Keith-CY
  * @Date: 2018-07-22 19:59:22
  * @Last Modified by: Keith-CY
- * @Last Modified time: 2018-07-22 22:52:29
+ * @Last Modified time: 2018-08-02 12:08:25
  */
 
 import { IBlock, IBlockHeader, Transaction, Metadata, ABI } from './typings'
@@ -10,6 +10,8 @@ import { PanelConfigs } from './config/localstorage'
 import widerThan from './utils/widerThan'
 import { Contract, AccountType } from './typings/account'
 import { LocalAccount } from './components/LocalAccounts'
+
+import { SelectorType } from './components/TableWithSelector'
 
 const isDesktop = widerThan(800)
 export const initHeader: IBlockHeader = {
@@ -116,6 +118,70 @@ export const initAccountState = {
     name: '',
     addr: ''
   },
+  error: {
+    code: '',
+    message: ''
+  }
+}
+
+export const initBlockState = {
+  loading: 0,
+  hash: '',
+  header: {
+    timestamp: '',
+    prevHash: '',
+    number: '',
+    stateRoot: '',
+    transactionsRoot: '',
+    receiptsRoot: '',
+    gasUsed: '',
+    proof: {
+      Tendermint: {
+        proposal: ''
+      }
+    }
+  },
+  body: {
+    transactions: []
+  },
+  version: 0,
+  transactionsOn: false,
+  error: initError
+}
+
+export const initBlockTableState = {
+  headers: [
+    { key: 'height', text: 'height', href: '/height/' },
+    { key: 'hash', text: 'hash', href: '/block/' },
+    { key: 'age', text: 'age' },
+    { key: 'transactions', text: 'transactions' },
+    { key: 'gasUsed', text: 'gas used' }
+  ],
+  items: [] as any[],
+  count: 0,
+  pageSize: 10,
+  pageNo: 0,
+  selectors: [
+    {
+      type: SelectorType.RANGE,
+      key: 'number',
+      text: 'number selector',
+      items: [{ key: 'numberFrom', text: 'NumberFrom' }, { key: 'numberTo', text: 'NumberTo' }]
+    },
+    {
+      type: SelectorType.RANGE,
+      key: 'transaction',
+      text: 'transactions selector',
+      items: [{ key: 'transactionFrom', text: 'transactionFrom' }, { key: 'transactionTo', text: 'transactionTo' }]
+    }
+  ],
+  selectorsValue: {
+    numberFrom: '',
+    numberTo: '',
+    transactionFrom: '',
+    transactionTo: ''
+  },
+  loading: 0,
   error: {
     code: '',
     message: ''

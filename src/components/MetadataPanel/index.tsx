@@ -3,7 +3,7 @@ import { List, ListItem, ListItemText } from '@material-ui/core'
 import { translate } from 'react-i18next'
 import { Metadata } from '../../typings'
 
-const styles = require('./styles.scss')
+const styles = require('./metadata.scss')
 const text = require('../../styles/text.scss')
 
 const list = [
@@ -41,6 +41,8 @@ const MetadataRender = translate('microscope')(
   )
 )
 
+export type ServerList = { serverName: string; serverIp: string }[]
+
 interface MetadataPanelProps {
   metadata: Metadata
   searchIp: string
@@ -49,7 +51,7 @@ interface MetadataPanelProps {
   switchChain: (e) => void
   handleKeyUp: (e: React.KeyboardEvent<HTMLInputElement>) => void
   t: (key: string) => string
-  serverList: string[]
+  serverList: ServerList
 }
 
 const MetadataPanel: React.SFC<MetadataPanelProps> = ({
@@ -84,9 +86,16 @@ const MetadataPanel: React.SFC<MetadataPanelProps> = ({
       <MetadataRender metadata={searchResult} />
     ) : (
       <List>
-        {serverList.map(server => (
-          <ListItem key={server} onClick={() => switchChain(server)} classes={{ root: styles.listItem }}>
-            <ListItemText primary={server} />
+        {serverList.map(({ serverName, serverIp }) => (
+          <ListItem
+            key={serverName}
+            onClick={() => switchChain(serverIp)}
+            classes={{
+              root: styles.listItem,
+              gutters: styles.serverGutters
+            }}
+          >
+            <ListItemText primary={serverName} secondary={serverIp} />
           </ListItem>
         ))}
       </List>

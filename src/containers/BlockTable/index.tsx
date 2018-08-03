@@ -1,18 +1,28 @@
+/*
+ * @Author: Keith-CY
+ * @Date: 2018-08-02 12:05:46
+ * @Last Modified by: Keith-CY
+ * @Last Modified time: 2018-08-02 12:12:50
+ */
+
 import * as React from 'react'
+
 import { LinearProgress } from '@material-ui/core'
-import TableWithSelector, {
-  TableWithSelectorProps,
-  SelectorType,
-} from '../../components/TableWithSelector'
+
+import { IContainerProps } from '../../typings'
+import { BlockFromServer } from '../../typings/block'
+import { withConfig } from '../../contexts/config'
+
+import TableWithSelector, { TableWithSelectorProps, SelectorType } from '../../components/TableWithSelector'
 import ErrorNotification from '../../components/ErrorNotification'
 import Banner from '../../components/Banner'
+
 import { fetchBlocks } from '../../utils/fetcher'
-import { BlockFromServer } from '../../typings/block'
 import paramsFilter from '../../utils/paramsFilter'
-import { withConfig } from '../../contexts/config'
-import { IContainerProps } from '../../typings'
 import hideLoader from '../../utils/hideLoader'
 import { handleError, dismissError } from '../../utils/handleError'
+
+import { initBlockTableState } from '../../initValues'
 
 interface BlockSelectors {
   selectorsValue: {
@@ -26,72 +36,29 @@ type BlockTableState = TableWithSelectorProps &
   }
 interface BlockTableProps extends IContainerProps {}
 
-const initialState: BlockTableState = {
-  headers: [
-    { key: 'height', text: 'height', href: '/height/' },
-    { key: 'hash', text: 'hash', href: '/block/' },
-    { key: 'age', text: 'age' },
-    { key: 'transactions', text: 'transactions' },
-    { key: 'gasUsed', text: 'gas used' },
-  ],
-  items: [] as any[],
-  count: 0,
-  pageSize: 10,
-  pageNo: 0,
-  selectors: [
-    {
-      type: SelectorType.RANGE,
-      key: 'number',
-      text: 'number selector',
-      items: [
-        { key: 'numberFrom', text: 'NumberFrom' },
-        { key: 'numberTo', text: 'NumberTo' },
-      ],
-    },
-    {
-      type: SelectorType.RANGE,
-      key: 'transaction',
-      text: 'transactions selector',
-      items: [
-        { key: 'transactionFrom', text: 'transactionFrom' },
-        { key: 'transactionTo', text: 'transactionTo' },
-      ],
-    },
-  ],
-  selectorsValue: {
-    numberFrom: '',
-    numberTo: '',
-    transactionFrom: '',
-    transactionTo: '',
-  },
-  loading: 0,
-  error: {
-    code: '',
-    message: '',
-  },
-}
+const initialState: BlockTableState = initBlockTableState
 
 class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
-  state = initialState
-  componentWillMount () {
+  readonly state = initialState
+  public componentWillMount () {
     this.setParamsFromUrl()
     this.setVisibleHeaders()
     this.setPageSize()
   }
 
-  componentDidMount () {
+  public componentDidMount () {
     hideLoader()
     this.fetchBlock({
       ...this.state.selectorsValue,
       offset: this.state.pageNo * this.state.pageSize,
-      limit: this.state.pageSize,
+      limit: this.state.pageSize
     })
   }
-  componentDidCatch (err) {
+  public componentDidCatch (err) {
     this.handleError(err)
   }
 
-  onSearch = params => {
+  private onSearch = params => {
     this.setState(state => Object.assign({}, state, { selectorsValue: params }))
     this.fetchBlock(params)
   }
@@ -104,10 +71,7 @@ class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
     this.setState(state => {
       const { headers } = state
       const visibleHeaders = headers.filter(
-        header =>
-          this.props.config.panelConfigs[
-            `block${header.key[0].toUpperCase()}${header.key.slice(1)}`
-          ] !== false,
+        header => this.props.config.panelConfigs[`block${header.key[0].toUpperCase()}${header.key.slice(1)}`] !== false
       )
       return { headers: visibleHeaders }
     })
@@ -120,7 +84,7 @@ class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
       numberTo: '',
       transactionFrom: '',
       transactionTo: '',
-      pageNo: '',
+      pageNo: ''
     }
     Object.keys(params).forEach(key => {
       const value = actParams.get(key)
@@ -136,7 +100,7 @@ class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
 
     this.setState({
       selectorsValue,
-      pageNo,
+      pageNo
     })
   }
   private handlePageChanged = newPage => {
@@ -145,7 +109,7 @@ class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
     this.fetchBlock({
       offset,
       limit,
-      ...this.state.selectorsValue,
+      ...this.state.selectorsValue
     })
       .then(() => {
         this.setState({ pageNo: newPage })
@@ -155,28 +119,20 @@ class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
   private fetchBlock = (params: { [index: string]: string | number } = {}) => {
     this.setState(state => ({ loading: state.loading + 1 }))
     return fetchBlocks(paramsFilter(params))
-      .then(
-        ({
-          result,
-        }: {
-        result: { blocks: BlockFromServer[]; count: number }
-        }) => {
-          this.setState(state => ({
-            loading: state.loading - 1,
-            count: result.count,
-            items: result.blocks.map(block => ({
-              key: block.hash,
-              height: block.header.number,
-              hash: block.hash,
-              age: `${Math.round(
-                (Date.now() - block.header.timestamp) / 1000,
-              )}s ago`,
-              transactions: `${block.transactionsCount}`,
-              gasUsed: block.header.gasUsed,
-            })),
+      .then(({ result }: { result: { blocks: BlockFromServer[]; count: number } }) => {
+        this.setState(state => ({
+          loading: state.loading - 1,
+          count: result.count,
+          items: result.blocks.map(block => ({
+            key: block.hash,
+            height: block.header.number,
+            hash: block.hash,
+            age: `${Math.round((Date.now() - block.header.timestamp) / 1000)}s ago`,
+            transactions: `${block.transactionsCount}`,
+            gasUsed: block.header.gasUsed
           }))
-        },
-      )
+        }))
+      })
       .catch(err => {
         this.handleError(err)
       })
@@ -185,24 +141,14 @@ class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
   private dismissError = dismissError(this)
 
   render () {
-    const {
-      headers,
-      items,
-      selectors,
-      selectorsValue,
-      count,
-      pageSize,
-      pageNo,
-      loading,
-      error,
-    } = this.state
+    const { headers, items, selectors, selectorsValue, count, pageSize, pageNo, loading, error } = this.state
     const activeParams = paramsFilter(selectorsValue)
     return (
       <React.Fragment>
         {loading ? (
           <LinearProgress
             classes={{
-              root: 'linearProgressRoot',
+              root: 'linearProgressRoot'
             }}
           />
         ) : null}
