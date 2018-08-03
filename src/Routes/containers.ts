@@ -5,21 +5,21 @@ export default [
     name: 'Homepage',
     component: 'Homepage',
     exact: true,
-    nav: false
+    nav: false,
   },
   {
     path: '/block/:blockHash',
     name: 'BlockByHash',
     component: 'Block',
     exact: true,
-    nav: false
+    nav: false,
   },
   {
     path: '/height/:height',
     name: 'BlockByHeight',
     component: 'Block',
     exact: true,
-    nav: false
+    nav: false,
   },
   {
     path: '/blocks',
@@ -28,7 +28,9 @@ export default [
     exact: true,
     nav: true,
     icon: `${process.env.PUBLIC}/microscopeIcons/mobile_navs/block.svg`,
-    iconActive: `${process.env.PUBLIC}/microscopeIcons/mobile_navs/block_active.svg`
+    iconActive: `${
+      process.env.PUBLIC
+    }/microscopeIcons/mobile_navs/block_active.svg`,
   },
   {
     path: '/transactions',
@@ -37,21 +39,23 @@ export default [
     exact: true,
     nav: true,
     icon: `${process.env.PUBLIC}/microscopeIcons/mobile_navs/transaction.svg`,
-    iconActive: `${process.env.PUBLIC}/microscopeIcons/mobile_navs/transaction_active.svg`
+    iconActive: `${
+      process.env.PUBLIC
+    }/microscopeIcons/mobile_navs/transaction_active.svg`,
   },
   {
     path: '/transaction/:transaction',
     name: 'Transaction',
     component: 'Transaction',
     exact: true,
-    nav: false
+    nav: false,
   },
   {
     path: '/account/:account',
     name: 'Account',
     component: 'Account',
     exact: true,
-    nav: false
+    nav: false,
   },
   {
     path: '/graphs',
@@ -60,7 +64,9 @@ export default [
     exact: true,
     nav: true,
     icon: `${process.env.PUBLIC}/microscopeIcons/mobile_navs/statistics.svg`,
-    iconActive: `${process.env.PUBLIC}/microscopeIcons/mobile_navs/statistics_active.svg`
+    iconActive: `${
+      process.env.PUBLIC
+    }/microscopeIcons/mobile_navs/statistics_active.svg`,
   },
   {
     path: '/config',
@@ -69,7 +75,9 @@ export default [
     exact: true,
     nav: true,
     icon: `${process.env.PUBLIC}/microscopeIcons/mobile_navs/config.svg`,
-    iconActive: `${process.env.PUBLIC}/microscopeIcons/mobile_navs/config_active.svg`
+    iconActive: `${
+      process.env.PUBLIC
+    }/microscopeIcons/mobile_navs/config_active.svg`,
   },
-  { path: '/', name: 'Footer', component: 'Footer', exact: false, nav: false }
+  { path: '/', name: 'Footer', component: 'Footer', exact: false, nav: false },
 ]
