@@ -95,7 +95,14 @@ const MetadataPanel: React.SFC<MetadataPanelProps> = ({
               gutters: styles.serverGutters
             }}
           >
-            <ListItemText primary={serverName} secondary={serverIp} />
+            <ListItemText
+              classes={{
+                primary: styles.serverPrimary,
+                secondary: styles.serverSecondary
+              }}
+              primary={serverName}
+              secondary={serverIp}
+            />
           </ListItem>
         ))}
       </List>

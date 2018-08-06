@@ -12,7 +12,7 @@ import {
   ExpansionPanelSummary,
   ExpansionPanelDetails,
   Divider,
-  Switch,
+  Switch
 } from '@material-ui/core'
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons'
 
@@ -42,7 +42,7 @@ enum ConfigType {
   DISPLAY,
   COUNT,
   ITEMS,
-  VALUE,
+  VALUE
 }
 
 enum ConfigPanel {
@@ -50,7 +50,7 @@ enum ConfigPanel {
   HEADER = 'header',
   BLOCK = 'block',
   TRANSACTION = 'transaction',
-  GRAPH = 'graph',
+  GRAPH = 'graph'
 }
 
 export interface IConfigPageProps {
@@ -64,7 +64,7 @@ export interface IConfigPageState {
 }
 
 const initState: IConfigPageState = {
-  configs: initPanelConfigs,
+  configs: initPanelConfigs
 }
 
 const ConfigItem = translate('microscope')(
@@ -74,23 +74,20 @@ const ConfigItem = translate('microscope')(
     value,
     handleSwitch,
     handleInput,
-    t,
+    t
   }: {
   config: ConfigItem
   index: number
   value: number | string | boolean | undefined
   handleSwitch: (key: string) => (e: any) => void
-  handleInput: (
-    key: string,
-  ) => (e: React.ChangeEvent<HTMLInputElement>) => void
+  handleInput: (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => void
   t: (key: string) => string
   }) => (
     <ListItem key={config.key}>
       <ListItemText
         primary={
           <React.Fragment>
-            {t(config.type === ConfigType.DISPLAY ? 'display' : 'set')}{' '}
-            {t(config.title)}
+            {t(config.type === ConfigType.DISPLAY ? 'display' : 'set')} {t(config.title)}
           </React.Fragment>
           // ' ' +
         }
@@ -104,7 +101,7 @@ const ConfigItem = translate('microscope')(
               colorPrimary: styles.switchColorPrimary,
               colorSecondary: styles.switchColorSecondary,
               // bar: styles.iOSBar,
-              icon: styles.iOSIcon,
+              icon: styles.iOSIcon
             }}
             onChange={handleSwitch(config.key)}
             checked={!!value}
@@ -120,7 +117,7 @@ const ConfigItem = translate('microscope')(
         )}
       </ListItemSecondaryAction>
     </ListItem>
-  ),
+  )
 )
 
 const Config = translate('microscope')(
@@ -130,7 +127,7 @@ const Config = translate('microscope')(
     values,
     handleSwitch,
     handleInput,
-    t,
+    t
   }: {
   title: any
   configs: any
@@ -139,11 +136,7 @@ const Config = translate('microscope')(
   handleInput: any
   t: any
   }) => (
-    <ExpansionPanel
-      defaultExpanded
-      classes={{ root: styles.panel }}
-      elevation={0}
-    >
+    <ExpansionPanel defaultExpanded classes={{ root: styles.panel }} elevation={0}>
       <ExpansionPanelSummary expandIcon={<ExpandMoreIcon />}>
         <Typography variant="caption" classes={{ caption: styles.panelTitle }}>
           {t(title)} {t('config')}
@@ -166,7 +159,7 @@ const Config = translate('microscope')(
       </ExpansionPanelDetails>
       <Divider />
     </ExpansionPanel>
-  ),
+  )
 )
 
 class ConfigPage extends React.Component<IConfigPageProps, IConfigPageState> {
@@ -174,7 +167,7 @@ class ConfigPage extends React.Component<IConfigPageProps, IConfigPageState> {
   constructor (props) {
     super(props)
     this.state = {
-      configs: this.props.config.panelConfigs,
+      configs: this.props.config.panelConfigs
     }
   }
 
@@ -204,151 +197,149 @@ class ConfigPage extends React.Component<IConfigPageProps, IConfigPageState> {
   }
   private panels = [
     // ConfigPanel.GENERAL,
-    ConfigPanel.HEADER,
+    // ConfigPanel.HEADER,
     ConfigPanel.BLOCK,
     ConfigPanel.TRANSACTION,
-    ConfigPanel.GRAPH,
+    ConfigPanel.GRAPH
   ]
   private configs = [
     {
       panel: ConfigPanel.GENERAL,
       type: ConfigType.VALUE,
       key: 'logo',
-      title: 'logo',
+      title: 'logo'
     },
     {
       panel: ConfigPanel.HEADER,
       type: ConfigType.DISPLAY,
       key: 'TPS',
-      title: 'TPS',
+      title: 'TPS'
     },
     {
       panel: ConfigPanel.BLOCK,
       type: ConfigType.DISPLAY,
       key: 'blockHeight',
-      title: 'height',
+      title: 'height'
     },
     {
       panel: ConfigPanel.BLOCK,
       type: ConfigType.DISPLAY,
       key: 'blockHash',
-      title: 'hash',
+      title: 'hash'
     },
     {
       panel: ConfigPanel.BLOCK,
       type: ConfigType.DISPLAY,
       key: 'blockAge',
-      title: 'age',
+      title: 'age'
     },
     {
       panel: ConfigPanel.BLOCK,
       type: ConfigType.DISPLAY,
       key: 'blockTransactions',
-      title: 'transactions',
+      title: 'transactions'
     },
     {
       panel: ConfigPanel.BLOCK,
       type: ConfigType.DISPLAY,
       key: 'blockGasUsed',
-      title: 'gas used',
+      title: 'gas used'
     },
     {
       panel: ConfigPanel.BLOCK,
       type: ConfigType.VALUE,
       key: 'blockPageSize',
-      title: 'page size',
+      title: 'page size'
     },
     {
       panel: ConfigPanel.TRANSACTION,
       type: ConfigType.DISPLAY,
       key: 'transactionHash',
-      title: 'hash',
+      title: 'hash'
     },
     {
       panel: ConfigPanel.TRANSACTION,
       type: ConfigType.DISPLAY,
       key: 'transactionFrom',
-      title: 'from',
+      title: 'from'
     },
     {
       panel: ConfigPanel.TRANSACTION,
       type: ConfigType.DISPLAY,
       key: 'transactionTo',
-      title: 'to',
+      title: 'to'
     },
     {
       panel: ConfigPanel.TRANSACTION,
       type: ConfigType.DISPLAY,
       key: 'transactionValue',
-      title: 'value',
+      title: 'value'
     },
     {
       panel: ConfigPanel.TRANSACTION,
       type: ConfigType.DISPLAY,
       key: 'transactionAge',
-      title: 'age',
+      title: 'age'
     },
     {
       panel: ConfigPanel.TRANSACTION,
       type: ConfigType.DISPLAY,
       key: 'transactionBlockNumber',
-      title: 'block number',
+      title: 'block number'
     },
     {
       panel: ConfigPanel.TRANSACTION,
       type: ConfigType.DISPLAY,
       key: 'transactionGasUsed',
-      title: 'gas used',
+      title: 'gas used'
     },
     {
       panel: ConfigPanel.TRANSACTION,
       type: ConfigType.VALUE,
       key: 'transactionPageSize',
-      title: 'page size',
+      title: 'page size'
     },
     {
       panel: ConfigPanel.GRAPH,
       type: ConfigType.DISPLAY,
       key: 'graphIPB',
-      title: 'Interval/Block',
+      title: 'Interval/Block'
     },
     {
       panel: ConfigPanel.GRAPH,
       type: ConfigType.DISPLAY,
       key: 'graphTPB',
-      title: 'Transactions/Block',
+      title: 'Transactions/Block'
     },
     {
       panel: ConfigPanel.GRAPH,
       type: ConfigType.DISPLAY,
       key: 'graphGasUsedBlock',
-      title: 'Gas Used/Block',
+      title: 'Gas Used/Block'
     },
     {
       panel: ConfigPanel.GRAPH,
       type: ConfigType.DISPLAY,
       key: 'graphGasUsedTx',
-      title: 'Gas Used/Transaction',
+      title: 'Gas Used/Transaction'
     },
     {
       panel: ConfigPanel.GRAPH,
       type: ConfigType.DISPLAY,
       key: 'graphProposals',
-      title: 'Proposals/Validator',
+      title: 'Proposals/Validator'
     },
     {
       panel: ConfigPanel.GRAPH,
       type: ConfigType.VALUE,
       key: 'graphMaxCount',
-      title: 'MaxCount',
-    },
+      title: 'MaxCount'
+    }
   ] as ConfigItem[]
   render () {
     return (
       <React.Fragment>
-        <Banner bg={`${process.env.PUBLIC}/banner/banner-Setting.png`}>
-          Config
-        </Banner>
+        <Banner bg={`${process.env.PUBLIC}/banner/banner-Setting.png`}>Config</Banner>
         <div className={`${styles.main} ${layout.center}`}>
           {this.panels.map(panel => (
             <Config

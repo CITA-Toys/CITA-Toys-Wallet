@@ -76,6 +76,14 @@ $sidebar-padding: 29px;
 }
 
 .serverGutters {
-  padding-left: 28px;
-  padding-right: 28px;
+  padding-left: 28px !important;
+  padding-right: 28px !important;
+}
+
+.serverPrimary {
+  color: $heavyText !important;
+}
+
+.serverSecondary {
+  color: $plainText !important;
 }
