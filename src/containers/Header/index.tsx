@@ -156,7 +156,7 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
   private handleKeyUp = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.keyCode === 13) {
-      this.switchChain()
+      this.switchChain('')()
     }
   }
 
@@ -177,12 +177,12 @@ class Header extends React.Component<HeaderProps, HeaderState> {
 
   private changeLng = (lng = 'en') => e => {
     this.setState({ lngOpen: false })
-    // this.props.i18n.changeLanguage(lng)
     window.localStorage.setItem('i18nextLng', lng)
     window.location.reload()
   }
-  private switchChain = (chain?: string) => {
+  private switchChain = (chain: string = '') => (e?: any) => {
     const ip = chain || this.state.searchIp
+    if (!ip) return
     this.props.CITAObservables.setServer(ip.startsWith('http') ? ip : `http://${ip}`)
     const chainIp = ip.startsWith('http') ? ip : `http://${ip}`
     window.localStorage.setItem('chainIp', chainIp)

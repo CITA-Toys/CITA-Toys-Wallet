@@ -6,12 +6,13 @@
  */
 
 import { IBlock, IBlockHeader, Transaction, Metadata, ABI } from './typings'
-import { PanelConfigs } from './config/localstorage'
 import widerThan from './utils/widerThan'
 import { Contract, AccountType } from './typings/account'
 import { LocalAccount } from './components/LocalAccounts'
 
 import { SelectorType } from './components/TableWithSelector'
+import LOCAL_STORAGE, { PanelConfigs } from './config/localstorage'
+import { getServerList, getPrivkeyList, getPanelConfigs } from './utils/accessLocalstorage'
 
 const isDesktop = widerThan(800)
 export const initHeader: IBlockHeader = {
@@ -186,4 +187,15 @@ export const initBlockTableState = {
     code: '',
     message: ''
   }
+}
+export const initConfigContext = {
+  localStorage: LOCAL_STORAGE,
+  serverList: getServerList(),
+  privkeyList: getPrivkeyList(),
+  panelConfigs: getPanelConfigs(),
+  addServer: server => false,
+  deleteServer: server => false,
+  addPrivkey: privkey => false,
+  deletePrivkey: privkey => false,
+  changePanelConfig: (config: any) => false
 }

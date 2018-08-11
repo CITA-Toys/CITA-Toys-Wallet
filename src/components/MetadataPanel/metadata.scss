@@ -65,6 +65,12 @@ $sidebar-padding: 29px;
     padding: 6px 24px;
     margin-left: 10px;
     text-transform: capitalize;
+    cursor: pointer;
+    &:disabled {
+      background: #eee;
+      color: #aaa;
+      cursor: default;
+    }
   }
 }
 

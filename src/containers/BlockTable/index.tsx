@@ -144,9 +144,9 @@ class BlockTable extends React.Component<BlockTableProps, BlockTableState> {
   public render () {
     const { headers, items, selectors, selectorsValue, count, pageSize, pageNo, loading, error } = this.state
     const activeParams = paramsFilter(selectorsValue) as any
-    const blockSearchText = rangeSelectorText('Block Number', activeParams.numberFrom, activeParams.numberTo)
+    const blockSearchText = rangeSelectorText('Number', activeParams.numberFrom, activeParams.numberTo)
     const transactionSearchText = rangeSelectorText(
-      'Transaction Count',
+      'Transaction',
       activeParams.transactionFrom,
       activeParams.transactionTo
     )

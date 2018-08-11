@@ -16,21 +16,18 @@ import {
 } from '@material-ui/core'
 import { ExpandMore as ExpandMoreIcon } from '@material-ui/icons'
 
-import CITAObservables from '@nervos/observables'
-
 import Banner from '../../components/Banner'
 
 import { PanelConfigs } from '../../config/localstorage'
-import { initPanelConfigs } from '../../initValues'
-import { withObservables } from '../../contexts/observables'
-import { withConfig, IConfig } from '../../contexts/config'
+
+import { withConfig, Config } from '../../contexts/config'
 import hideLoader from '../../utils/hideLoader'
 
 const layout = require('../../styles/layout.scss')
 const styles = require('./config.scss')
 
 /* eslint-disable no-use-before-define */
-interface ConfigItem {
+interface ConfigDetail {
   panel: ConfigPanel
   type: ConfigType
   key: string
@@ -53,31 +50,24 @@ enum ConfigPanel {
   GRAPH = 'graph'
 }
 
-export interface IConfigPageProps {
-  config: IConfig
-  CITAObservables: CITAObservables
+export interface ConfigPageProps {
+  config: Config
   t: (key: string) => string
 }
 
-export interface IConfigPageState {
+export interface ConfigPageState {
   configs: PanelConfigs
 }
 
-const initState: IConfigPageState = {
-  configs: initPanelConfigs
-}
-
-const ConfigItem = translate('microscope')(
+const ConfigDetail = translate('microscope')(
   ({
     config,
-    index,
     value,
     handleSwitch,
     handleInput,
     t
   }: {
-  config: ConfigItem
-  index: number
+  config: ConfigDetail
   value: number | string | boolean | undefined
   handleSwitch: (key: string) => (e: any) => void
   handleInput: (key: string) => (e: React.ChangeEvent<HTMLInputElement>) => void
@@ -89,7 +79,6 @@ const ConfigItem = translate('microscope')(
           <React.Fragment>
             {t(config.type === ConfigType.DISPLAY ? 'display' : 'set')} {t(config.title)}
           </React.Fragment>
-          // ' ' +
         }
       />
       <ListItemSecondaryAction>
@@ -100,7 +89,6 @@ const ConfigItem = translate('microscope')(
               checked: styles.switchChecked,
               colorPrimary: styles.switchColorPrimary,
               colorSecondary: styles.switchColorSecondary,
-              // bar: styles.iOSBar,
               icon: styles.iOSIcon
             }}
             onChange={handleSwitch(config.key)}
@@ -108,11 +96,7 @@ const ConfigItem = translate('microscope')(
           />
         ) : (
           <div>
-            <TextField
-              value={`${value}`}
-              onChange={handleInput(config.key)}
-              // style={{ textAlign: 'right' }}
-            />
+            <TextField value={`${value}`} onChange={handleInput(config.key)} />
           </div>
         )}
       </ListItemSecondaryAction>
@@ -120,7 +104,7 @@ const ConfigItem = translate('microscope')(
   )
 )
 
-const Config = translate('microscope')(
+const ConfigItem = translate('microscope')(
   ({
     title,
     configs,
@@ -146,10 +130,9 @@ const Config = translate('microscope')(
       <ExpansionPanelDetails>
         <List style={{ width: '100%' }}>
           {configs.map((config, idx) => (
-            <ConfigItem
+            <ConfigDetail
               key={config.key}
               config={config}
-              index={idx}
               value={values[config.key]}
               handleSwitch={handleSwitch}
               handleInput={handleInput}
@@ -162,47 +145,15 @@ const Config = translate('microscope')(
   )
 )
 
-class ConfigPage extends React.Component<IConfigPageProps, IConfigPageState> {
-  // state: IConfigPageState
-  constructor (props) {
-    super(props)
-    this.state = {
-      configs: this.props.config.panelConfigs
-    }
-  }
-
-  componentDidMount () {
-    hideLoader()
-  }
-  private handleSwitch = key => (e: any) => {
-    this.setState(state => {
-      const { configs } = this.state
-      const newConfig = { ...configs, [key]: !configs[key] }
-      if (this.props.config.changePanelConfig(newConfig)) {
-        return { configs: newConfig }
-      }
-      return state
-    })
-  }
-  private handleInput = key => (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = e.currentTarget
-    this.setState(state => {
-      const { configs } = state
-      const newConfig = { ...configs, [key]: value }
-      if (this.props.config.changePanelConfig(newConfig)) {
-        return { configs: newConfig }
-      }
-      return state
-    })
-  }
-  private panels = [
+class ConfigPage extends React.Component<ConfigPageProps, ConfigPageState> {
+  static panels = [
     // ConfigPanel.GENERAL,
     // ConfigPanel.HEADER,
     ConfigPanel.BLOCK,
     ConfigPanel.TRANSACTION,
     ConfigPanel.GRAPH
   ]
-  private configs = [
+  static configs = [
     {
       panel: ConfigPanel.GENERAL,
       type: ConfigType.VALUE,
@@ -335,17 +286,48 @@ class ConfigPage extends React.Component<IConfigPageProps, IConfigPageState> {
       key: 'graphMaxCount',
       title: 'MaxCount'
     }
-  ] as ConfigItem[]
-  render () {
+  ] as ConfigDetail[]
+  public constructor (props) {
+    super(props)
+    this.state = {
+      configs: props.config.panelConfigs
+    }
+  }
+
+  public componentDidMount () {
+    hideLoader()
+  }
+  private handleSwitch = key => (e?: any) => {
+    this.setState(state => {
+      const { configs } = this.state
+      const newConfig = { ...configs, [key]: !configs[key] }
+      if (this.props.config.changePanelConfig(newConfig)) {
+        return { configs: newConfig }
+      }
+      return state
+    })
+  }
+  private handleInput = key => (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { value } = e.currentTarget
+    this.setState(state => {
+      const { configs } = state
+      const newConfig = { ...configs, [key]: value }
+      if (this.props.config.changePanelConfig(newConfig)) {
+        return { configs: newConfig }
+      }
+      return state
+    })
+  }
+  public render () {
     return (
       <React.Fragment>
         <Banner bg={`${process.env.PUBLIC}/banner/banner-Setting.png`}>Config</Banner>
         <div className={`${styles.main} ${layout.center}`}>
-          {this.panels.map(panel => (
-            <Config
+          {ConfigPage.panels.map(panel => (
+            <ConfigItem
               title={panel}
               key={panel}
-              configs={this.configs.filter(config => config.panel === panel)}
+              configs={ConfigPage.configs.filter(config => config.panel === panel)}
               values={this.state.configs}
               handleSwitch={this.handleSwitch}
               handleInput={this.handleInput}
@@ -357,4 +339,4 @@ class ConfigPage extends React.Component<IConfigPageProps, IConfigPageState> {
   }
 }
 
-export default withConfig(withObservables(ConfigPage))
+export default withConfig(ConfigPage)
