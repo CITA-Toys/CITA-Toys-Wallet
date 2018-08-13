@@ -116,6 +116,8 @@ The **Metadata Panel** is used to check metadata of active chain, or inspect and
 
 ### Statistics Panel
 
+> NOTICE: this panel is hidden by default, corresponding code is at `src/containers/Header/index.tsx`
+
 On click of **TPS** the **Statistics Panel** will be called out.
 
 The **Statistics Panel** is used to inspect current status of active chain.
