@@ -1,4 +1,5 @@
 [![MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://github.com/cryptape/microscope)
+[![AppChain](https://img.shields.io/badge/made%20for-AppChain-618833.svg)](appchain.nervos.org)
 
 # Overview
 
