@@ -58,7 +58,7 @@ CHAIN_SERVERS= # default appchain addresses
 APP_NAME= # explorer name
 ```
 
-> NOTICE: Our CDN for static assets is available at `http://pccoq959o.bkt.clouddn.com/`, namely icons and images can be added by setting `PUBLIC=http://pccoq959o.bkt.clouddn.com/` on `.env`.
+> NOTICE: Our CDN for static assets is available at `https://cdn.cryptape.com/`, namely icons and images can be added by setting `PUBLIC=https://cdn.cryptape.com/` on `.env`.
 
 5.  Developing
 
