@@ -2,7 +2,7 @@
  * @Author: Keith-CY
  * @Date: 2018-07-22 19:59:22
  * @Last Modified by: Keith-CY
- * @Last Modified time: 2018-08-02 12:08:25
+ * @Last Modified time: 2018-08-15 18:33:06
  */
 
 import { IBlock, IBlockHeader, Transaction, Metadata, ABI } from './typings'
@@ -85,6 +85,7 @@ export const initPanelConfigs: PanelConfigs = {
 }
 
 export const initServerList = (process.env.CHAIN_SERVERS || '').split(',')
+console.log(initServerList)
 export const initPrivateKeyList = []
 export const initError = { message: '', code: '' }
 export const initAccountState = {

@@ -174,8 +174,8 @@ class Header extends React.Component<HeaderProps, HeaderState> {
   }
   private switchChain = (chain?: string) => {
     const ip = chain || this.state.searchIp
-    this.props.CITAObservables.setServer(ip.startsWith('http') ? ip : `http://${ip}`)
-    const chainIp = ip.startsWith('http') ? ip : `http://${ip}`
+    this.props.CITAObservables.setServer(ip.startsWith('http') ? ip : `https://${ip}`)
+    const chainIp = ip.startsWith('http') ? ip : `https://${ip}`
     window.localStorage.setItem('chainIp', chainIp)
     window.location.reload()
   }
