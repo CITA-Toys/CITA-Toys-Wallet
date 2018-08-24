@@ -1,236 +1,146 @@
+/*
+ * @Author: Keith-CY
+ * @Date: 2018-07-22 21:41:37
+ * @Last Modified by: Keith-CY
+ * @Last Modified time: 2018-07-22 22:25:04
+ */
+// TODO: use contract instance for eth call
+
 import * as React from 'react'
 import * as web3Utils from 'web3-utils'
 import * as Web3Contract from 'web3-eth-contract'
 import * as web3Abi from 'web3-eth-abi'
 
-import {
-  Card,
-  CardHeader,
-  CardContent,
-  Tabs,
-  Tab,
-  Button,
-  Divider,
-  LinearProgress,
-} from '@material-ui/core'
+import { Card, CardHeader, CardContent, Tabs, Tab, Button, Divider, LinearProgress } from '@material-ui/core'
 
 import ERCPanel from '../../components/ERCPanel'
 import TransactionTable from '../../containers/TransactionTable'
 import Banner from '../../components/Banner'
 import Dialog from '../Dialog'
-
-import { withObservables } from '../../contexts/observables'
-import { IContainerProps, Transaction, ABI } from '../../typings'
-import LocalAccounts, { LocalAccount } from '../../components/LocalAccounts'
 import ErrorNotification from '../../components/ErrorNotification'
+import LocalAccounts from '../../components/LocalAccounts'
+
+import { AccountType } from '../../typings/account'
+import { IContainerProps, Transaction, ABI } from '../../typings'
+import { withObservables } from '../../contexts/observables'
+
+import { initAccountState } from '../../initValues'
 import hideLoader from '../../utils/hideLoader'
 import { handleError, dismissError } from '../../utils/handleError'
 
 const layouts = require('../../styles/layout.scss')
-// const texts = require('../../styles/text.scss')
-// const styles = require('./styles.scss')
 
-enum AccountType {
-  NORMAL = '普通账户',
-  ERC20 = 'ERC20',
-  ERC721 = 'ERC721',
-}
-
-interface Contract {
-  methods?: any
-  _jsonInterface: {
-    signature: string
-  }[]
-}
-
-const accountFormatter = (addr: string) =>
-  addr.startsWith('0x') ? addr : `0x${addr}`
+const accountFormatter = (addr: string) => (addr.startsWith('0x') ? addr : `0x${addr}`)
 interface AccountProps extends IContainerProps {}
-const initState = {
-  loading: 0,
-  type: AccountType.NORMAL,
-  addr: '',
-  abi: [] as ABI,
-  // abi: initABI,
-  contract: { _jsonInterface: [] } as Contract,
-  balance: '',
-  txCount: '',
-  creator: '',
-  transactions: [] as Transaction[],
-  customToken: {
-    name: '',
-  },
-
-  normals: [] as LocalAccount[],
-  erc20s: [] as LocalAccount[],
-  erc721s: [] as LocalAccount[],
-  panelOn: false,
-  addrsOn: false,
-  normalsAdd: {
-    name: '',
-    addr: '',
-  },
-  erc20sAdd: {
-    name: '',
-    addr: '',
-  },
-  erc721sAdd: {
-    name: '',
-    addr: '',
-  },
-  error: {
-    code: '',
-    message: '',
-  },
-}
-
-type AccountState = typeof initState
+type AccountState = typeof initAccountState
 class Account extends React.Component<AccountProps, AccountState> {
-  state = initState
-
-  componentWillMount () {
+  readonly state = initAccountState
+  public componentWillMount () {
     const { account } = this.props.match.params
     this.onMount(account)
   }
-  componentDidMount () {
+  public componentDidMount () {
     hideLoader()
   }
-  componentWillReceiveProps (nextProps: AccountProps) {
+  public componentWillReceiveProps (nextProps: AccountProps) {
     const { account } = nextProps.match.params
     if (account && account !== this.props.match.params.account) {
       this.onMount(account)
     }
   }
-  componentDidCatch (err) {
+  public componentDidCatch (err) {
     this.handleError(err)
   }
   private onMount = account => {
-    this.setState(initState)
-    // this.loadAddrList()
+    this.setState(initAccountState)
     this.updateBasicInfo(account)
   }
   private onTabClick = (e, value) => {
-    this.setState(state => ({ panelOn: !!value }))
+    this.setState({ panelOn: !!value })
   }
 
   protected readonly addrGroups = [
     {
       key: 'normals',
-      label: AccountType.NORMAL,
+      label: AccountType.NORMAL
     },
     {
       key: 'erc20s',
-      label: AccountType.ERC20,
+      label: AccountType.ERC20
     },
     {
       key: 'erc721s',
-      label: AccountType.ERC721,
-    },
-  ]
-  private generalInfo = [
-    { key: 'balance', label: 'Balance' },
-    { key: 'txCount', label: 'Count of Transactions' },
+      label: AccountType.ERC721
+    }
   ]
   private fetchInfo = addr => {
-    /**
-     * @method get_balance
-     */
-    this.setState(state => ({ loading: state.loading + 1 }))
+    // NOTE: async
+    this.setState(state => ({ loading: state.loading + 3 })) // for get balance, get transaction count, and get abi
     this.props.CITAObservables.getBalance({ addr, blockNumber: 'latest' })
-      .finally(() => this.setState(state => ({ loading: state.loading - 1 })))
+      // .finally(() => this.setState(state => ({ loading: state.loading - 1 })))
       .subscribe(
-        (balance: string) =>
-          this.setState(state => ({ balance: `${+balance}` })),
-        error => this.handleError(error),
-        () => {},
+        (balance: string) => this.setState(state => ({ loading: state.loading - 1, balance: `${+balance}` })),
+        this.handleError
       )
-    /**
-     * @method get_transaction_count
-     */
-    this.setState(state => ({ loading: state.loading + 1 }))
     this.props.CITAObservables.getTransactionCount({
-      accountAddr: addr,
-      blockNumber: 'latest',
-    })
-      .finally(() => this.setState(state => ({ loading: state.loading - 1 })))
-      .subscribe(
-        // next
-        (count: string) =>
-          this.setState(state => ({ txCount: count.slice(2) })),
-        // error
-        error => this.handleError(error),
-        // complete
-        () => {},
-      )
+      addr,
+      blockNumber: 'latest'
+    }).subscribe(
+      (count: string) => this.setState(state => ({ txCount: count.slice(2), loading: state.loading - 1 })),
+      this.handleError
+    )
 
-    /**
-     * @method get_abi
-     */
-    this.setState(state => ({ loading: state.loading + 1 }))
     this.props.CITAObservables.getAbi({
       contractAddr: addr,
-      blockNumber: 'latest',
-    })
-      .finally(() => this.setState(state => ({ loading: state.loading - 1 })))
-      .subscribe(
-        // next
-        encoded => {
-          if (encoded === '0x') return
-          try {
-            const abiStr = web3Utils.hexToUtf8(encoded as string)
-            const abi = JSON.parse(abiStr)
-            const contract = new Web3Contract(abi, this.state.addr)
-            this.setState(state => ({
-              abi,
-              contract,
-            }))
-          } catch (err) {
-            // console.error(e.stack)
-            this.handleError(err)
-          }
-        },
-        // error
-        err => {
+      blockNumber: 'latest'
+    }).subscribe(encoded => {
+      if (encoded === '0x') {
+        this.setState(state => ({ loading: state.loading - 1 }))
+      } else {
+        try {
+          const abiStr = web3Utils.hexToUtf8(encoded as string)
+          const abi = JSON.parse(abiStr).filter((a: any) => a.type === 'function')
+          const contract = new Web3Contract(abi, this.state.addr)
+          this.setState(state => ({
+            abi,
+            contract,
+            loading: state.loading - 1
+          }))
+        } catch (err) {
           this.handleError(err)
-        },
-        // complete
-        () => {
-          // this.setState(state => ({ loading: state.loading - 1 }))
-        },
-      )
+        }
+      }
+    }, this.handleError)
   }
   private updateBasicInfo = account => {
     if (account) {
       const addr = accountFormatter(account)
       let type = AccountType.NORMAL
-      type = this.state.erc20s.map(erc => erc.addr).includes(addr)
-        ? AccountType.ERC20
-        : type
-      type = this.state.erc721s.map(erc => erc.addr).includes(addr)
-        ? AccountType.ERC721
-        : type
+      type = this.state.erc20s.map(erc => erc.addr).includes(addr) ? AccountType.ERC20 : type
+      type = this.state.erc721s.map(erc => erc.addr).includes(addr) ? AccountType.ERC721 : type
       this.setState({
         addr,
-        type,
+        type
       })
       this.fetchInfo(addr)
     }
   }
   private toggleAddrs = (addrsOn = false) => e => {
-    this.setState(state => ({ addrsOn }))
+    this.setState({ addrsOn })
   }
   private addAddr = group => e => {
     this.setState(state => {
       const { name, addr } = this.state[`${group}Add`]
       const newList = [...state[group], { name, addr }]
+      // side effect
       window.localStorage.setItem(group, JSON.stringify(newList))
       return {
         ...state,
         [group]: newList,
         [`${group}Add`]: {
           name: '',
-          addr: '',
-        },
+          addr: ''
+        }
       }
     })
   }
@@ -240,29 +150,25 @@ class Account extends React.Component<AccountProps, AccountState> {
       ...state,
       [`${group}Add`]: {
         ...state[`${group}Add`],
-        [label]: value,
-      },
+        [label]: value
+      }
     }))
   }
-  private handleAddrDelete = (group, index) => e => {
+  private handleAddrDelete = (group, idx) => e => {
     this.setState(state => {
-      const { name, addr } = this.state[`${group}Add`]
-      const newList = [...state[group]]
-      newList.splice(index, 1)
+      const newList = [...state[group]].splice(idx, 1)
       window.localStorage.setItem(group, JSON.stringify(newList))
       return {
         ...state,
         [group]: newList,
         [`${group}Add`]: {
           name: '',
-          addr: '',
-        },
+          addr: ''
+        }
       }
     })
   }
-  private handleAbiValueChange = (index: number) => (
-    inputIndex: number,
-  ) => e => {
+  private handleAbiValueChange = (index: number) => (inputIndex: number) => e => {
     const { value } = e.target
     this.setState(state => {
       const abi = [...state.abi]
@@ -275,52 +181,43 @@ class Account extends React.Component<AccountProps, AccountState> {
   private handleEthCall = (index: number) => e => {
     const inputs = this.state.abi[index].inputs.map(input => ({
       name: input.name,
-      value: input.value,
+      value: input.value
     }))
     /* eslint-disable no-underscore-dangle */
     const jsonInterface = this.state.contract._jsonInterface[index]
     /* eslint-enable no-underscore-dangle */
     // send transform data
-    const data = web3Abi.encodeFunctionCall(
-      jsonInterface,
-      inputs.map(input => input.value),
-    )
-    this.setState(state => ({ loading: state.loading + 1 }))
+    const data = web3Abi.encodeFunctionCall(jsonInterface, inputs.map(input => input.value))
+    this.setState(state => ({ loading: state.loading + 1 })) // for eth call
     /**
      * @method eth_call
      */
     this.props.CITAObservables.ethCall({
-      from: '',
-      to: this.state.addr,
-      data,
-      blockNumber: 'latest',
-    })
-      .finally(() => this.setState(state => ({ loading: state.loading - 1 })))
-      .subscribe(
-        // next
-        result => {
-          try {
-            const outputs = web3Utils.hexToUtf8(result)
-            this.setState(state => {
-              const abi = [...state.abi]
-              if (typeof outputs === 'string') {
-                abi[index].outputs[0].value = outputs
-              } else {
-                outputs.forEach((output, outputIndex) => {
-                  abi[index].outputs[outputIndex].value = output
-                })
-              }
-              return { ...state, abi }
-            })
-          } catch (err) {
-            this.handleError(err)
+      // callObject({
+      //   to: this.state.addr,
+      //   data,
+      // }),
+      callObject: {
+        to: this.state.addr,
+        data
+      },
+      blockNumber: 'latest'
+    }).subscribe(result => {
+      try {
+        const outputTypes = this.state.abi[index].outputs.map(o => o.type)
+        const outputs = web3Abi.decodeParameters(outputTypes, result) as { [index: string]: any; __length__: number }
+        this.setState(state => {
+          const abi = JSON.parse(JSON.stringify(state.abi))
+          for (let i = 0; i < outputs.__length__; i++) {
+            abi[index].outputs[i].value = outputs[i]
           }
-        },
-        // error
-        error => this.handleError(error),
-        // complete
-        () => {},
-      )
+          return { ...state, abi, loading: state.loading - 1 }
+        })
+      } catch (err) {
+        console.log(err)
+        this.handleError(err)
+      }
+    }, this.handleError)
   }
   private handleError = handleError(this)
   private dismissError = dismissError(this)
@@ -339,14 +236,14 @@ class Account extends React.Component<AccountProps, AccountState> {
       erc20sAdd,
       erc721sAdd,
       abi,
-      error,
+      error
     } = this.state
     return (
       <React.Fragment>
         {loading ? (
           <LinearProgress
             classes={{
-              root: 'linearProgressRoot',
+              root: 'linearProgressRoot'
             }}
           />
         ) : null}
@@ -361,11 +258,7 @@ class Account extends React.Component<AccountProps, AccountState> {
         </Banner>
         <div className={layouts.main}>
           <Card classes={{ root: layouts.cardContainer }} elevation={0}>
-            <CardHeader
-              action={
-                <Button onClick={this.toggleAddrs(true)}>管理本地账户</Button>
-              }
-            />
+            <CardHeader action={<Button onClick={this.toggleAddrs(true)}>管理本地账户</Button>} />
             <CardContent>
               <Tabs value={+panelOn} onChange={this.onTabClick}>
                 <Tab label={`Transactions(${txCount || 0})`} />
@@ -384,12 +277,7 @@ class Account extends React.Component<AccountProps, AccountState> {
             </CardContent>
           </Card>
         </div>
-        <Dialog
-          fullScreen
-          on={addrsOn}
-          dialogTitle="地址管理"
-          onClose={this.toggleAddrs()}
-        >
+        <Dialog fullScreen on={addrsOn} dialogTitle="地址管理" onClose={this.toggleAddrs()}>
           <LocalAccounts
             addrGroups={this.addrGroups}
             normals={normals}

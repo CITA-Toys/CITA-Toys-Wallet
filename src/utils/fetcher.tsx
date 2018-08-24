@@ -1,31 +1,73 @@
+/*
+ * @Author: Keith-CY
+ * @Date: 2018-07-22 21:11:41
+ * @Last Modified by: Keith-CY
+ * @Last Modified time: 2018-08-03 14:23:19
+ */
+
 import axios, { AxiosResponse } from 'axios'
+import { initServerList } from '../initValues'
+import ErrorTexts from '../typings/errors'
 
-const url = path => {
-  const ip = window.localStorage.getItem('chainIp') || process.env.CITA_SERVER
-  return `${ip}/${path}`
+const baseURL = window.localStorage.getItem('chainIp') || initServerList[0]
+
+const axiosIns = axios.create({
+  baseURL
+})
+
+interface Params {
+  [index: string]: string | number
 }
+
 export const fetch10Transactions = () =>
-  axios
-    .get(url('api/transactions'))
+  axiosIns
+    .get('api/transactions')
     .then((res: AxiosResponse) => res.data)
-    .catch(err => console.error(err))
+    .catch(() => {
+      throw new Error(ErrorTexts.CACHE_SERVER_NOT_AVAILABLE)
+    })
 
-export const fetchBlocks = (params: { [index: string]: string | number }) =>
-  axios
-    .get(url('api/blocks'), { params })
+export const fetchBlocks = (params: Params) =>
+  axiosIns
+    .get('api/blocks', { params })
     .then((res: AxiosResponse) => res.data)
-    .catch(err => console.error(err))
+    .catch(() => {
+      throw new Error(ErrorTexts.CACHE_SERVER_NOT_AVAILABLE)
+    })
 
-export const fetchTransactions = (params: {
-[index: string]: string | number
-}) =>
-  axios
-    .get(url('api/transactions'), { params })
+export const fetchTransactions = (params: Params) =>
+  axiosIns
+    .get('api/transactions', { params })
     .then((res: AxiosResponse) => res.data)
-    .catch(err => console.error(err))
+    .catch(() => {
+      throw new Error(ErrorTexts.CACHE_SERVER_NOT_AVAILABLE)
+    })
 
 export const fetchStatistics = params =>
-  axios
-    .get(url('/api/statistics'), { params })
+  axiosIns
+    .get('/api/statistics', { params })
     .then((res: AxiosResponse) => res.data)
-    .catch(err => console.error(err))
+    .catch(() => {
+      throw new Error(ErrorTexts.CACHE_SERVER_NOT_AVAILABLE)
+    })
+
+export const fetchServerList = () =>
+  axios
+    .get(`${process.env.PUBLIC}/defaultServerList.json`)
+    .then((res: AxiosResponse) => res.data)
+    .catch(() => {
+      throw new Error(ErrorTexts.SERVER_LIST_NOT_FOUND)
+    })
+
+export const fetchMetadata = ip =>
+  axios
+    .post(`http://${ip}`, {
+      jsonrpc: '2.0',
+      method: 'getMetaData',
+      params: ['latest'],
+      id: 1
+    })
+    .then((res: AxiosResponse) => res.data)
+    .catch(() => {
+      throw new Error(ErrorTexts.CACHE_SERVER_NOT_AVAILABLE)
+    })

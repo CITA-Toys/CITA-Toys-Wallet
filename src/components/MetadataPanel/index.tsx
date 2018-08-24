@@ -3,7 +3,7 @@ import { List, ListItem, ListItemText } from '@material-ui/core'
 import { translate } from 'react-i18next'
 import { Metadata } from '../../typings'
 
-const styles = require('./styles.scss')
+const styles = require('./metadata.scss')
 const text = require('../../styles/text.scss')
 
 const list = [
@@ -14,7 +14,7 @@ const list = [
   { name: 'Genesis Time', value: 'genesisTimestamp' },
   { name: 'Block Interval', value: 'blockInterval' },
   { name: 'Token Name', value: 'tokenName' },
-  { name: 'Token Symbol', value: 'tokenSymbol' },
+  { name: 'Token Symbol', value: 'tokenSymbol' }
 ]
 
 const MetadataRender = translate('microscope')(
@@ -22,8 +22,7 @@ const MetadataRender = translate('microscope')(
     <div className={styles.display}>
       {list.map(item => (
         <div key={item.name} className={`${styles.item} ${text.ellipsis}`}>
-          {t(item.name)}:{' '}
-          <span className={styles.itemValue}>{metadata[item.value]}</span>
+          {t(item.name)}: <span className={styles.itemValue}>{metadata[item.value]}</span>
         </div>
       ))}
       <div className={styles.validators}>
@@ -39,18 +38,20 @@ const MetadataRender = translate('microscope')(
         ) : null}
       </div>
     </div>
-  ),
+  )
 )
+
+export type ServerList = { serverName: string; serverIp: string }[]
 
 interface MetadataPanelProps {
   metadata: Metadata
   searchIp: string
   searchResult: Metadata
   handleInput: (key: string) => (e: any) => void
-  switchChain: (e) => void
+  switchChain: (ip?: string) => (e) => void
   handleKeyUp: (e: React.KeyboardEvent<HTMLInputElement>) => void
   t: (key: string) => string
-  serverList: string[]
+  serverList: ServerList
 }
 
 const MetadataPanel: React.SFC<MetadataPanelProps> = ({
@@ -61,7 +62,7 @@ const MetadataPanel: React.SFC<MetadataPanelProps> = ({
   handleKeyUp,
   switchChain,
   t,
-  serverList,
+  serverList
 }) => (
   <div>
     <div className={styles.title}>
@@ -79,19 +80,31 @@ const MetadataPanel: React.SFC<MetadataPanelProps> = ({
         value={searchIp}
         onKeyUp={handleKeyUp}
       />
-      <button onClick={switchChain}>{t('switch')}</button>
+      <button onClick={switchChain('')} disabled={!searchIp}>
+        {t('switch')}
+      </button>
     </div>
-    {searchResult.chainId !== '' ? (
+    {searchResult.chainId !== -1 ? (
       <MetadataRender metadata={searchResult} />
     ) : (
       <List>
-        {serverList.map(server => (
+        {serverList.map(({ serverName, serverIp }) => (
           <ListItem
-            key={server}
-            onClick={() => switchChain(server)}
-            classes={{ root: styles.listItem }}
+            key={serverName}
+            onClick={switchChain(serverIp)}
+            classes={{
+              root: styles.listItem,
+              gutters: styles.serverGutters
+            }}
           >
-            <ListItemText primary={server} />
+            <ListItemText
+              classes={{
+                primary: styles.serverPrimary,
+                secondary: styles.serverSecondary
+              }}
+              primary={serverName}
+              secondary={serverIp}
+            />
           </ListItem>
         ))}
       </List>

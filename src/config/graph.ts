@@ -30,14 +30,14 @@ export const LineOption = {
     colorStops: [
       {
         offset: 0,
-        color: 'red', // 0% 处的颜色
+        color: 'red',
       },
       {
         offset: 1,
-        color: 'blue', // 100% 处的颜色
+        color: 'blue',
       },
     ],
-    globalCoord: false, // 缺省为 false
+    globalCoord: false,
   },
 }
 export const PieOption = {

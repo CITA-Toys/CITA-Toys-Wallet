@@ -1,7 +1,9 @@
 import * as React from 'react'
 import { LinearProgress, Grid } from '@material-ui/core'
 import { translate } from 'react-i18next'
-import { IContainerProps, IBlock, TransactionFromServer } from '../../typings'
+
+import { Chain } from '@nervos/plugin'
+import { IContainerProps, TransactionFromServer } from '../../typings'
 import { withObservables } from '../../contexts/observables'
 import { fetch10Transactions } from '../../utils/fetcher'
 import StaticCard from '../../components/StaticCard'
@@ -18,26 +20,28 @@ interface HomepageProps extends IContainerProps {}
 
 const initState = {
   loading: 0,
-  blocks: [] as IBlock[],
+  blocks: [] as Chain.Block<Chain.TransactionInBlock>[],
   transactions: [] as TransactionFromServer[],
   healthy: {
-    count: '',
+    count: ''
   },
   error: {
     code: '',
-    message: '',
-  },
+    message: ''
+  }
 }
 type HomepageState = typeof initState
 class Homepage extends React.Component<HomepageProps, HomepageState> {
   state = initState
   componentWillMount () {
+    // NOTICE: async
+    this.setState(state => ({ loading: state.loading + 1 })) // for get block number
     this.props.CITAObservables.newBlockNumber(0, false).subscribe(
-      // next
-      blockNumber => this.blockHistory({ height: blockNumber, count: 10 }),
-      // error
-      this.handleError,
-      // complete
+      blockNumber => {
+        this.setState(state => ({ loading: state.loading - 1 }))
+        this.blockHistory({ height: blockNumber, count: 10 })
+      },
+      this.handleError // for get block number
     )
     this.transactionHistory()
   }
@@ -47,43 +51,30 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
   componentDidCatch (err) {
     this.handleError(err)
   }
-  private blkInfo = [
-    { key: 'height', label: '出块高度' },
-    { key: 'owner', label: '出块人' },
-    { key: 'time', label: '出块时间' },
-    { key: 'txCount', label: '交易量' },
-  ]
 
   private blockHistory = ({ height, count }) => {
-    this.setState(state => ({ loading: state.loading + 1 }))
+    // NOTICE: async
+    this.setState(state => ({ loading: state.loading + 1 })) // for block history
     this.props.CITAObservables.blockHistory({
       by: height,
-      count,
-    }).subscribe((blocks: IBlock[]) => {
+      count
+    }).subscribe((blocks: Chain.Block<Chain.TransactionInBlock>[]) => {
       this.setState(state => ({
         loading: state.loading - 1,
-        blocks,
+        blocks
       }))
-    }, this.handleError)
+    }, this.handleError) // for block history
   }
   private transactionHistory = () => {
-    this.setState(state => ({ loading: state.loading + 1 }))
+    // NOTICE: async
+    this.setState(state => ({ loading: state.loading + 1 })) // for transaction history
     fetch10Transactions()
-      .then(
-        ({
-          result,
-        }: {
-        result: {
-        transactions: TransactionFromServer[]
-        count: number
-        }
-        }) => {
-          this.setState(state => ({
-            loading: state.loading - 1,
-            transactions: result.transactions,
-          }))
-        },
-      )
+      .then(({ result: { transactions } }: { result: { transactions: TransactionFromServer[] } }) => {
+        this.setState(state => ({
+          loading: state.loading - 1,
+          transactions
+        }))
+      })
       .catch(this.handleError)
   }
   private handleError = handleError(this)
@@ -93,9 +84,7 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
     const { t } = this.props
     return (
       <React.Fragment>
-        {this.state.loading ? (
-          <LinearProgress classes={{ root: 'linearProgressRoot' }} />
-        ) : null}
+        {this.state.loading ? <LinearProgress classes={{ root: 'linearProgressRoot' }} /> : null}
         <div className={layout.main}>
           <Grid container spacing={window.innerWidth > 800 ? 24 : 0}>
             <Grid item md={6} sm={12} xs={12}>
@@ -120,10 +109,7 @@ class Homepage extends React.Component<HomepageProps, HomepageState> {
             </Grid>
           </Grid>
         </div>
-        <ErrorNotification
-          error={this.state.error}
-          dismissError={this.dismissError}
-        />
+        <ErrorNotification error={this.state.error} dismissError={this.dismissError} />
       </React.Fragment>
     )
   }

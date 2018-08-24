@@ -8,8 +8,10 @@ import {
   ListSubheader,
   ListItem,
   ListItemText,
-  Divider,
+  Divider
 } from '@material-ui/core'
+import { unsigner } from '@nervos/signer'
+import { Chain } from '@nervos/plugin/lib/typings/index.d'
 
 import Banner from '../../components/Banner'
 
@@ -33,6 +35,7 @@ interface TransactionState extends DetailedTransaction {
     message: string
     code: string
   }
+  loading: number
 }
 const initState: TransactionState = {
   hash: '',
@@ -44,14 +47,15 @@ const initState: TransactionState = {
     to: '',
     from: '',
     data: '',
-    value: '',
+    value: ''
   },
   error: {
     message: '',
-    code: '',
+    code: ''
   },
   timestamp: '',
   gasUsed: '',
+  loading: 0
 }
 
 const InfoList = ({ infos, details }) =>
@@ -60,7 +64,7 @@ const InfoList = ({ infos, details }) =>
       <ListItemText
         classes={{
           primary: styles.infoTitle,
-          secondary: styles.infoValue,
+          secondary: styles.infoValue
         }}
         primary={info.label}
         secondary={
@@ -88,7 +92,7 @@ const Info = ({ title, infos, details }) => (
       </ListSubheader>
     }
     classes={{
-      root: styles.listRoot,
+      root: styles.listRoot
     }}
   >
     <Divider classes={{ root: styles.divider }} light />
@@ -100,16 +104,10 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
   componentWillMount () {
     const { transaction } = this.props.match.params
     if (transaction) {
-      this.props.CITAObservables.getTransaction(transaction).subscribe(
-        // next
-        (tx: DetailedTransaction) => {
-          this.handleReturnedTx(tx)
-        },
-        // error
-        this.handleError,
-        // complete
-        () => {},
-      )
+      this.setState(state => ({ loading: state.loading + 1 }))
+      this.props.CITAObservables.getTransaction(transaction).subscribe((tx: Chain.TransactionInBlock) => {
+        this.handleReturnedTx(tx)
+      }, this.handleError)
     }
   }
   componentDidMount () {
@@ -118,34 +116,38 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
   componentDidCatch (err) {
     this.handleError(err)
   }
-  private handleReturnedTx = (tx: DetailedTransaction) => {
+  private handleReturnedTx = (tx: Chain.TransactionInBlock) => {
     if (!tx) {
-      return this.setState(state => ({
+      this.handleError({
         error: {
           message: 'Transaction Not Found',
-          code: '-1',
-        },
-      }))
+          code: '-1'
+        }
+      })
     }
-    if (tx.basicInfo && tx.basicInfo.data) {
+    const details = unsigner(tx.content)
+    if (tx.basicInfo && typeof tx.basicInfo !== 'string') {
       /* eslint-disable */
-      const { data, value } = tx.basicInfo
+      const { data, value } = details.transaction
+      const { address } = details.sender
       tx.basicInfo.data = bytesToHex(data as any)
-      tx.basicInfo.value = bytesToHex(value as any)
+      tx.basicInfo.value = '' + +bytesToHex(value as any)
+      tx.basicInfo.from = '0x' + address
       /* eslint-enable */
     }
-    return this.setState({ ...tx })
+    // return this.setState(state => ({ ...tx, loading: state.loading - 1 }))
+    return this.setState(state => Object.assign({}, state, tx, { loading: state.loading - 1 }))
   }
   private infos = [
     { key: 'blockHash', label: 'Block Hash', type: 'block' },
     { key: 'blockNumber', label: 'Height', type: 'height' },
-    { key: 'index', label: 'Index' },
+    { key: 'index', label: 'Index' }
   ]
   private basicInfo = [
     { key: 'from', label: 'From', type: 'account' },
     { key: 'to', label: 'To', type: 'account' },
     { key: 'value', label: 'value' },
-    { key: 'data', label: 'data' },
+    { key: 'data', label: 'data' }
   ]
 
   private handleError = handleError(this)
@@ -157,7 +159,7 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
         {hash ? null : (
           <LinearProgress
             classes={{
-              root: 'linearProgressRoot',
+              root: 'linearProgressRoot'
             }}
           />
         )}
@@ -182,9 +184,7 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
                 {gasUsed ? (
                   <span>
                     <img
-                      src={`${
-                        process.env.PUBLIC
-                      }/microscopeIcons/petrol_barrel.svg`}
+                      src={`${process.env.PUBLIC}/microscopeIcons/petrol_barrel.svg`}
                       alt="gas used"
                       className={styles.gasIcon}
                     />
@@ -199,11 +199,7 @@ class Transaction extends React.Component<TransactionProps, TransactionState> {
           <Card classes={{ root: layouts.cardContainer }}>
             <CardContent classes={{ root: styles.cardContentRoot }}>
               <div className={styles.lists}>
-                <Info
-                  title="Transaction"
-                  infos={this.basicInfo}
-                  details={this.state.basicInfo}
-                />
+                <Info title="Transaction" infos={this.basicInfo} details={this.state.basicInfo} />
                 <Info title="Block" infos={this.infos} details={this.state} />
               </div>
             </CardContent>
