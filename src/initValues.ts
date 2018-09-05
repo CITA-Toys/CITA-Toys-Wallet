@@ -95,7 +95,7 @@ export const initAccountState = {
   abi: [] as ABI,
   contract: { _jsonInterface: [], methods: [] } as Contract,
   balance: '',
-  txCount: '',
+  txCount: 0,
   creator: '',
   transactions: [] as Transaction[],
   customToken: {

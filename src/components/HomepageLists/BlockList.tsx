@@ -2,7 +2,7 @@ import * as React from 'react'
 import { Link } from 'react-router-dom'
 import { translate } from 'react-i18next'
 import { List, ListItem, ListItemText } from '@material-ui/core'
-import { Chain } from '@nervos/web3-plugin'
+import { Chain } from '@nervos/plugin'
 // import Avatar from '@material-ui/core/Avatar'
 import { IBlock } from '../../typings/'
 
